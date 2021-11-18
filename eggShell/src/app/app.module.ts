@@ -11,11 +11,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { SettingsComponent } from './settings/settings.component';
+import { AddEggComponent } from './add-egg/add-egg.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent
+    NavComponent,
+    SettingsComponent,
+    AddEggComponent
   ],
   imports: [
     BrowserModule,
