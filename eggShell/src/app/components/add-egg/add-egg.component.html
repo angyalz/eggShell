@@ -1,1 +1,8 @@
-<p>add-egg works!</p>
+<mat-card>
+    <mat-form-field appearance="fill">
+        <mat-label>Verbose datepicker</mat-label>
+        <input matInput [matDatepicker]="dp" [formControl]="date">
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp></mat-datepicker>
+    </mat-form-field>
+</mat-card>
