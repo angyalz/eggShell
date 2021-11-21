@@ -1,11 +1,46 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "eggShell node.js express sevrer",
+  "description": "eggshell App with Angular frontend and node.js express backend",
   "main": "index.js",
   "scripts": {
+    "build": "cd eggShell && npm i && npm run build",
+    "start": "node src/index.js",
+    "start:server": "nodemon --delay 3500ms src/index.js",
+    "start:server-prod": "cross-env NODE_ENV=production node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angyalz/eggShell.git"
+  },
+  "keywords": [
+    "remek",
+    "server",
+    "NodeJS",
+    "express"
+  ],
+  "author": "angyalZK",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/github.com/angyalz/eggShell/issues"
+  },
+  "homepage": "https://github.com/github.com/angyalz/eggShell#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "config": "^3.3.6",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.7",
+    "mongoose-id-validator": "^0.6.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "cors": "^2.8.5",
+    "nodemon": "^2.0.12"
+  }
 }

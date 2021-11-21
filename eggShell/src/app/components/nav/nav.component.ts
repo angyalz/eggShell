@@ -16,6 +16,21 @@ export class NavComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  isLoggedIn: boolean = false;
+  badgeCounter = {
+    settings: 1
+  }
+
+  constructor(
+    private breakpointObserver: BreakpointObserver
+    ) {}
+
+  login () {
+    this.isLoggedIn = true;
+  }
+
+  logout () {
+    this.isLoggedIn = false;
+  }
 
 }

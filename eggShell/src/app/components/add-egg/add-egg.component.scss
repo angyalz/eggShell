@@ -1,0 +1,38 @@
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    mat-card {
+        margin: 2em auto;
+        padding: 2em;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: url('../../../../../server/public/images/background/eggs/eggs5.jpg');
+        background-size: cover;
+
+        .info {
+            display: inherit;
+            width: 100%;
+            justify-content: space-between;
+
+            p {
+                padding: 1em;
+            }
+        }
+
+        mat-form-field {
+            margin: 1em;
+
+            input {
+                text-align: center;
+            }
+        }
+
+        button {
+            width: 5em;
+        }
+    }
+}

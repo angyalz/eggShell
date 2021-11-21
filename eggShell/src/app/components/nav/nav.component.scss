@@ -1,12 +1,17 @@
 .sidenav-container {
   height: 100%;
+  width: 100%;
 }
 
 .sidenav {
   width: 200px;
 
+  a span {
+    padding-top: 0.1em;
+  }
+
   mat-icon {
-    margin-right: 0.25em;
+    padding-right: 0.25em;
   }
 }
 
@@ -23,9 +28,8 @@
 .mat-toolbar {
   display: flex;
   justify-content: space-between;
-  // color: yellow;
   
   mat-icon {
-    margin-left: 0.25em;
+    padding-left: 0.25em;
   }
 }

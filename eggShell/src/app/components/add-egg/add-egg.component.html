@@ -1,8 +1,26 @@
-<mat-card>
-    <mat-form-field appearance="fill">
-        <mat-label>Verbose datepicker</mat-label>
-        <input matInput [matDatepicker]="dp" [formControl]="date">
-        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-        <mat-datepicker #dp></mat-datepicker>
-    </mat-form-field>
-</mat-card>
+<section>
+    <mat-card>
+        <div class="info">
+            <p>Mai tojások száma:   9 db</p>
+            <mat-icon color="primary"
+                #tooltip="matTooltip"
+                matTooltip="A megadott mennyiség a kiválasztott dátum napi mennyiségéhez adódik hozzá"
+                matTooltipPosition="above"
+                matTooltipHideDelay=1000
+                (click)="tooltip.toggle()">
+                info
+            </mat-icon>
+        </div>
+        <mat-form-field appearance="standard">
+            <mat-label>Tojások száma</mat-label>
+            <input matInput type="number" value=0>
+        </mat-form-field>
+        <mat-form-field appearance="standard">
+            <mat-label>Dátum</mat-label>
+            <input matInput [matDatepicker]="dp" [formControl]="date">
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp></mat-datepicker>
+        </mat-form-field>
+        <button mat-raised-button color="accent"><mat-icon>task_alt</mat-icon></button>
+    </mat-card>
+</section>
