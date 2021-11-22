@@ -1,0 +1,5 @@
+# eggShell
+
+
+#to-dos:
+- logger
