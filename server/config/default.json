@@ -1,7 +1,7 @@
 {
     "database": {
         "dbType": "mongodb+srv://",
-        "username": "egshellDBadmin",
+        "username": "eggshellDBadmin",
         "password": "escMPXZAyErKVY6x",
         "host": "cluster0.ziyex.mongodb.net/eggshell?retryWrites=true&w=majority"
     },

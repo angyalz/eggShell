@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose';
-import idValidator from 'mongoose-id-validator';
+const mongoose = require('mongoose');
+const idValidator = require('mongoose-id-validator');
 
-const UserSchema = Schema({
+const UserSchema = mongoose.Schema({
 
     userName: { type: String, required: true, unique: true },
     email: { type: String, required: true, match: /.+\@.+\..+/, unique: true },
@@ -9,7 +9,7 @@ const UserSchema = Schema({
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
     barton: [
         {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'Barton'
         }
     ]
@@ -22,4 +22,4 @@ const UserSchema = Schema({
 
 UserSchema.plugin(idValidator);
 
-export default model('User', UserSchema, 'users');
+module.exports = mongoose.model('User', UserSchema, 'users');

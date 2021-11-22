@@ -5,34 +5,44 @@ section {
 
     mat-card {
         margin: 2em auto;
-        padding: 2em;
+        padding: 0em;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background: url('../../../../../server/public/images/background/eggs/eggs5.jpg');
+        background: url("../../../../../server/public/images/background/eggs/eggs5.jpg");
         background-size: cover;
 
-        .info {
-            display: inherit;
-            width: 100%;
-            justify-content: space-between;
+        .background-filter {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2em;
+            background: rgba($color: #ffffff, $alpha: 0.3);
 
-            p {
-                padding: 1em;
+            .info {
+                display: inherit;
+                width: 100%;
+                justify-content: space-between;
+    
+                p {
+                    padding: 1em;
+                }
+            }
+    
+            mat-form-field {
+                margin: 1em;
+    
+                input {
+                    text-align: center;
+                }
+            }
+    
+            button {
+                width: 5em;
             }
         }
 
-        mat-form-field {
-            margin: 1em;
-
-            input {
-                text-align: center;
-            }
-        }
-
-        button {
-            width: 5em;
-        }
     }
 }

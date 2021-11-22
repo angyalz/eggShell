@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose';
-import idValidator from 'mongoose-id-validator';
+const mongoose = require('mongoose');
+const idValidator = require('mongoose-id-validator');
 
-const FeedSchema = Schema({
+const FeedSchema = mongoose.Schema({
 
     name: { type: String, required: true, unique: true },
     // weight: { type: Number, required: true },
@@ -16,4 +16,4 @@ const FeedSchema = Schema({
 
 FeedSchema.plugin(idValidator);
 
-export default model('Feed', FeedSchema, 'feed');
+module.exports = mongoose.model('Feed', FeedSchema, 'feed');

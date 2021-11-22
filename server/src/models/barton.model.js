@@ -1,18 +1,18 @@
-import { Schema, model } from 'mongoose';
-import idValidator from 'mongoose-id-validator';
+const mongoose = require('mongoose');
+const idValidator = require('mongoose-id-validator');
 
-const BartonSchema = Schema({
+const BartonSchema = mongoose.Schema({
 
     bartonName: { type: String },
     users: [
         {
-            user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+            user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
             role: { type: String, enum: ['owner', 'user'], default: 'owner', required: true }
         }
     ],
     poultry: [
         {
-            breed: { type: Schema.Types.ObjectId, required: true, ref: 'Poultry' },
+            breed: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Poultry' },
             quantity: { type: Number, required: true },
             purchase_date: { type: Date, default: Date.now },
             purchase_price: { type: Number },
@@ -20,7 +20,7 @@ const BartonSchema = Schema({
     ],
     feed: [
         {
-            type: { type: Schema.Types.ObjectId, required: true, ref: 'Feed' },
+            type: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Feed' },
             unit: { type: String, enum: ['kg', 'q'], default: 'kg', required: true },
             price: { type: Number, required: true },
             date_from: { type: Date, default: Date.now, required: true },
@@ -29,7 +29,7 @@ const BartonSchema = Schema({
     ],
     vaccine: [
         {
-            type: { type: Schema.Types.ObjectId, required: true, ref: 'Vaccine' },
+            type: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Vaccine' },
             price: { type: Number },
             date_from: { type: Date, default: Date.now },
             date_to: { type: Date, default: Date.now },
@@ -44,4 +44,4 @@ const BartonSchema = Schema({
 
 BartonSchema.plugin(idValidator);
 
-export default model('Barton', BartonSchema, 'bartons');
+module.exports = mongoose.model('Barton', BartonSchema, 'bartons');
