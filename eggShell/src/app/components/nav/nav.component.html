@@ -15,17 +15,20 @@
     </mat-toolbar>
     <mat-nav-list>
       <a *ngIf="isLoggedIn"
-        mat-list-item routerLink="/" routerLinkActive="active" (click)="drawer.toggle()">
+        mat-list-item routerLink="/" routerLinkActive="active" 
+        (click)="drawer.toggle()">
         <mat-icon>home</mat-icon>
         <span>Főoldal</span>
       </a>
       <a *ngIf="isLoggedIn"
-        mat-list-item routerLink="/add-egg" routerLinkActive="active" (click)="drawer.toggle()">
+        mat-list-item routerLink="/add-egg" routerLinkActive="active" 
+        (click)="drawer.toggle()">
         <mat-icon>egg</mat-icon>
         <span>Tojás</span>
       </a>
       <a *ngIf="isLoggedIn"
-        mat-list-item routerLink="/add-egg" routerLinkActive="active" (click)="drawer.toggle()">
+        mat-list-item routerLink="/add-egg" routerLinkActive="active" 
+        (click)="drawer.toggle()">
         <mat-icon>restaurant_menu</mat-icon>
         <span>Táp</span>
       </a>
@@ -48,20 +51,21 @@
         </span>
       </a>
       <a *ngIf="!isLoggedIn"
-        mat-list-item routerLink="/add-egg" routerLinkActive="active" 
-        (click)="drawer.toggle()">
-        <mat-icon>person_add</mat-icon>
-        <span>Regisztráció</span>
-      </a>
-      <a *ngIf="!isLoggedIn"
-        mat-list-item routerLink="/add-egg" routerLinkActive="active" 
+        mat-list-item  
         (click)="drawer.toggle()"
-        (click)="login()">
+        (click)="openLoginDialog()">
         <mat-icon>login</mat-icon>
         <span>Belépés</span>
       </a>
+      <a *ngIf="!isLoggedIn"
+        mat-list-item 
+        (click)="drawer.toggle()"
+        (click)="openRegDialog()">
+        <mat-icon>person_add</mat-icon>
+        <span>Regisztráció</span>
+      </a>
       <a *ngIf="isLoggedIn"
-        mat-list-item routerLink="/add-egg" routerLinkActive="active" 
+        mat-list-item 
         (click)="drawer.toggle()"
         (click)="logout()">
         <mat-icon>logout</mat-icon>
@@ -83,7 +87,7 @@
       <!-- <span>{{isHandset$ | async}}</span> -->
       <div class="icons">
         <mat-icon 
-            *ngIf="!isLoggedIn" (click)="login()"
+            *ngIf="!isLoggedIn" (click)="openLoginDialog()"
             matTooltip="Belépés"
             matTooltipPosition="below"
             matTooltipShowDelay=250
@@ -91,7 +95,7 @@
           login
         </mat-icon>
         <mat-icon 
-            *ngIf="!isLoggedIn"
+            *ngIf="!isLoggedIn" (click)="openRegDialog()"
             matTooltip="Regisztráció"
             matTooltipPosition="below"
             matTooltipShowDelay=250

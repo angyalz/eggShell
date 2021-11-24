@@ -1,11 +1,30 @@
 const User = require('../../models/user.model');
 const Token = require('../../models/token.model');
 
-exports.findToken = (refreshToken) => Token.findOne({ refreshToken }); 
+exports.findToken = async (refreshToken) => {
+    try {
+        await Token.findOne({ refreshToken })
+    } catch (err) {
+        console.error(err.message);
+    }
+}; 
 
 exports.saveToken = (refreshToken) => Token.create({ refreshToken }); 
+// exports.saveToken = async (refreshToken) => {
+//     try {
+//         await Token.create({ refreshToken });
+//     } catch (err) {
+//         console.error(err.message);
+//     }
+// }; 
 
-exports.deleteToken = (refreshToken) => Token.deleteOne({ refreshToken }); 
+exports.deleteToken = async (refreshToken) => {
+    try {
+        Token.deleteOne({ refreshToken })
+    } catch (err) {
+        console.error(err.message);
+    }
+}; 
 
 exports.create = async (userData) => {
     try {

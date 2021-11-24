@@ -3,7 +3,7 @@ const idValidator = require('mongoose-id-validator');
 
 const UserSchema = mongoose.Schema({
 
-    userName: { type: String, required: true, unique: true },
+    username: { type: String, required: true, unique: true },
     email: { type: String, required: true, match: /.+\@.+\..+/, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
