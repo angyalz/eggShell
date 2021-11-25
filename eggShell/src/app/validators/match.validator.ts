@@ -8,7 +8,7 @@ export function matchValidator(name1: string, name2: string): ValidatorFn {
             return null;
         }
 
-        return (<FormGroup>control.parent).get(name1)?.value !== (<FormGroup>control.parent).get(name2)?.value ? { match: true } : null;
+        return (<FormGroup>control.parent).get(name2)?.value !== (<FormGroup>control.parent).get(name1)?.value ? { match: true } : null;
 
     }
 }

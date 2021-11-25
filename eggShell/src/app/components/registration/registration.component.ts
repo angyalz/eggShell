@@ -57,7 +57,7 @@ export class RegistrationComponent implements OnInit {
           Validators.minLength(8),
           Validators.maxLength(32),
           passwordStrengthValidator(),
-          matchValidator('password', 'passCheck')
+          // matchValidator('password', 'passCheck')
         ]
       }
     ),

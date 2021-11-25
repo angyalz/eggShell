@@ -8,7 +8,6 @@ const app = require('./server');
 const PORT = process.env.PORT || config.get('port') || 3000;
 
 mongoose.Promise = global.Promise;
-mongoose.set('useFindAndModify', false);
 
 if (!config.has('database')) {
     logger.error('Database config not found');

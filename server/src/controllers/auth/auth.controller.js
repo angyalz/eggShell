@@ -1,4 +1,5 @@
-const authService = require('./auth.service');
+const service = require('./auth.service');
+const Model = require('../../models/user.model')
 const createError = require('http-errors');
 
 const jwt = require('jsonwebtoken');
@@ -8,32 +9,45 @@ const saltRounds = 10;
 
 // register a new customer
 exports.register = async (req, res, next) => {
-    // let { firstName, lastName, nickName, city, yearOfBirth, email, password } = req.body;
-    let { username, email, password } = req.body;
-    // if (!firstName || !lastName || !username || !city || !yearOfBirth || !email || !password) {
-    if (!username || !email || !password) {
-        console.error(`Request body is missing required field(s)`);
-        return next(new createError.BadRequest(`Request body is missing required field(s)`));
+
+    const validationErrors = new Model(req.body).validateSync();
+    if (validationErrors) {
+        console.error('ValidError: ', validationErrors);
+        return next(
+            new createError.BadRequest(validationErrors)
+        );
     }
+
+    let { username, email, password } = req.body;
+
+    // if (!username || !email || !password) {
+    //     console.error(`Request body is missing required field(s)`);
+    //     return next(new createError.BadRequest(`Request body is missing required field(s)`));
+    // }
     try {
+
         // check if email is not already in db
-        const emailIsTaken = await authService.findUser({ email });
-        if (emailIsTaken) {
-            console.error(emailIsTaken);
-            return next(new createError.BadRequest(`Email is already registered`))
-        }
+        // const emailIsTaken = await service.findUser({ email });
+
+        // if (emailIsTaken) {
+        //     console.error(emailIsTaken);
+        //     return next(new createError.BadRequest(`Email is already registered`))
+        // }
+
         password = await bcrypt.hash(password, saltRounds);
-        // const newUser = await authService.create({ firstName, lastName, username, city, yearOfBirth, email, password });
-        const newUser = await authService.create({ username, email, password });
-        if (!newUser) {
+
+        const entity = await service.create({ username, email, password });
+
+        if (!entity) {
             throw new Error('could not save user')
         }
         res.status(201);
-        return res.json({ email: newUser.email });
+        return res.json({ email: entity.email });
 
     } catch (err) {
         console.error(err.message);
-        return next(new createError.InternalServerError(err.message));
+        console.error(err);
+        return next(new createError.InternalServerError(err));
     }
 }
 
@@ -49,7 +63,7 @@ exports.login = async (req, res, next) => {
 
     try {
 
-        const user = await authService.findUser({ email });
+        const user = await service.findUser({ email });
 
         if (!user) {
             console.error(`Invalid email/pass combination`);
@@ -85,7 +99,7 @@ exports.login = async (req, res, next) => {
         console.log('refreshToken: ', refreshToken); // debug
 
         // save the refresh token
-        const savedRefreshToken = await authService.saveToken(refreshToken);
+        const savedRefreshToken = await service.saveToken(refreshToken);
 
         console.log('savedRefreshToken at auth.controller: ', savedRefreshToken); // debug
 
@@ -108,12 +122,14 @@ exports.refresh = async (req, res, next) => {
 
     const { refreshToken } = req.body;
 
-    if (!refreshToken) return res.sendStatus(401);
+    if (!refreshToken) {
+        return res.sendStatus(401);
+    };
 
     try {
 
         // check that refreshToken exist in db
-        const tokenFromDB = await authService.findToken(refreshToken);
+        const tokenFromDB = await service.findToken(refreshToken);
 
         if (!tokenFromDB) {
             return res.sendStatus(403);
@@ -157,10 +173,11 @@ exports.logout = async (req, res, next) => {
 
     try {
         // we delete the refreshToken from the DB
-        const { deletedCount } = await authService.deleteToken(refreshToken);
+        const { deletedCount } = await service.deleteToken(refreshToken);
         if (!deletedCount) {
             throw new Error('already logged out or token not found in DB')
         }
+        console.log('deletedCount: ', deletedCount); // debug
         console.log('token found and deleted from DB');
         res.status(200);
         return res.json({});

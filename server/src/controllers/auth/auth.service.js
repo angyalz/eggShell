@@ -3,24 +3,24 @@ const Token = require('../../models/token.model');
 
 exports.findToken = async (refreshToken) => {
     try {
-        await Token.findOne({ refreshToken })
+        return await Token.findOne({ refreshToken })
     } catch (err) {
         console.error(err.message);
     }
 }; 
 
-exports.saveToken = (refreshToken) => Token.create({ refreshToken }); 
-// exports.saveToken = async (refreshToken) => {
-//     try {
-//         await Token.create({ refreshToken });
-//     } catch (err) {
-//         console.error(err.message);
-//     }
-// }; 
+// exports.saveToken = (refreshToken) => Token.create({ refreshToken }); 
+exports.saveToken = async (refreshToken) => {
+    try {
+        return await Token.create({ refreshToken });
+    } catch (err) {
+        console.error(err.message);
+    }
+}; 
 
 exports.deleteToken = async (refreshToken) => {
     try {
-        Token.deleteOne({ refreshToken })
+        return await Token.deleteOne({ refreshToken });
     } catch (err) {
         console.error(err.message);
     }
@@ -28,9 +28,9 @@ exports.deleteToken = async (refreshToken) => {
 
 exports.create = async (userData) => {
     try {
-        const newUser = new User(userData);
-        const savedUser = await newUser.save();
-        return savedUser;
+        // const newUser = new User(userData);
+        // return await newUser.save();
+        return await new User(userData).save();
     } catch (err) {
         console.error(err.message);
     }
@@ -38,8 +38,7 @@ exports.create = async (userData) => {
 
 exports.findUser = async (query) => {
     try {
-        const user = await User.findOne(query);
-        return user;
+        return await User.findOne(query);
     } catch (err) {
         console.error(err.message);
     }

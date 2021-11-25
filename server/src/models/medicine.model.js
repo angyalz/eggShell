@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const idValidator = require('mongoose-id-validator');
 
-const VaccineSchema = mongoose.Schema({
+const MedicineSchema = new mongoose.Schema({
 
     name: { type: String, required: true, unique: true},
 
@@ -12,6 +12,6 @@ const VaccineSchema = mongoose.Schema({
 
 })
 
-VaccineSchema.plugin(idValidator);
+MedicineSchema.plugin(idValidator);
 
-module.exports = mongoose.model('Vaccine', VaccineSchema, 'vaccine');
+module.exports = mongoose.model('Medicine', MedicineSchema, 'medicine');

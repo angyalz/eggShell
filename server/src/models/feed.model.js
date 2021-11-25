@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const idValidator = require('mongoose-id-validator');
 
-const FeedSchema = mongoose.Schema({
+const FeedSchema = new mongoose.Schema({
 
     name: { type: String, required: true, unique: true },
     // weight: { type: Number, required: true },

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const controller = require('./users.controller');
+const controller = require('./bartons.controller');
 
 const authenticationByJWT = require('../../controllers/auth/authenticate');
 const adminRoleHandler = require('../../controllers/auth/adminOnly');

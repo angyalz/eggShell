@@ -16,7 +16,7 @@ export class UserHttpService extends BaseHttpService<User>{
     this.entity = 'users'
   }
 
-    getUsers(): Observable<any> {
+  getUsers(): Observable<User> {
     return this.http.get(`${this.BASE_URL}${this.entity}`)
   }
 }

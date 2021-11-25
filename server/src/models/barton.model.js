@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const idValidator = require('mongoose-id-validator');
 
-const BartonSchema = mongoose.Schema({
+const BartonSchema = new mongoose.Schema({
 
     bartonName: { type: String },
     users: [
