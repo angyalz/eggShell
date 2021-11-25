@@ -4,8 +4,6 @@ export function matchValidator(name1: string, name2: string): ValidatorFn {
 
     return (control: AbstractControl): ValidationErrors | null => {
 
-        console.log('MatchValidator control:', control, control.value)
-
         if (!control.value) {
             return null;
         }
