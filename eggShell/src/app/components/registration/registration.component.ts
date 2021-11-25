@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserLogin } from 'src/app/models/user-login.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { HttpService } from 'src/app/services/base-http.service';
+// import { BaseHttpService } from 'src/app/services/base-http.service';
 import { ValidationErrorHandlerService } from 'src/app/services/validation-error-handler.service';
 import { matchValidator } from 'src/app/validators/match.validator';
 import { passwordStrengthValidator } from 'src/app/validators/password-strength.validator';
@@ -31,7 +31,7 @@ export class RegistrationComponent implements OnInit {
   numbersOnlyPattern: string | RegExp = '^[0-9]+$';
 
   userReg: FormGroup = new FormGroup({
-    
+
     username: new FormControl('',
       {
         validators: [
@@ -97,7 +97,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   constructor(
-    private httpService: HttpService,
+    // private httpService: HttpService,
     private authService: AuthService,
     private validErrorHandler: ValidationErrorHandlerService,
     public dialogRef: MatDialogRef<LoginComponent>,
@@ -111,7 +111,7 @@ export class RegistrationComponent implements OnInit {
 
   regUser(user: any) {
 
-    this.httpService.regNewUser(user).subscribe({
+    this.authService.regNewUser(user).subscribe({
 
       next: (data: any) => {
         this.userReg.reset();
@@ -148,10 +148,13 @@ export class RegistrationComponent implements OnInit {
       .subscribe({
         next: () => { },
         error: (err) => {
-          this._snackBar.open(`Hoppá, nem sikerült bejelentkezni! \nSzerverválasz: ${err.error.message}\nKód: ${err.status}`,
-            'OK', {
-            duration: 5000
-          });
+          this._snackBar.open(
+            `Hoppá, nem sikerült bejelentkezni! \nSzerverválasz: ${err.error.message}\nKód: ${err.status}`,
+            'OK',
+            {
+              duration: 5000
+            }
+          );
           console.error(err);
         },
         complete: () => {

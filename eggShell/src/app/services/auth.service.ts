@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserLoggedIn } from '../models/user-logged-in.model';
 import { UserLogin } from '../models/user-login.model';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,10 @@ export class AuthService {
   userLoggedInObject: BehaviorSubject<UserLoggedIn | null> = new BehaviorSubject<UserLoggedIn | null>(null);
 
   constructor(private http: HttpClient) { }
+
+  regNewUser(user: any): Observable<User> {
+    return this.http.post<User>(`${this.BASE_URL}register`, user);
+  }
 
   login(loginData: UserLogin): Observable<UserLoggedIn> {
 

@@ -1,27 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { User } from '../models/user.model';
-import { BaseHttpService } from './base-http.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthHttpService extends BaseHttpService<User> {
+export class AuthHttpService  {
+
+  BASE_URL = environment.apiUrl;
 
   constructor(public http: HttpClient) {
-    super(http);
-    this.entity = 'user';
   }
 
-  // getClassroomBySchoolId(id: string): Observable<Classroom[]> {
-  //   return this.http.get<Classroom[]>(`${this.BASE_URL}${this.entity}/classes/${id}`)
+  // regNewUser(user: any): Observable<User> {
+  //   return this.http.post<User>(`${this.BASE_URL}register`, user);
   // }
-
-  // getUsers(): Observable<any> {
-  //   return this.http.get(`${this.BASE_URL}users`)
-  // }
-  regNewUser(user: any): Observable<User> {
-    return this.http.post<User>(`${this.BASE_URL}register`, user);
-  }
 }
