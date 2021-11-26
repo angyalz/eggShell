@@ -37,6 +37,10 @@ app.get('/images/:file', (req, res, next) => {
     logger.info(`file request: ${req.params.file}`);
     res.download(`./public/images/${req.params.file}`);
 });
+app.get('/images/poultries/:file', (req, res, next) => {
+    logger.info(`file request: ${req.params.file}`);
+    res.download(`./public/images/poultries/${req.params.file}`);
+});
 
 // app.use('/api-doc', serve, setup(swaggerDocument));
 

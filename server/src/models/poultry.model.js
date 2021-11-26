@@ -3,8 +3,10 @@ const idValidator = require('mongoose-id-validator');
 
 const PoultrySchema = new mongoose.Schema({
 
-    name: { type: String, required: true },
-    sex: { type: String, enum: ['male', 'female'], required: true }
+    species: { type: String, required: true },
+    // breed: {},
+    sex: { type: String, enum: ['hen', 'cock'], required: true },
+    nameOfSex: { type: String, reqired: true }
 
 }, {
 

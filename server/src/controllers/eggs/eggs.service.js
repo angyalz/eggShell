@@ -1,4 +1,4 @@
-const Model = require('../../models/barton.model');
+const Model = require('../../models/egg.model');
 
 
 exports.create = async (requestData) => {

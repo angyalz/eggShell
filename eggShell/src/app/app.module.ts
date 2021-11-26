@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LayoutModule } from '@angular/cdk/layout';
 import { ReactiveFormsModule } from '@angular/forms';
+
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -19,15 +20,21 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
+
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 import { AddEggComponent } from './components/add-egg/add-egg.component';
-import { SettingsComponent } from './components/settings/settings.component';
-import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { BartonComponent } from './components/barton/barton.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegistrationComponent } from './components/registration/registration.component';
+import { SettingsComponent } from './components/settings/settings.component';
+
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -37,6 +44,7 @@ import { RegistrationComponent } from './components/registration/registration.co
     NavComponent,
     RegistrationComponent,
     SettingsComponent,
+    BartonComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -56,10 +64,12 @@ import { RegistrationComponent } from './components/registration/registration.co
     MatIconModule,
     MatInputModule,
     MatListModule,
+    MatMenuModule,
     MatSidenavModule,
     MatSnackBarModule,
     MatToolbarModule,
     MatTooltipModule,
+    DragDropModule,
   ],
   providers: [
     {

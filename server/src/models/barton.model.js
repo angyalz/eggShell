@@ -12,10 +12,12 @@ const BartonSchema = new mongoose.Schema({
     ],
     poultry: [
         {
-            breed: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Poultry' },
+            species: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Poultry' },
+            // breed: {},
             quantity: { type: Number, required: true },
-            purchase_date: { type: Date, default: Date.now },
-            purchase_price: { type: Number },
+            purchaseDate: { type: Date, default: Date.now },
+            purchasePrice: { type: Number },
+            ageAtPurchase: { type: Number}
         },
     ],
     feed: [
@@ -23,16 +25,16 @@ const BartonSchema = new mongoose.Schema({
             type: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Feed' },
             unit: { type: String, enum: ['kg', 'q'], default: 'kg', required: true },
             price: { type: Number, required: true },
-            date_from: { type: Date, default: Date.now, required: true },
-            date_to: { type: Date, default: Date.now },
+            dateFrom: { type: Date, default: Date.now, required: true },
+            dateTo: { type: Date, default: Date.now },
         }
     ],
-    vaccine: [
+    medicine: [
         {
-            type: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Vaccine' },
+            type: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Medicine' },
             price: { type: Number },
-            date_from: { type: Date, default: Date.now },
-            date_to: { type: Date, default: Date.now },
+            dateFrom: { type: Date, default: Date.now },
+            dateTo: { type: Date, default: Date.now },
         }
     ]
 

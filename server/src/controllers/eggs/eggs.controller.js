@@ -1,7 +1,7 @@
-const service = require('./bartons.service');
+const service = require('./eggs.service');
 const logger = require('../../config/logger');
 const createError = require('http-errors');
-const Model = require('../../models/barton.model');
+const Model = require('../../models/egg.model');
 
 
 exports.create = async (req, res, next) => {
