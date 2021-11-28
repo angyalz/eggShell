@@ -4,24 +4,25 @@
 
         <div class="poultry-list" cdkDropList [cdkDropListData]="barton" (cdkDropListDropped)="drop($event)">
             <div class="items" *ngFor="let item of barton" cdkDrag [matBadge]="item.qty" matBadgeColor="accent"
-            [matMenuTriggerFor]="menu">
-            <!-- (click)="openMatMenu()"> -->
-                <mat-menu #menu="matMenu">
-                    <form matMenuItem class="item-form">
+                (click)="item.isOpen = !item.isOpen" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+                <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger"
+                    [cdkConnectedOverlayOpen]="item.isOpen">
+                    <form class="item-form">
                         <mat-form-field class="form-field" appearance="standard">
                             <mat-label>egyedszám</mat-label>
                             <input type="number" matInput placeholder="egyedszám" value="1">
                         </mat-form-field>
-                    
+
                         <mat-form-field class="form-field" appearance="standard">
                             <mat-label>név</mat-label>
-                            <input matMenuItem type="text" matInput placeholder="egyedi név">
+                            <input type="text" matInput placeholder="egyedi név">
                         </mat-form-field>
+                        <p>{{item}}</p>
                     </form>
-                </mat-menu>
+                </ng-template>
                 <!-- [ngStyle]="{'background-image': 'url(' + item.image + ')'}"> -->
                 <img [src]="item.image" alt="">
-                <h4>{{item.species}}</h4>
+                <h4 >{{item.species}}</h4>
             </div>
         </div>
     </div>
@@ -32,8 +33,8 @@
         <div class="poultry-list" cdkDropList [cdkDropListData]="poultryToMove" (cdkDropListDropped)="drop($event)">
             <div class="items" *ngFor="let item of poultryToMove" cdkDrag>
                 <!-- [ngStyle]="{'background-image': 'url(' + item.image + ')'}"> -->
-                <img [src]="item.image" alt="">
-                <h4>{{item.species}}</h4>
+                <img  [src]="item.image" alt="">
+                <h4 >{{item.species}}</h4>
             </div>
         </div>
     </div>

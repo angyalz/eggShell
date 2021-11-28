@@ -10,8 +10,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 })
 export class BartonComponent implements OnInit {
 
-  @ViewChild(MatMenuTrigger) 
-  trigger!: MatMenuTrigger;
+  isOpen: boolean = false;
 
   URL = environment.apiUrl;
 
@@ -38,7 +37,7 @@ export class BartonComponent implements OnInit {
       qty: 1,
     }
   ];
-  poultryToMove = [...this.poultry];
+  poultryToMove = [...this.poultry, this.isOpen];
 
   constructor() { }
 
@@ -63,8 +62,8 @@ export class BartonComponent implements OnInit {
     console.log('poultry: ', this.poultry);
   }
 
-  openMatMenu () {
-    this.trigger.openMenu();
+  openMenu() {
+
   }
 
 }

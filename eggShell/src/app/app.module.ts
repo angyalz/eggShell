@@ -27,6 +27,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 import { AddEggComponent } from './components/add-egg/add-egg.component';
 import { BartonComponent } from './components/barton/barton.component';
@@ -50,9 +51,11 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
+    DragDropModule,
     FormsModule,
     HttpClientModule,
     LayoutModule,
+    OverlayModule,
     ReactiveFormsModule,
     MatBadgeModule,
     MatButtonModule,
@@ -69,7 +72,6 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
     MatSnackBarModule,
     MatToolbarModule,
     MatTooltipModule,
-    DragDropModule,
   ],
   providers: [
     {
