@@ -3,14 +3,15 @@
         <h2>Udvar lakói</h2>
 
         <div class="poultry-list" cdkDropList [cdkDropListData]="barton" (cdkDropListDropped)="drop($event)">
-            <div class="items" *ngFor="let item of barton" cdkDrag [matBadge]="item.qty" matBadgeColor="accent"
-                (click)="item.isOpen = !item.isOpen" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+            <div class="items" *ngFor="let item of barton; index as i" cdkDrag [matBadge]="item.qty" matBadgeColor="accent"
+                (click)="barton[i].isOpen = !barton[i].isOpen" (click)="openMenu(i, item)" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+                <!-- (click)="openMenu(i)" cdkOverlayOrigin #trigger="cdkOverlayOrigin"> -->
                 <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger"
-                    [cdkConnectedOverlayOpen]="item.isOpen">
-                    <form class="item-form">
+                    [cdkConnectedOverlayOpen]="barton[i].isOpen">
+                    <form class="item-form" ngForm>
                         <mat-form-field class="form-field" appearance="standard">
                             <mat-label>egyedszám</mat-label>
-                            <input type="number" matInput placeholder="egyedszám" value="1">
+                            <input type="number" matInput placeholder="egyedszám" [value]="item.qty">
                         </mat-form-field>
 
                         <mat-form-field class="form-field" appearance="standard">
@@ -23,6 +24,7 @@
                 <!-- [ngStyle]="{'background-image': 'url(' + item.image + ')'}"> -->
                 <img [src]="item.image" alt="">
                 <h4 >{{item.species}}</h4>
+                <h6 >{{item.isOpen}}</h6>
             </div>
         </div>
     </div>
