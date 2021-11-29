@@ -4,10 +4,10 @@
 
         <div class="poultry-list" cdkDropList [cdkDropListData]="barton" (cdkDropListDropped)="drop($event)">
             <div class="items" *ngFor="let item of barton; index as i" cdkDrag [matBadge]="item.qty" matBadgeColor="accent"
-                (click)="barton[i].isOpen = !barton[i].isOpen" (click)="openMenu(i, item)" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+                (click)="item.isOpen = !item.isOpen" (click)="openMenu(i, item)" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
                 <!-- (click)="openMenu(i)" cdkOverlayOrigin #trigger="cdkOverlayOrigin"> -->
                 <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger"
-                    [cdkConnectedOverlayOpen]="barton[i].isOpen">
+                    [cdkConnectedOverlayOpen]="item.isOpen">
                     <form class="item-form" ngForm>
                         <mat-form-field class="form-field" appearance="standard">
                             <mat-label>egyedszám</mat-label>
@@ -32,8 +32,8 @@
     <div class="barton-container">
         <h2>Baromfi fajták</h2>
 
-        <div class="poultry-list" cdkDropList [cdkDropListData]="poultryToMove" (cdkDropListDropped)="drop($event)">
-            <div class="items" *ngFor="let item of poultryToMove" cdkDrag>
+        <div class="poultry-list" cdkDropList [cdkDropListData]="poultry" (cdkDropListDropped)="drop($event)">
+            <div class="items" *ngFor="let item of poultry" cdkDrag>
                 <!-- [ngStyle]="{'background-image': 'url(' + item.image + ')'}"> -->
                 <img  [src]="item.image" alt="">
                 <h4 >{{item.species}}</h4>

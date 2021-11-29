@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
 import { MatMenuTrigger } from '@angular/material/menu';
 
@@ -41,7 +41,7 @@ export class BartonComponent implements OnInit {
       isOpen: false,
     }
   ];
-  poultryToMove = [...this.poultry];
+  // poultryToMove = [...this.poultry];
   // poultryToMove = [...this.poultry];
   
   constructor() { }
@@ -55,14 +55,15 @@ export class BartonComponent implements OnInit {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem(
+      // transferArrayItem(
+      copyArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex,
       );
     }
-    this.poultryToMove = [...this.poultry];
+    // this.poultryToMove = [...this.poultry];
     console.log('event at drop: ', event);
     console.log('barton at drop: ', this.barton);
     console.log('poultry at drop: ', this.poultry);
