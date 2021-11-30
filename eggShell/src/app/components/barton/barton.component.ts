@@ -23,7 +23,7 @@ export class BartonComponent implements OnInit {
   URL = environment.apiUrl;
 
   barton: Array<any> = [];
-  poultry: Array<any> = [
+  poultryRef: Array<any> = [
     {
       species: 'tyúk',
       image: `${this.URL}images/poultries/hen.png`,
@@ -49,7 +49,7 @@ export class BartonComponent implements OnInit {
       isOpen: false,
     }
   ];
-  // poultryToMove = [...this.poultry];
+  poultry = this.poultryRef.map(obj => ({...obj}));
   // poultryToMove = [...this.poultry];
   
   constructor(
@@ -73,8 +73,8 @@ export class BartonComponent implements OnInit {
         event.currentIndex,
       );
     }
-    // this.barton.qty = 
-    // this.poultryToMove = [...this.poultry];
+    this.barton[event.currentIndex].qty = this.barton[event.currentIndex].qty + event.currentIndex; // debug 
+    this.poultry = this.poultryRef.map(obj => ({ ...obj }));
     console.log('event at drop: ', event);
     console.log('barton at drop: ', this.barton);
     console.log('poultry at drop: ', this.poultry);
@@ -90,7 +90,8 @@ export class BartonComponent implements OnInit {
       // console.log('The dialog was closed');
       console.log('DialogResult: ', result);
       this.barton[i].qty = result.qty;
-      this.barton[i].customName = result.customName;
+      this.barton[i].customName = result.name;
+      console.log('barton array: ', this.barton, '\nindex: ', i);
     });
   }
 
@@ -103,6 +104,10 @@ export class BartonComponent implements OnInit {
     // console.log(cdkConnectedOverlayOpen); // debug
     // this.barton[i].isOpen = !this.barton[i].isOpen;
     // return this.barton[i].isOpen = !this.barton[i].isOpen;
+  }
+
+  logger(event: any) {
+    console.log('logger: ', event);
   }
 
 }
