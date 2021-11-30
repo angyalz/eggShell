@@ -1,0 +1,31 @@
+<div>
+    <div mat-dialog-content class="dialog-form">
+        <!-- <p>What's your favorite animal?</p> -->
+        <mat-form-field appearance="standard">
+            <mat-label>egyedszám</mat-label>
+            <input matInput type="number" [(ngModel)]="data.qty" placeholder="egyedszám" [value]="data.qty">
+        </mat-form-field>
+        <mat-form-field appearance="standard">
+            <mat-label>név</mat-label>
+            <input matInput type="text" [(ngModel)]="data.name" placeholder="egyedi név" [value]="data.name">
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+        <!-- <button mat-button (click)="onNoClick()">No Thanks</button> -->
+        <button mat-button [mat-dialog-close]="data" cdkFocusInitial color="accent">Ok</button>
+    </div>
+</div>
+
+
+<!-- <form class="item-form" ngForm>
+    <mat-form-field class="form-field" appearance="standard">
+        <mat-label>egyedszám</mat-label>
+        <input type="number" matInput placeholder="egyedszám" [value]="item.qty">
+    </mat-form-field>
+
+    <mat-form-field class="form-field" appearance="standard">
+        <mat-label>név</mat-label>
+        <input type="text" matInput placeholder="egyedi név">
+    </mat-form-field>
+    <p>{{item}}</p>
+</form> -->

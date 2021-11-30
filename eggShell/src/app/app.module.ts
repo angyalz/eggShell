@@ -36,6 +36,7 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { SettingsComponent } from './components/settings/settings.component';
 
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { PoultryDialogComponent } from './components/barton/poultry-dialog/poultry-dialog.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
     RegistrationComponent,
     SettingsComponent,
     BartonComponent,
+    PoultryDialogComponent,
   ],
   imports: [
     AppRoutingModule,

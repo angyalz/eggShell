@@ -4,11 +4,16 @@
 
         <div class="poultry-list" cdkDropList [cdkDropListData]="barton" (cdkDropListDropped)="drop($event)">
             <div class="items" *ngFor="let item of barton; index as i" cdkDrag [matBadge]="item.qty" matBadgeColor="accent"
-                (click)="item.isOpen = !item.isOpen" (click)="openMenu(i, item)" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+                (click)="openDialog(item, i)" >
+            <!-- <div class="items" *ngFor="let item of barton; index as i" cdkDrag [matBadge]="item.qty" matBadgeColor="accent"
+                (click)="selectedItem = selectedItem === item ? null : item" (click)="openMenu(i, item)" cdkOverlayOrigin #trigger="cdkOverlayOrigin"> -->
                 <!-- (click)="openMenu(i)" cdkOverlayOrigin #trigger="cdkOverlayOrigin"> -->
-                <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger"
-                    [cdkConnectedOverlayOpen]="item.isOpen">
-                    <form class="item-form" ngForm>
+                <!-- <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger"
+                    [cdkConnectedOverlayOpen]="selectedItem === item" hasBackdrop 
+                    (backdropClick)="isOpen=false"> -->
+                <!-- <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger"
+                    [cdkConnectedOverlayOpen]="item.isOpen"> -->
+                    <!-- <form class="item-form" ngForm>
                         <mat-form-field class="form-field" appearance="standard">
                             <mat-label>egyedszám</mat-label>
                             <input type="number" matInput placeholder="egyedszám" [value]="item.qty">
@@ -19,11 +24,12 @@
                             <input type="text" matInput placeholder="egyedi név">
                         </mat-form-field>
                         <p>{{item}}</p>
-                    </form>
-                </ng-template>
+                    </form> -->
+                <!-- </ng-template> -->
                 <!-- [ngStyle]="{'background-image': 'url(' + item.image + ')'}"> -->
                 <img [src]="item.image" alt="">
-                <h4 >{{item.species}}</h4>
+                <h4 *ngIf="!item.customName">{{item.species}} {{i}}</h4>
+                <h4 *ngIf="item.customName">{{item.customName}}</h4>
                 <h6 >{{item.isOpen}}</h6>
             </div>
         </div>

@@ -1,7 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { PoultryDialogComponent } from './poultry-dialog/poultry-dialog.component';
+
+export interface DialogData {
+  qty: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-barton',
@@ -10,7 +17,8 @@ import { MatMenuTrigger } from '@angular/material/menu';
 })
 export class BartonComponent implements OnInit {
 
-  // isOpen: boolean = false;
+  isOpen: boolean = false;
+  selectedItem: any;
 
   URL = environment.apiUrl;
 
@@ -44,7 +52,9 @@ export class BartonComponent implements OnInit {
   // poultryToMove = [...this.poultry];
   // poultryToMove = [...this.poultry];
   
-  constructor() { }
+  constructor(
+    public dialog: MatDialog,
+  ) { }
 
   ngOnInit(): void {
   }
@@ -63,10 +73,25 @@ export class BartonComponent implements OnInit {
         event.currentIndex,
       );
     }
+    // this.barton.qty = 
     // this.poultryToMove = [...this.poultry];
     console.log('event at drop: ', event);
     console.log('barton at drop: ', this.barton);
     console.log('poultry at drop: ', this.poultry);
+  }
+
+  openDialog(item: any, i: number): void {
+    const dialogRef = this.dialog.open(PoultryDialogComponent, {
+      // width: '250px',
+      data: { qty: item.qty, name: item.customName },
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      // console.log('The dialog was closed');
+      console.log('DialogResult: ', result);
+      this.barton[i].qty = result.qty;
+      this.barton[i].customName = result.customName;
+    });
   }
 
   openMenu(i: number, item?: any) {   // debug item
