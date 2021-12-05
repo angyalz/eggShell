@@ -13,7 +13,7 @@ const BartonSchema = new mongoose.Schema({
     poultry: [
         {
             species: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Poultry' },
-            // breed: {},
+            customName: { type: String },
             quantity: { type: Number, required: true },
             purchaseDate: { type: Date, default: Date.now },
             purchasePrice: { type: Number },
