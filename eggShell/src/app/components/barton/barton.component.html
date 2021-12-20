@@ -5,62 +5,34 @@
         <div class="poultry-list" cdkDropList [cdkDropListData]="barton" (cdkDropListDropped)="drop($event)">
             <div [id]="i" class="items" *ngFor="let item of barton; index as i" cdkDrag [matBadge]="item.quantity"
                 matBadgeColor="accent" [matMenuTriggerFor]="menu" (click)="logger(item)">
-                <!-- (click)="openDialog(item, i)" > -->
-                <!-- <div class="items" *ngFor="let item of barton; index as i" cdkDrag [matBadge]="item.qty" matBadgeColor="accent"
-                (click)="selectedItem = selectedItem === item ? null : item" (click)="openMenu(i, item)" cdkOverlayOrigin #trigger="cdkOverlayOrigin"> -->
-                <!-- (click)="openMenu(i)" cdkOverlayOrigin #trigger="cdkOverlayOrigin"> -->
-                <!-- <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger"
-                    [cdkConnectedOverlayOpen]="selectedItem === item" hasBackdrop 
-                    (backdropClick)="isOpen=false"> -->
-                <!-- <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger"
-                    [cdkConnectedOverlayOpen]="item.isOpen"> -->
-                <!-- <form class="item-form" ngForm>
-                        <mat-form-field class="form-field" appearance="standard">
-                            <mat-label>egyedszám</mat-label>
-                            <input type="number" matInput placeholder="egyedszám" [value]="item.qty">
-                        </mat-form-field>
-
-                        <mat-form-field class="form-field" appearance="standard">
-                            <mat-label>név</mat-label>
-                            <input type="text" matInput placeholder="egyedi név">
-                        </mat-form-field>
-                        <p>{{item}}</p>
-                    </form> -->
-                <!-- </ng-template> -->
                 <!-- [ngStyle]="{'background-image': 'url(' + item.image + ')'}"> -->
                 <mat-menu #menu="matMenu" (click)="$event.stopPropagation()">
-                    <form class="item-form" ngForm mat-menu-item>
-                        <mat-form-field class="form-field" appearance="standard" >
+                    <form class="item-form" ngForm mat-menu-item [ngFormOptions]="{updateOn: 'blur'}">
+                        <mat-form-field class="form-field" appearance="standard">
                             <mat-label>egyedszám</mat-label>
                             <div>
-                                <button  mat-icon-button type="button"
-                                    (click)="item.quantity=item.quantity-1" 
+                                <input type="number" matInput ngModel placeholder="egyedszám"
+                                    [(ngModel)]="item.quantity" [ngModelOptions]="{standalone: true}"
+                                    [value]="item.quantity" min=0 
+                                    (keyup.enter)="trigger.closeMenu()"
                                     (click)="$event.stopPropagation()">
-                                    <mat-icon>remove</mat-icon>
-                                </button>
-                                <input type="number" matInput placeholder="egyedszám" [value]="item.quantity"
-                                    (click)="$event.stopPropagation()">
-                                <button  mat-icon-button type="button"
-                                    (click)="item.quantity=item.quantity+1" 
-                                    (click)="$event.stopPropagation()">
-                                    <mat-icon>add</mat-icon>
-                                </button>
                             </div>
                         </mat-form-field>
 
                         <mat-form-field class="form-field" appearance="standard">
                             <mat-label>név</mat-label>
-                            <input type="text" matInput placeholder="egyedi név" [value]="item.customName || ''"
-                                (click)="$event.stopPropagation()"
-                                (input)="item.customName">
+                            <input type="text" matInput ngModel placeholder="egyedi név" 
+                                [(ngModel)]="item.customName" [ngModelOptions]="{standalone: true}" 
+                                [value]="item.customName || ''"
+                                (keyup.enter)="trigger.closeMenu()"
+                                (click)="$event.stopPropagation()" >
                         </mat-form-field>
                         <!-- <p>{{item}}</p> -->
                     </form>
                 </mat-menu>
                 <img [src]="URL + item.image" [alt]="item.species">
-                <h4 *ngIf="!item.customName">{{item.species}} {{i}}</h4>
+                <h4 *ngIf="!item.customName">{{item.species}}</h4>
                 <h4 *ngIf="item.customName">{{item.customName}}</h4>
-                <!-- <h6>{{item.isOpen}}</h6> -->
             </div>
         </div>
     </div>

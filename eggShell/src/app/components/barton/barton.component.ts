@@ -17,7 +17,7 @@ import { PoultryHttpService } from 'src/app/services/poultry-http.service';
 
 export class BartonComponent implements AfterViewInit {
 
-  selectedItem: any;
+  // selectedItem: any;
 
   URL = environment.apiUrl;
 
@@ -31,6 +31,8 @@ export class BartonComponent implements AfterViewInit {
     private poultryHttp: PoultryHttpService,
     private _snackBar: MatSnackBar,
   ) { }
+
+  @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
 
   ngAfterViewInit() {
     this.getPoultryData();
@@ -96,6 +98,18 @@ export class BartonComponent implements AfterViewInit {
 
     console.log('barton at drop: ', this.barton);   // debug
     console.log('poultry at drop: ', this.poultry);   // debug
+  }
+
+  saveQty(index: number, value: number) {
+    this.barton[index].quantity = value;
+    console.log('saveQty: ', index, value);   //debug
+    console.log('saveQty: ', this.barton);   //debug
+  }
+
+  savecustomName(index: number, value: string | undefined) {
+    this.barton[index].customName = value;
+    console.log('saveCustomName: ', index, value);   //debug
+    console.log('saveCustomName: ', this.barton);   //debug
   }
 
   // openMenu(i: number, item?: any) {   // debug item
