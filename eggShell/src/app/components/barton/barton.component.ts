@@ -9,16 +9,12 @@ import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PoultryHttpService } from 'src/app/services/poultry-http.service';
 
-export interface DialogData {
-  qty: number;
-  name: string;
-}
-
 @Component({
   selector: 'app-barton',
   templateUrl: './barton.component.html',
   styleUrls: ['./barton.component.scss']
 })
+
 export class BartonComponent implements AfterViewInit {
 
   selectedItem: any;
@@ -34,10 +30,13 @@ export class BartonComponent implements AfterViewInit {
     public dialog: MatDialog,
     private poultryHttp: PoultryHttpService,
     private _snackBar: MatSnackBar,
-    private cdRef: ChangeDetectorRef,
   ) { }
 
   ngAfterViewInit() {
+    this.getPoultryData();
+  }
+
+  getPoultryData() {
     this.poultryDB = new PoultryData(this.poultryHttp);
     this.poultryDB.getAllPoultry().subscribe({
       next: (data: Poultry[]) => {
@@ -64,7 +63,7 @@ export class BartonComponent implements AfterViewInit {
         // console.log('poultry at getAllPoultry', this.poultry);    // debug
       }
     })
-    // console.log('PoultryData at ViewInit: ', this.poultry);    // debug
+    // console.log('PoultryData at ViewInit: ', this.poultry);    // debug}
   }
 
   drop(event: CdkDragDrop<PoultryOfBarton[]>) {
