@@ -57,7 +57,7 @@
                         <!-- <p>{{item}}</p> -->
                     </form>
                 </mat-menu>
-                <img [src]="item.image" alt="">
+                <img [src]="URL + item.image" [alt]="item.species">
                 <h4 *ngIf="!item.customName">{{item.species}} {{i}}</h4>
                 <h4 *ngIf="item.customName">{{item.customName}}</h4>
                 <!-- <h6>{{item.isOpen}}</h6> -->
@@ -71,7 +71,7 @@
         <div class="poultry-list" cdkDropList [cdkDropListData]="poultry" (cdkDropListDropped)="drop($event)">
             <div class="items" *ngFor="let item of poultry" cdkDrag>
                 <!-- [ngStyle]="{'background-image': 'url(' + item.image + ')'}"> -->
-                <img [src]="item.image" alt="">
+                <img [src]="URL + item.image" [alt]="item.species">
                 <h4>{{item.species}}</h4>
             </div>
         </div>

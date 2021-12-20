@@ -42,16 +42,17 @@ export class NavComponent implements OnInit {
 
   ngOnInit(): void {
     if (localStorage.getItem('refreshToken')) {
-      this.userRefreshSubscription = this.authService.refreshUserAuthentication().subscribe(
-        () => { },
-        (err) => {
+      this.userRefreshSubscription = this.authService.refreshUserAuthentication().subscribe({
+        next: () => { },
+        error: (err) => {
           this._snackBar.open(`A munkamenet lejárt, lépj be újra!`, 'OK', {
             duration: 5000,
             panelClass: ['snackbar-error']
           });
           this.openLoginDialog();
-        }
-      )
+        },
+        complete: () => { }
+      })
     }
 
     this.userSignInSubscription = this.authService.getUserLoggedInObj().subscribe({

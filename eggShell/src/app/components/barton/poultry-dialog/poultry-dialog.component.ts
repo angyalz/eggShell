@@ -11,7 +11,7 @@ export class PoultryDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<PoultryDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    // @Inject(MAT_DIALOG_DATA) public data: DialogData,
     ) { }
 
   ngOnInit(): void {

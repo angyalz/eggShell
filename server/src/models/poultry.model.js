@@ -6,7 +6,8 @@ const PoultrySchema = new mongoose.Schema({
     species: { type: String, required: true },
     // breed: {},
     sex: { type: String, enum: ['hen', 'cock'], required: true },
-    nameOfSex: { type: String, reqired: true }
+    nameOfSex: { type: String, reqired: true },
+    image: { type: String, required: true }
 
 }, {
 
