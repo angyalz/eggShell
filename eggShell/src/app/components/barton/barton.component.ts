@@ -8,6 +8,7 @@ import { Poultry } from 'src/app/models/poultry.model';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PoultryHttpService } from 'src/app/services/poultry-http.service';
+import { ProgressService } from 'src/app/services/progress.service';
 
 @Component({
   selector: 'app-barton',
@@ -17,7 +18,7 @@ import { PoultryHttpService } from 'src/app/services/poultry-http.service';
 
 export class BartonComponent implements AfterViewInit {
 
-  // selectedItem: any;
+  // isLoading: boolean = true;
 
   URL = environment.apiUrl;
 
@@ -30,15 +31,21 @@ export class BartonComponent implements AfterViewInit {
     public dialog: MatDialog,
     private poultryHttp: PoultryHttpService,
     private _snackBar: MatSnackBar,
+    public progress: ProgressService,
   ) { }
 
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
+
+  ngOnInit() {
+    this.progress.isLoading = true;
+  }
 
   ngAfterViewInit() {
     this.getPoultryData();
   }
 
   getPoultryData() {
+    this.progress.isLoading = true;
     this.poultryDB = new PoultryData(this.poultryHttp);
     this.poultryDB.getAllPoultry().subscribe({
       next: (data: Poultry[]) => {
@@ -61,6 +68,7 @@ export class BartonComponent implements AfterViewInit {
         console.error(err);
       },
       complete: () => {
+        this.progress.isLoading = false;
         // this._snackBar.open(`Sikeres`, 'OK', { duration: 2000, panelClass: ['snackbar-ok'] });
         // console.log('poultry at getAllPoultry', this.poultry);    // debug
       }

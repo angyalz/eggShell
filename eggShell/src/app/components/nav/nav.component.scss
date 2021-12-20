@@ -13,6 +13,16 @@
   mat-icon {
     padding-right: 0.25em;
   }
+
+  .mat-toolbar {
+    display: flex;
+    // width: 100%;
+    justify-content: flex-end;
+
+    mat-icon {
+      padding: 0;
+    }
+  }
 }
 
 .sidenav .mat-toolbar {
@@ -29,7 +39,17 @@
   display: flex;
   justify-content: space-between;
   
-  mat-icon {
-    padding-left: 0.25em;
+  .icons {
+    display: inherit;
+    align-items: center;
+
+    mat-icon {
+      padding: 0 0.25em;
+    }
   }
+}
+
+.progress {
+  height: 4px;
+  background: none;
 }

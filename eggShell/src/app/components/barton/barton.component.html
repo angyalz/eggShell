@@ -6,6 +6,7 @@
             <div [id]="i" class="items" *ngFor="let item of barton; index as i" cdkDrag [matBadge]="item.quantity"
                 matBadgeColor="accent" [matMenuTriggerFor]="menu" (click)="logger(item)">
                 <!-- [ngStyle]="{'background-image': 'url(' + item.image + ')'}"> -->
+                <!-- <mat-progress-spinner *ngIf="isLoading"></mat-progress-spinner> -->
                 <mat-menu #menu="matMenu" (click)="$event.stopPropagation()">
                     <form class="item-form" ngForm mat-menu-item [ngFormOptions]="{updateOn: 'blur'}">
                         <mat-form-field class="form-field" appearance="standard">
