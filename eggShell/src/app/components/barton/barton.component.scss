@@ -16,6 +16,11 @@ div {
         vertical-align: top;
         text-align: center;
 
+        h2 {
+            font-weight: 300;
+            font-size: medium;
+        }
+
         .poultry-list {
             box-sizing: border-box;
             display: flex;
@@ -25,7 +30,8 @@ div {
             align-items: center;
             justify-content: center;
             margin: 1em auto;
-            border: solid 1px #ccc;
+            // border: solid 1px #ccc;
+            box-shadow: 4px 4px 12px #ccc;
             min-height: 20em;
             background: white;
             border-radius: 4px;
@@ -34,17 +40,16 @@ div {
             .items {
                 box-sizing: border-box;
                 display: flex;
-                // flex-direction: row;
                 flex-direction: column;
                 align-items: center;
-                // align-self: flex-end;
-                justify-items: end;
+                justify-content: space-evenly;
                 margin: 1em auto;
                 width: 6em;
                 height: 8em;
                 // padding: 20px 10px;
                 border-radius: 50%;
-                border-bottom: solid 1px #ccc;
+                // border-bottom: solid 1px #ccc;
+                box-shadow: 4px 4px 12px #ccc;
                 // color: rgba(0, 0, 0, 0.87);
                 cursor: move;
                 // background-size: cover;
@@ -55,13 +60,15 @@ div {
                 //   text-align: center;
                 img {
                     margin-top: 0.5em;
-                    width: 5em;
-                    height: 5em;
+                    width: 4.5em;
+                    height: 4.5em;
                     border-radius: 0 0 50% 50%;
                     // border-bottom: solid 1px #ccc;
                 }
-                h4 {
+                h5, h6 {
                     margin: 0 auto;
+                    padding: 0;
+                    max-width: 5.25em;
                 }
             }
         }

@@ -34,6 +34,7 @@ export class AuthService {
                   _id: loginData._id,
                   username: loginData.username,
                   role: loginData.role,
+                  bartons: loginData.bartons,
                   accessToken: loginData.accessToken,
                   refreshToken: loginData.refreshToken
                 });
@@ -60,6 +61,7 @@ export class AuthService {
                 _id: res._id,
                 username: res.username,
                 role: res.role,
+                bartons: res.bartons,
                 accessToken: res.accessToken,
                 refreshToken: res.refreshToken
               });

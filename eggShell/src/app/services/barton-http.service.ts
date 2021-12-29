@@ -11,10 +11,18 @@ export class BartonHttpService extends BaseHttpService<Barton>{
 
   constructor(public override http: HttpClient) {
     super(http);
-    this.entity = 'barton'
+    this.entity = 'bartons'
    }
 
   getAllBartons(): Observable<Barton[]> {
     return this.http.get<Barton[]>(`${this.BASE_URL}${this.entity}`)
+  }
+
+  getBartonsByUserId(user_id: string): Observable<Barton[]> {
+    return this.http.get<Barton[]>(`${this.BASE_URL}${this.entity}/?users.user=${user_id}`)
+  }
+
+  getBartonById(id: string): Observable<Barton> {
+    return this.http.get<Barton>(`${this.BASE_URL}${this.entity}/${id}`)
   }
 }

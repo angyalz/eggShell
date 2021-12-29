@@ -1,0 +1,43 @@
+.stepper {
+    height: calc(100vh - 68px);
+
+    .label {
+        font-weight: 200;
+        margin: 0;
+        // line-height: 50%;
+        text-decoration: none;
+    }
+
+    .link {
+        color: blue;
+    }
+
+    .auth {
+        display: flex;
+        justify-content: center;
+
+        div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            // width: 8em;
+            // height: 9em;
+            margin: 3em 2em;
+            font-weight: 200;
+            // border-radius: 50%;
+
+            p {
+                text-shadow: 2px 2px 6px #aaa;
+            }
+
+            button {
+                margin: 1em;
+            }
+        }
+    }
+
+    .tab-group {
+        margin: 1em auto;
+    }
+}

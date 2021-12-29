@@ -36,7 +36,8 @@ $eggShell-light-theme: mat.define-light-theme((
 /* You can add global styles to this file, and also import other style files */
 
 html, body { 
-  height: 100%; 
+  box-sizing: border-box;
+  height: 100vh; 
   width: 100%;
   // max-width: 100%;
 }
@@ -49,12 +50,12 @@ body {
 // body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .snackbar-ok {
-    background: #1b5e20;
+    background: #00a00b;
     color: whitesmoke;
     box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.8);
 }
 .snackbar-error {
-    background: #610101;
+    background: #970000;
     color: whitesmoke;
     box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.8);
 }
@@ -78,7 +79,7 @@ body {
 
         h2 {
             text-align: center;
-            font-weight: 400;
+            font-weight: 300;
         }
 
         .submit-button {
@@ -87,5 +88,5 @@ body {
     }
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+// html, body { height: 100%; }
+// body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,4 +1,7 @@
 <div cdkDropListGroup>
+    <!-- <mat-tab-group>
+            <mat-tab [label]="tab.bartonName ? tab.bartonName : 'Udvar'" *ngFor="let tab of bartonsData"> -->
+            
     <div class="barton-container">
         <h2>Udvar lakói</h2>
 
@@ -16,6 +19,7 @@
                                     [(ngModel)]="item.quantity" [ngModelOptions]="{standalone: true}"
                                     [value]="item.quantity" min=0 
                                     (keyup.enter)="trigger.closeMenu()"
+
                                     (click)="$event.stopPropagation()">
                             </div>
                         </mat-form-field>
@@ -26,14 +30,17 @@
                                 [(ngModel)]="item.customName" [ngModelOptions]="{standalone: true}" 
                                 [value]="item.customName || ''"
                                 (keyup.enter)="trigger.closeMenu()"
+                                
+                                (event)="logger($event)"
                                 (click)="$event.stopPropagation()" >
                         </mat-form-field>
                         <!-- <p>{{item}}</p> -->
                     </form>
                 </mat-menu>
                 <img [src]="URL + item.image" [alt]="item.species">
-                <h4 *ngIf="!item.customName">{{item.species}}</h4>
-                <h4 *ngIf="item.customName">{{item.customName}}</h4>
+                <h5 *ngIf="!item.customName">{{item.species}}</h5>
+                <h5 *ngIf="item.customName">{{item.customName}}</h5>
+                <h6 *ngIf="!item.customName && (item.nameOfSex !== item.species)">{{item.nameOfSex}}</h6>
             </div>
         </div>
     </div>
@@ -45,8 +52,11 @@
             <div class="items" *ngFor="let item of poultry" cdkDrag>
                 <!-- [ngStyle]="{'background-image': 'url(' + item.image + ')'}"> -->
                 <img [src]="URL + item.image" [alt]="item.species">
-                <h4>{{item.species}}</h4>
+                <h5>{{item.species}}</h5>
+                <h6 *ngIf="item.nameOfSex !== item.species">{{item.nameOfSex}}</h6>
             </div>
         </div>
     </div>
+    <!-- </mat-tab>
+    </mat-tab-group> -->
 </div>

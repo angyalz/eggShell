@@ -11,9 +11,13 @@ exports.create = async (requestData) => {
     }
 };
 
-exports.findAll = async () => {
+exports.findAll = async (query) => {
+    console.log('query at bartons service findAll: ', query); // debug
     try {
-        return await Model.find().select({ _id: 0, userName: 1, email: 1 })
+        return await Model.find(query)
+        // .populate('poultry.species')
+        // .populate('feed.type')
+        // .populate('medicine.type')
     } catch (err) {
         console.error(err.message);
     }

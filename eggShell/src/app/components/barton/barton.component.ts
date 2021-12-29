@@ -1,14 +1,18 @@
-import { Component, OnInit, ViewChild, Inject, OnDestroy, AfterViewInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, OnDestroy, AfterViewInit, AfterViewChecked, ChangeDetectorRef, Input } from '@angular/core';
 import { CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PoultryOfBarton } from 'src/app/models/poultry-of-barton.model';
 import { Poultry } from 'src/app/models/poultry.model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PoultryHttpService } from 'src/app/services/poultry-http.service';
 import { ProgressService } from 'src/app/services/progress.service';
+import { BartonHttpService } from 'src/app/services/barton-http.service';
+import { Barton } from 'src/app/models/barton.model';
+import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-barton',
@@ -22,32 +26,74 @@ export class BartonComponent implements AfterViewInit {
 
   URL = environment.apiUrl;
 
-  poultryDB!: PoultryData | null;
+  userObject!: UserLoggedIn | null;
+  // userObject!: any;
+  userSignInSubscription?: Subscription;
+
+
+  // poultryDB!: PoultryData | null;
+  bartonsData: Barton[] = [];
+  bartonRef!: PoultryOfBarton[];
   poultryRef!: Poultry[];
   barton: PoultryOfBarton[] = [];
   poultry: PoultryOfBarton[] = [];
 
   constructor(
     public dialog: MatDialog,
+    private authService: AuthService,
     private poultryHttp: PoultryHttpService,
+    private bartonHttp: BartonHttpService,
     private _snackBar: MatSnackBar,
     public progress: ProgressService,
   ) { }
 
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.progress.isLoading = true;
   }
 
-  ngAfterViewInit() {
+  ngOnDestroy(): void {
+    if (this.userSignInSubscription) this.userSignInSubscription.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+    this.getUserObject();
     this.getPoultryData();
+    // this.getBartonsData();
+    console.log('UserObject at barton component: ', this.userObject);   // debug
   }
 
-  getPoultryData() {
+  // getUserObject(): void {
+  //   this.userObject = this.authService.getUserLoggedInObj();
+  //   console.log('userObject at getUserObject: ', this.userObject);   // debug
+  // }
+
+  getUserObject(): void {
+    this.userSignInSubscription = this.authService.userLoggedInObject.subscribe({
+      next: (user) => {
+        this.userObject = user;
+        // this.isLoggedIn = Boolean(this.userObject);
+        console.log('userObject at barton: ', this.userObject)  // debug
+
+        if (this.userObject) {
+          this.getBartonsData(this.userObject._id); 
+        }
+      },
+      error: (err) => { console.error(err) }
+    })
+  }
+
+  // getPoultryData() {
+  //   this.progress.isLoading = true;
+  // }
+  // this.poultryDB = new PoultryData(this.poultryHttp);
+  // this.poultryDB.getPoultryData().subscribe({
+  getPoultryData(): void {
+
     this.progress.isLoading = true;
-    this.poultryDB = new PoultryData(this.poultryHttp);
-    this.poultryDB.getAllPoultry().subscribe({
+
+    this.poultryHttp.getAllPoultry().subscribe({
       next: (data: Poultry[]) => {
         console.log('getAllPoultry data: ', data);    // debug
         this.poultryRef = [...data];
@@ -76,7 +122,43 @@ export class BartonComponent implements AfterViewInit {
     // console.log('PoultryData at ViewInit: ', this.poultry);    // debug}
   }
 
-  drop(event: CdkDragDrop<PoultryOfBarton[]>) {
+  getBartonsData(id: string): void {
+
+    this.progress.isLoading = true;
+    console.log('getBartonsData called', this.userObject); // debug
+
+    this.bartonHttp.getBartonsByUserId(id).subscribe({
+      next: (data: Barton[]) => {
+        console.log('BartonsData: ', this.bartonsData);   // debug
+        console.log('getBartonsData: ', data, data.length);    // debug
+        if (data.length !== 0) {
+          this.bartonsData = [...data];
+          this.bartonRef = this.bartonsData[0].poultry;   // tabIndex!!!
+          this.barton = JSON.parse(JSON.stringify([...this.bartonRef]));
+        } else {
+          // this.bartonsData[0][bartonName] = 'Udvar 1';
+        }
+      },
+      error: (err: { error: { message: any; }; status: any; }) => {
+        this._snackBar.open(
+          `Hoppá, nem sikerült lekérni az udvar adatait! \n ${err.error.message}\nKód: ${err.status}`,
+          'OK',
+          {
+            duration: 5000,
+            panelClass: ['snackbar-error']
+          }
+        );
+        console.error(err);
+      },
+      complete: () => {
+        this.progress.isLoading = false;
+      }
+    })
+    console.log('BartonData at ViewInit: ', this.barton);    // debug}
+  }
+
+
+  drop(event: CdkDragDrop<PoultryOfBarton[]>): void {
 
     // console.log('event at drop: ', event);    // debug
     // console.log('lists at drop event: ', this.poultry, this.barton);    // debug
@@ -94,7 +176,6 @@ export class BartonComponent implements AfterViewInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       transferArrayItem(
-        // copyArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
@@ -108,13 +189,13 @@ export class BartonComponent implements AfterViewInit {
     console.log('poultry at drop: ', this.poultry);   // debug
   }
 
-  saveQty(index: number, value: number) {
+  saveQty(index: number, value: number): void {
     this.barton[index].quantity = value;
     console.log('saveQty: ', index, value);   //debug
     console.log('saveQty: ', this.barton);   //debug
   }
 
-  savecustomName(index: number, value: string | undefined) {
+  savecustomName(index: number, value: string | undefined): void {
     this.barton[index].customName = value;
     console.log('saveCustomName: ', index, value);   //debug
     console.log('saveCustomName: ', this.barton);   //debug
@@ -127,19 +208,19 @@ export class BartonComponent implements AfterViewInit {
 
   // }
 
-  logger(event: any) {    // debug
+  logger(event: any): void {    // debug
     console.log('logger: ', event);
   }
 
 }
 
-export class PoultryData {
+// export class PoultryData {
 
-  constructor(
-    private poultryHttp: PoultryHttpService,
-  ) { }
+//   constructor(
+//     private poultryHttp: PoultryHttpService,
+//   ) { }
 
-  getAllPoultry(): Observable<Poultry[]> {
-    return this.poultryHttp.getAllPoultry();
-  }
-}
+//   getAllPoultry(): Observable<Poultry[]> {
+//     return this.poultryHttp.getAllPoultry();
+//   }
+// }

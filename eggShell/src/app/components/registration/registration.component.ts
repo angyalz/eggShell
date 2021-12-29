@@ -19,10 +19,7 @@ import { LoginComponent } from '../login/login.component';
 })
 export class RegistrationComponent implements OnInit {
 
-  hide = true;
-
-  ageLimit: number = 18;
-  userList: any[] = [];
+  hide = true;  // pwd visible switch
 
   loginSubscription: Subscription = new Subscription;
   userObject: any;
@@ -138,7 +135,9 @@ export class RegistrationComponent implements OnInit {
         console.log(err);
       },
 
-      complete: () => { }
+      complete: () => { 
+        this.dialogRef.close();
+      }
     })
   }
 

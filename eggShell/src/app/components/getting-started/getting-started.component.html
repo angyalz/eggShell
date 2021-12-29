@@ -1,0 +1,52 @@
+<mat-stepper class="stepper" [orientation]="(stepperOrientation | async)!" [selectedIndex]="stepperIndex">
+
+    <mat-step>
+        <ng-template matStepLabel>
+            <p class="label">Regisztrálj vagy jelentkezz be!</p>
+        </ng-template>
+        <!-- [stepControl]="login" -->
+        <!-- <app-auth></app-auth> -->
+        <div class="auth">
+            <div>
+                <button mat-fab (click)="openLoginDialog()">
+                    <mat-icon>login</mat-icon>
+                </button>
+                <p>bejelentkezés</p>
+            </div>
+            <div>
+                <button mat-fab (click)="openRegDialog()">
+                    <mat-icon>person_add</mat-icon>
+                </button>
+                <p>regisztráció</p>
+            </div>
+        </div>
+
+    </mat-step>
+
+    <mat-step >
+        <ng-template matStepLabel>
+            <p class="label">Hozz létre egy udvart...</p>
+            <p class="label link" (click)="tabIndex=1">
+                ...vagy csatlakozz egy regisztrált felhasználóhoz
+            </p>
+            
+        </ng-template>
+        <mat-tab-group class="tab-group" mat-align-tabs="center" [selectedIndex]="tabIndex">
+            <mat-tab label="létrehozok">
+                <app-barton></app-barton>
+            </mat-tab>
+            <mat-tab label="csatlakozok">
+                <input type="email" matInput ngModel 
+                    placeholder="egyedszám" 
+                    [(ngModel)]="inviteEmail"
+                    [ngModelOptions]="{standalone: true}" >
+                    <!-- (keyup.enter)="trigger.closeMenu()" -->
+            </mat-tab>
+        </mat-tab-group>
+        
+    </mat-step>
+    <!-- <mat-step
+         label="Regisztrálj vagy jelentkezz be!">
+    </mat-step> -->
+
+</mat-stepper>

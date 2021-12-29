@@ -81,7 +81,9 @@ exports.login = async (req, res, next) => {
         const accessToken = jwt.sign(
             {
                 _id: user._id,
-                role: user.role
+                username: user.username,
+                role: user.role,
+                bartons: user.barton,
             }, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: process.env.TOKEN_EXPIRY
         }
@@ -90,7 +92,9 @@ exports.login = async (req, res, next) => {
         // gen a refreshToken
         const refreshToken = jwt.sign({
             _id: user._id,
-            role: user.role
+            username: user.username,
+            role: user.role,
+            bartons: user.barton,
         }, process.env.REFRESH_TOKEN_SECRET, {
             expiresIn: process.env.REFRESH_EXPIRY
         });
@@ -108,7 +112,12 @@ exports.login = async (req, res, next) => {
         }
         res.status(200);
         res.json({
-            accessToken, refreshToken, _id: user._id, role: user.role
+            _id: user._id,
+            username: user.username,
+            role: user.role,
+            bartons: user.barton,
+            accessToken,
+            refreshToken,
         });
 
     } catch (error) {
@@ -145,13 +154,22 @@ exports.refresh = async (req, res, next) => {
         const accessToken = jwt.sign(
             {
                 _id: user._id,
-                role: user.role
+                username: user.username,
+                role: user.role,
+                bartons: user.barton,
             }, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: process.env.TOKEN_EXPIRY
         }
         )
         res.status(200);
-        res.json({ accessToken, _id: user._id, role: user.role });
+        res.json({
+            _id: user._id,
+            username: user.username,
+            role: user.role,
+            bartons: user.barton,
+            accessToken,
+            refreshToken,
+        });
 
     } catch (error) {
 

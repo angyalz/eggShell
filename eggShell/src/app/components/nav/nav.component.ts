@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -9,12 +9,20 @@ import { AuthService } from 'src/app/services/auth.service';
 import { LoginComponent } from '../login/login.component';
 import { RegistrationComponent } from '../registration/registration.component';
 import { ProgressService } from 'src/app/services/progress.service';
+import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
+import { environment } from 'src/environments/environment';
+import { AuthComponent } from '../auth/auth.component';
+
+export interface DialogData {
+  tabIndex: 0;
+}
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss']
 })
+
 
 export class NavComponent implements OnInit {
 
@@ -24,7 +32,9 @@ export class NavComponent implements OnInit {
       shareReplay()
     );
 
-  userObject: any;
+  URL = environment.apiUrl;
+
+  userObject!: UserLoggedIn | null;
   userSignInSubscription?: Subscription;
   userLogoutSubscription?: Subscription;
   userRefreshSubscription?: Subscription;
@@ -34,6 +44,8 @@ export class NavComponent implements OnInit {
     settings: 1
   }
 
+  // dialogResult!: string;
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private authService: AuthService,
@@ -41,9 +53,24 @@ export class NavComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     public progress: ProgressService,
-    ) {}
+  ) { }
 
   ngOnInit(): void {
+
+    this.checkRefreshToken();
+    this.getUserObject();
+
+  }
+
+  ngOnDestroy(): void {
+
+    if (this.userLogoutSubscription) this.userLogoutSubscription.unsubscribe();
+    if (this.userRefreshSubscription) this.userRefreshSubscription.unsubscribe();
+    if (this.userSignInSubscription) this.userSignInSubscription.unsubscribe();
+
+  }
+
+  checkRefreshToken(): void {
     if (localStorage.getItem('refreshToken')) {
       this.userRefreshSubscription = this.authService.refreshUserAuthentication().subscribe({
         next: () => { },
@@ -57,49 +84,53 @@ export class NavComponent implements OnInit {
         complete: () => { }
       })
     }
+  }
 
+  getUserObject(): void {
     this.userSignInSubscription = this.authService.getUserLoggedInObj().subscribe({
       next: (user) => {
         this.userObject = user;
         this.isLoggedIn = Boolean(this.userObject);
         console.log('userObject at nav: ', this.userObject, this.isLoggedIn)  // debug
       },
-      error: (err) => { },
+      error: (err) => { console.error(err) },
       complete: () => { }
     })
   }
 
-  ngOnDestroy(): void {
-
-    if (this.userLogoutSubscription) this.userLogoutSubscription.unsubscribe();
-    if (this.userRefreshSubscription) this.userRefreshSubscription.unsubscribe();
-    if (this.userSignInSubscription) this.userSignInSubscription.unsubscribe();
-
-  }
-
   openLoginDialog(): void {
-    const dialogRef = this.dialog.open(LoginComponent, {});
+    const dialogRef = this.dialog.open(AuthComponent, {
+      data: {
+        tabIndex: 0
+      }
+    });
 
-    dialogRef.afterClosed().subscribe(result => { });
+    dialogRef.afterClosed().subscribe({ 
+      next: (result) => console.log('loginDialog result: ', result),
+    });
   }
 
   openRegDialog(): void {
-    const dialogRef = this.dialog.open(RegistrationComponent, {});
+    const dialogRef = this.dialog.open(AuthComponent, {
+      data: {
+        tabIndex: 1
+      }
+    });
 
     dialogRef.afterClosed().subscribe(result => { });
   }
 
-  logout() {
+  logout(): void {
     this.userLogoutSubscription = this.authService.logout().subscribe({
-      next: () => { },
-      error: (err) => { err },
-      complete: () => {
+      next: () => { 
         this._snackBar.open(`Sikeres kilépés`, 'OK', {
           duration: 2000,
           panelClass: ['snackbar-ok']
         });
         this.router.navigate([''])
-      }
+      },
+      error: (err) => { console.error(err) },
+      complete: () => { }
     })
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { UserLogin } from 'src/app/models/user-login.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ValidationErrorHandlerService } from 'src/app/services/validation-error-handler.service';
+// import { DialogData } from '../nav/nav.component';
 
 @Component({
   selector: 'app-login',
@@ -58,7 +59,7 @@ export class LoginComponent implements OnInit {
             `Hoppá, nem sikerült bejelentkezni! \n ${err.error.message}\nKód: ${err.status}`,
             'OK',
             {
-              duration: 5000,
+              duration: 1000,
               panelClass: ['snackbar-error']
             }
           );

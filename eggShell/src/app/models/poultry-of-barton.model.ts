@@ -1,14 +1,14 @@
 import { Poultry } from "./poultry.model";
 
 export interface PoultryOfBarton extends Poultry{
-    // _poultryId: string;
+    // _id: string;
     // species: string;
-    customName?: string;
     // sex: 'hen' | 'cock';
     // nameOfSex: string;
-    // quantity:
+    // image: string;
+    // quantity: number;
+    customName?: string;
     purchaseDate?: Date;
     purchasePrice?: number;
     ageAtPurchase?: number;
-    // image: string;
 }

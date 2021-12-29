@@ -8,11 +8,13 @@ router.post('/', (req, res, next) => {
     return controller.create(req, res, next);
 });
 
-router.get('/', authenticationByJWT, adminRoleHandler, (req, res, next) => {
+router.get('/', authenticationByJWT, (req, res, next) => {
+    console.log('Get at bartons router');       // debug
     return controller.findAll(req, res, next);
 });
 
 router.get('/:id', authenticationByJWT, (req, res, next) => {
+    console.log('Get at bartons router');       // debug
     return controller.findOne(req, res, next);
 });
 

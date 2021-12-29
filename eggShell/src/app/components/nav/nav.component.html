@@ -77,9 +77,19 @@
   <mat-sidenav-content>
     <mat-toolbar color="primary">
       
-      <span *ngIf="!(isHandset$ | async) || !isLoggedIn">eggshell</span>
-      <!-- <span>{{isHandset$ | async}}</span> -->
+      <span *ngIf="!(isHandset$ | async) || !isLoggedIn">
+        <img [src]="URL + 'images/favicon.ico'" alt="favicon" >
+        eggshell
+      </span>
+      <span class="user" *ngIf="(isHandset$ | async) && isLoggedIn" style="font-size: medium">
+        <img [src]="userObject?.avatarUrl ? userObject?.avatarUrl : URL + 'images/favicon2.ico'" alt="favicon" >
+        {{userObject?.username}}
+      </span>
       <div class="icons">
+        <span class="user" *ngIf="!(isHandset$ | async) && isLoggedIn" style="font-size: medium">
+          <img [src]="userObject?.avatarUrl ? userObject?.avatarUrl : URL + 'images/favicon2.ico'" alt="favicon">
+          {{userObject?.username}}
+        </span>
         <mat-icon 
             *ngIf="!isLoggedIn" (click)="openLoginDialog()"
             matTooltip="Belépés"
@@ -118,7 +128,7 @@
     <div class="progress">
       <mat-progress-bar mode="indeterminate" *ngIf="progress.isLoading"></mat-progress-bar>
     </div>
-    <app-barton></app-barton>
+    <app-getting-started></app-getting-started>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

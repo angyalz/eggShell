@@ -4,7 +4,7 @@
     <form class="form" [formGroup]="userLogin" (ngSubmit)="login(userLogin.value)">
         <ng-container>
 
-            <h2 mat-dialog-title>bejelentkezés</h2>
+            <!-- <h2 mat-dialog-title>bejelentkezés</h2> -->
 
             <mat-form-field appearance="standard">
                 <mat-label>email cím</mat-label>
@@ -29,7 +29,7 @@
 
             <div mat-dialog-actions>
                 <button type="submit" class="submit-button" [disabled]="userLogin.invalid" mat-raised-button
-                    mat-dialog-close color="primary">Login</button>
+                    color="primary">Login</button>
             </div>
 
         </ng-container>

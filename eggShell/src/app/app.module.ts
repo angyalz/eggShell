@@ -15,7 +15,7 @@ import { MatCardModule } from '@angular/material/card';
 import { NavComponent } from './components/nav/nav.component';
 import { MatCommonModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -24,6 +24,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -32,7 +34,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
 
 import { AddEggComponent } from './components/add-egg/add-egg.component';
+import { AuthComponent } from './components/auth/auth.component';
 import { BartonComponent } from './components/barton/barton.component';
+import { GettingStartedComponent } from './components/getting-started/getting-started.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { SettingsComponent } from './components/settings/settings.component';
@@ -43,11 +47,13 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
   declarations: [
     AppComponent,
     AddEggComponent,
+    AuthComponent,
+    BartonComponent,
+    GettingStartedComponent,
     LoginComponent,
     NavComponent,
     RegistrationComponent,
     SettingsComponent,
-    BartonComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -74,12 +80,18 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
     MatProgressSpinnerModule,
     MatSidenavModule,
     MatSnackBarModule,
+    MatStepperModule,
+    MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
   ],
   providers: [
     {
       provide: MatDialogRef,
+      useValue: { hasBackDrop: true }
+    },
+    {
+      provide: MAT_DIALOG_DATA,
       useValue: {}
     },
     {
