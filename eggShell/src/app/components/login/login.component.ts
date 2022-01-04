@@ -21,10 +21,13 @@ export class LoginComponent implements OnInit {
   loginSubscription: Subscription = new Subscription;
   userObject: any;
 
+  emailPattern: string | RegExp = '/^\S+@\S{2, }\.\S{2, }$/';
+
   userLogin = new FormGroup({
     email: new FormControl('', [
       Validators.required,
-      Validators.email
+      Validators.email,
+      // Validators.pattern(this.emailPattern)
     ]),
     password: new FormControl('', [Validators.required]),
   });

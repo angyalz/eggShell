@@ -26,6 +26,7 @@ export class RegistrationComponent implements OnInit {
 
   lettersOnlyPattern: string | RegExp = '^[a-zA-Z íöüóőúűéáÍÖÜÓŐÚŰÉÁ]+$';
   numbersOnlyPattern: string | RegExp = '^[0-9]+$';
+  emailPattern: string | RegExp = '^\S+@\S{2,}\.\S{2,}$';
 
   userReg: FormGroup = new FormGroup({
 
@@ -42,7 +43,8 @@ export class RegistrationComponent implements OnInit {
       {
         validators: [
           Validators.required,
-          Validators.email
+          Validators.email,
+          Validators.pattern(this.emailPattern)
         ],
         updateOn: 'blur'
       }

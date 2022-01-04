@@ -1,3 +1,5 @@
+import { PoultryOfBarton } from "./poultry-of-barton.model";
+
 export interface Barton {
 
     _id: string;
@@ -8,20 +10,21 @@ export interface Barton {
             role: 'owner' | 'user'
         }
     ],
-    poultry: [
-        {
-            _id: string;
-            species: string,
-            sex: 'hen' | 'cock';
-            nameOfSex: string;
-            image: string;
-            quantity: number,
-            customName?: string,
-            purchaseDate?: Date,
-            purchasePrice?: number,
-            ageAtPurchase?: number
-        },
-    ],
+    poultry: PoultryOfBarton[],
+    // poultry: [
+    //     {
+    //         _id: string;
+    //         species: string,
+    //         sex: 'hen' | 'cock';
+    //         nameOfSex: string;
+    //         image: string;
+    //         quantity: number,
+    //         customName?: string,
+    //         purchaseDate?: Date,
+    //         purchasePrice?: number,
+    //         ageAtPurchase?: number
+    //     },
+    // ],
     feed?: [
         {
             type: string,       // _id
@@ -40,15 +43,3 @@ export interface Barton {
         }
     ]
 }
-// export interface PoultryOfBarton extends Poultry {
-//     _id: string;
-//     species: string;
-//     customName?: string;
-//     sex: 'hen' | 'cock';
-//     nameOfSex: string;
-//     image: string;
-//     quantity: number;
-//     purchaseDate?: Date;
-//     purchasePrice?: number;
-//     ageAtPurchase?: number;
-// }

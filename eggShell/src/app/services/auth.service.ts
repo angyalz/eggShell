@@ -11,8 +11,8 @@ import { User } from '../models/user.model';
 })
 export class AuthService {
 
-  BASE_URL = environment.apiUrl;
-  userLoggedInObject: BehaviorSubject<UserLoggedIn | null> = new BehaviorSubject<UserLoggedIn | null>(null);
+  private BASE_URL = environment.apiUrl;
+  private userLoggedInObject: BehaviorSubject<UserLoggedIn | null> = new BehaviorSubject<UserLoggedIn | null>(null);
 
   constructor(private http: HttpClient) { }
 

@@ -32,6 +32,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { AddEggComponent } from './components/add-egg/add-egg.component';
 import { AuthComponent } from './components/auth/auth.component';

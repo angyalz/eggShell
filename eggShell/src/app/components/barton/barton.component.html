@@ -1,54 +1,75 @@
 <div cdkDropListGroup>
-    <!-- <mat-tab-group>
-            <mat-tab [label]="tab.bartonName ? tab.bartonName : 'Udvar'" *ngFor="let tab of bartonsData"> -->
-            
-    <div class="barton-container">
-        <h2>Udvar lakói</h2>
+    <mat-tab-group class="tab-group" mat-align-tabs="center" [(selectedIndex)]="tabIndex">
+        
+        <mat-tab *ngFor="let barton of bartonsData">
+            <ng-template mat-tab-label >
+                <form ngForm [ngFormOptions]="{updateOn: 'blur'}">
+                    <input type="text" matInput 
+                    ngModel [(ngModel)]="barton.bartonName" 
+                    [ngModelOptions]="{standalone: true}"
+                    [value]="barton.bartonName" >
+                </form>
+            </ng-template>
 
-        <div class="poultry-list" cdkDropList [cdkDropListData]="barton" (cdkDropListDropped)="drop($event)">
-            <div [id]="i" class="items" *ngFor="let item of barton; index as i" cdkDrag [matBadge]="item.quantity"
-                matBadgeColor="accent" [matMenuTriggerFor]="menu" (click)="logger(item)">
-                <!-- [ngStyle]="{'background-image': 'url(' + item.image + ')'}"> -->
-                <!-- <mat-progress-spinner *ngIf="isLoading"></mat-progress-spinner> -->
-                <mat-menu #menu="matMenu" (click)="$event.stopPropagation()">
-                    <form class="item-form" ngForm mat-menu-item [ngFormOptions]="{updateOn: 'blur'}">
-                        <mat-form-field class="form-field" appearance="standard">
-                            <mat-label>egyedszám</mat-label>
-                            <div>
-                                <input type="number" matInput ngModel placeholder="egyedszám"
-                                    [(ngModel)]="item.quantity" [ngModelOptions]="{standalone: true}"
-                                    [value]="item.quantity" min=0 
-                                    (keyup.enter)="trigger.closeMenu()"
+            <div class="barton-container">
+                <!-- <h2>Udvar lakói</h2> -->
 
-                                    (click)="$event.stopPropagation()">
-                            </div>
-                        </mat-form-field>
+                <div class="poultry-list" cdkDropList [cdkDropListData]="(barton.poultry)"
+                    (cdkDropListDropped)="drop($event)" cdkDropListOrientation="horizontal">
+                    <div  class="items" *ngFor="let item of (barton.poultry)" cdkDrag
+                        [matBadge]="item.quantity" matBadgeColor="accent" [matMenuTriggerFor]="menu"
+                        (click)="logger(item)">
+                        <!-- [ngStyle]="{'background-image': 'url(' + item.image + ')'}"> -->
+                        <!-- <mat-progress-spinner *ngIf="isLoading"></mat-progress-spinner> -->
+                        <mat-menu #menu="matMenu" (click)="$event.stopPropagation()">
+                            <form class="item-form" ngForm mat-menu-item [ngFormOptions]="{updateOn: 'blur'}">
+                                <mat-form-field class="form-field" appearance="standard">
+                                    <mat-label>egyedszám</mat-label>
+                                    <div>
+                                        <input type="number" matInput ngModel placeholder="egyedszám"
+                                            [(ngModel)]="item.quantity" [ngModelOptions]="{standalone: true}"
+                                            [value]="item.quantity" min=0 (keyup.enter)="trigger.closeMenu()"
+                                            (click)="$event.stopPropagation()" (blur)="logger(item)">
+                                    </div>
+                                </mat-form-field>
 
-                        <mat-form-field class="form-field" appearance="standard">
-                            <mat-label>név</mat-label>
-                            <input type="text" matInput ngModel placeholder="egyedi név" 
-                                [(ngModel)]="item.customName" [ngModelOptions]="{standalone: true}" 
-                                [value]="item.customName || ''"
-                                (keyup.enter)="trigger.closeMenu()"
-                                
-                                (event)="logger($event)"
-                                (click)="$event.stopPropagation()" >
-                        </mat-form-field>
-                        <!-- <p>{{item}}</p> -->
-                    </form>
-                </mat-menu>
-                <img [src]="URL + item.image" [alt]="item.species">
-                <h5 *ngIf="!item.customName">{{item.species}}</h5>
-                <h5 *ngIf="item.customName">{{item.customName}}</h5>
-                <h6 *ngIf="!item.customName && (item.nameOfSex !== item.species)">{{item.nameOfSex}}</h6>
+                                <mat-form-field class="form-field" appearance="standard">
+                                    <mat-label>név</mat-label>
+                                    <input type="text" matInput ngModel placeholder="egyedi név"
+                                        [(ngModel)]="item.customName" [ngModelOptions]="{standalone: true}"
+                                        [value]="item.customName || ''" (keyup.enter)="trigger.closeMenu()"
+                                        (event)="logger($event)" (click)="$event.stopPropagation()"
+                                        (blur)="logger(item)">
+                                </mat-form-field>
+                                <!-- <p>{{item}}</p> -->
+                            </form>
+                        </mat-menu>
+                        <img [src]="URL + item.image" [alt]="item.species">
+                        <h5 *ngIf="!item.customName">{{item.species}}</h5>
+                        <h5 *ngIf="item.customName">{{item.customName}}</h5>
+                        <h6 *ngIf="!item.customName && (item.nameOfSex !== item.species)">{{item.nameOfSex}}</h6>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
+
+        </mat-tab>
+        <mat-tab disabled class="tab-button" color="accent">
+            <ng-template mat-tab-label>
+                <button mat-icon-button color="accent" (click)="addNewBarton()">
+                    <mat-icon >add_circle</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteBarton(tabIndex)">
+                    <mat-icon >delete</mat-icon>
+                </button>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
 
     <div class="barton-container">
         <h2>Baromfi fajták</h2>
 
-        <div class="poultry-list" cdkDropList [cdkDropListData]="poultry" (cdkDropListDropped)="drop($event)">
+        <div id="source-list" class="poultry-list" cdkDropList [cdkDropListData]="poultry"
+            (cdkDropListDropped)="drop($event)" cdkDropListOrientation="horizontal">
             <div class="items" *ngFor="let item of poultry" cdkDrag>
                 <!-- [ngStyle]="{'background-image': 'url(' + item.image + ')'}"> -->
                 <img [src]="URL + item.image" [alt]="item.species">
@@ -57,6 +78,5 @@
             </div>
         </div>
     </div>
-    <!-- </mat-tab>
-    </mat-tab-group> -->
+
 </div>
