@@ -9,7 +9,7 @@ import { ProgressService } from './progress.service';
 })
 export class BartonService {
 
-  bartonList: BehaviorSubject<Barton[] | []> = new BehaviorSubject<Barton[] | []>([]);
+  private bartonList: BehaviorSubject<Barton[] | []> = new BehaviorSubject<Barton[] | []>([]);
 
   constructor(
     private bartonHttp: BartonHttpService,
@@ -29,10 +29,11 @@ export class BartonService {
                 bartonsData
               )
             } else if (bartonsData) {
+              console.log('bartonsData at bartonService: ', bartonsData);     // debug
               this.bartonList.next(
                [
                 {
-                  _id: '',
+                  // _id: '',
                   bartonName: 'Udvar 1',
                   users: [{
                     user: userId,
@@ -47,6 +48,14 @@ export class BartonService {
         })
       )
   }
+
+  getBartonList() {
+    return this.bartonList.asObservable();
+  }
+
+  // getBartonData() {
+  //   return this.bartonList.value;
+  // }
 }
 
 

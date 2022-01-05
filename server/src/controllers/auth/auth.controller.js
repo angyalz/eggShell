@@ -174,6 +174,7 @@ exports.refresh = async (req, res, next) => {
     } catch (error) {
 
         if (error.message === 'jwt expired') {
+            await service.deleteToken(refreshToken);
             return next(new createError.Forbidden(error.message))
         }
         return next(new createError.InternalServerError(error.message));

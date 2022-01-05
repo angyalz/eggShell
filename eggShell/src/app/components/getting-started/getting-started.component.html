@@ -1,5 +1,5 @@
 <mat-stepper class="stepper" linear #stepper [orientation]="(stepperOrientation | async)!"
-    [selectedIndex]="stepperIndex">
+    [selectedIndex]="stepperIndex" >
 
     <mat-step state="login">
         <!-- label="Regisztrálj vagy jelentkezz be!" -->
@@ -22,23 +22,24 @@
                 <p>regisztráció</p>
             </div>
         </div> -->
-
     </mat-step>
 
     <mat-step state="barton">
-        <!-- label="Hozz létre egy udvart..." -->
         <ng-template matStepLabel>
-            <p class="label">Hozz létre egy udvart...</p>
+            <p class="label link" (click)="tabIndex=0">
+                Hozz létre egy udvart...
+            </p>
             <p class="label link" (click)="tabIndex=1">
                 ...vagy csatlakozz egy regisztrált felhasználóhoz
             </p>
 
         </ng-template>
         <mat-tab-group class="tab-group" mat-align-tabs="center" [selectedIndex]="tabIndex">
-            <mat-tab label="létrehozok">
+            <mat-tab class="tab-content" label="létrehozok">
                 <app-barton></app-barton>
-                <button mat-fab color="accent" mat-raised-button (click)="saveBarton()">
-                    <mat-icon>send</mat-icon>
+                <button mat-raised-button color="accent" (click)="saveBarton()">
+                    Kész!
+                    <!-- <mat-icon>save</mat-icon> -->
                 </button>
             </mat-tab>
             <mat-tab label="csatlakozok">

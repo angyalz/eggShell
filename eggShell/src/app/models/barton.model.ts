@@ -2,8 +2,8 @@ import { PoultryOfBarton } from "./poultry-of-barton.model";
 
 export interface Barton {
 
-    _id: string;
-    bartonName: string,
+    _id?: string;
+    bartonName?: string,
     users: [
         {
             user: string,

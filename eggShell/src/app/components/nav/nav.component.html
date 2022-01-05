@@ -128,7 +128,14 @@
     <div class="progress">
       <mat-progress-bar mode="indeterminate" *ngIf="progress.isLoading"></mat-progress-bar>
     </div>
-    <app-getting-started></app-getting-started>
+    <app-getting-started 
+      >
+    </app-getting-started>
+    <!-- <app-getting-started 
+      *ngIf="isLoggedIn !== undefined" 
+      [isLoggedIn]="isLoggedIn"
+      [userObject]="userObject">
+    </app-getting-started> -->
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

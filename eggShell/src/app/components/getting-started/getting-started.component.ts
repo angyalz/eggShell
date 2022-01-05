@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { StepperOrientation, STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
@@ -20,17 +20,20 @@ import { AuthComponent } from '../auth/auth.component';
     },
   ],
 })
+
 export class GettingStartedComponent implements OnInit {
+  
+  userObject!: UserLoggedIn | null;
+  isLoggedIn!: boolean;
+  // @Input() userObject!: UserLoggedIn | null;
+  // @Input() isLoggedIn!: boolean;
+  userSignInSubscription!: Subscription;
 
   stepperOrientation: Observable<StepperOrientation>;
   stepperIndex: number = 0;
   tabIndex: number = 0;
 
   dialogRef!: MatDialogRef<AuthComponent, any>;
-
-  userObject!: UserLoggedIn | null;
-  isLoggedIn!: boolean;
-  userSignInSubscription!: Subscription;
 
   emailPattern: string | RegExp = '^\S+@\S{2,}\.\S{2,}$';
   inviteEmailFormControl = new FormControl('',
@@ -55,11 +58,20 @@ export class GettingStartedComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('Getting Started ngOnInit');  // debug
+    console.log('Getting Started isLoggedin: ', this.isLoggedIn);  // debug
+    console.log('Getting Started userObject: ', this.userObject);  // debug
     // this.getUserObject();
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSignInSubscription) this.userSignInSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
     console.log('Getting Started ngAfterViewInit');  // debug
+    console.log('Getting Started isLoggedin: ', this.isLoggedIn);  // debug
+    console.log('Getting Started userObject: ', this.userObject);  // debug
+    console.log('Getting Started stepperOrientation: ', this.stepperOrientation);  // debug
     this.getUserObject();
     // this.setStepper();
   }
@@ -69,33 +81,26 @@ export class GettingStartedComponent implements OnInit {
       next: (user) => {
         this.userObject = user;
         this.isLoggedIn = Boolean(this.userObject);
-        if (this.isLoggedIn) {
-          this.stepper.next();
-          this.dialogRef.close();
-          console.log('closeLoginDialog');   // debug
-          console.log('Stepper: ', this.stepper);   // debug
-        } else {
-          this.stepper.reset();
-          this.openLoginDialog();
-          console.log('openLoginDialog');   // debug
-          console.log('Stepper: ', this.stepper);   // debug
-        }
+        this.setStepper();
         console.log('isLoggedIn at getting-started: ', this.isLoggedIn);  // debug
         console.log('stepperIndex at getting-started: ', this.stepperIndex);  // debug
       },
-      error: (err) => { console.error(err) },
-      complete: () => { console.log('GetUserObject complete') }
+      error: (err) => { console.error(err) }
     })
   }
 
   setStepper (): void {
+    console.log('SetStepper called');     // debug
+
     if (this.isLoggedIn) {
       this.stepper.next();
       this.dialogRef.close();
+      console.log('CloseDialog at SetStepper');     // debug
       console.log('Stepper: ', this.stepper);   // debug
     } else {
       this.stepper.reset();
       this.openLoginDialog();
+      console.log('OpenDialog at SetStepper');     // debug
       console.log('Stepper: ', this.stepper);   // debug
     }
   }

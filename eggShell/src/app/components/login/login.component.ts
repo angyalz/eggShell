@@ -1,13 +1,15 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
 import { UserLogin } from 'src/app/models/user-login.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { BartonService } from 'src/app/services/barton.service';
+import { ProgressService } from 'src/app/services/progress.service';
 import { ValidationErrorHandlerService } from 'src/app/services/validation-error-handler.service';
-// import { DialogData } from '../nav/nav.component';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +21,7 @@ export class LoginComponent implements OnInit {
   hide = true;  // pwd visible switch
 
   loginSubscription: Subscription = new Subscription;
-  userObject: any;
+  getBartonsDataSubscription: Subscription = new Subscription;
 
   emailPattern: string | RegExp = '/^\S+@\S{2, }\.\S{2, }$/';
 
@@ -45,10 +47,17 @@ export class LoginComponent implements OnInit {
     public dialogRef: MatDialogRef<LoginComponent>,
     // @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private _snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private bartonService: BartonService,
+    private progress: ProgressService
   ) { }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    if (this.loginSubscription) this.loginSubscription.unsubscribe();
+    if (this.getBartonsDataSubscription) this.getBartonsDataSubscription.unsubscribe();
   }
 
 
@@ -56,7 +65,9 @@ export class LoginComponent implements OnInit {
 
     this.loginSubscription = this.authService.login(user)
       .subscribe({
-        next: () => { },
+        next: (user: UserLoggedIn) => { 
+          this.getBartonsData(user._id);
+        },
         error: (err) => {
           this._snackBar.open(
             `Hoppá, nem sikerült bejelentkezni! \n ${err.error.message}\nKód: ${err.status}`,
@@ -72,9 +83,35 @@ export class LoginComponent implements OnInit {
           this.dialogRef.close();
           this.userLogin.reset();
           this._snackBar.open(`Sikeres belépés`, 'OK', { duration: 2000, panelClass: ['snackbar-ok'] });
+          this.progress.isLoading = false;
           // this.router.navigate(['/']);
         }
       })
+  }
+
+  getBartonsData(id: string): void {
+
+    this.progress.isLoading = true;
+
+    console.log('getBartonsData called', id); // debug
+
+    this.getBartonsDataSubscription = this.bartonService.getBartonsData(id).subscribe({
+      next: () => { },
+      error: (err: { error: { message: any; }; status: any; }) => {
+        this._snackBar.open(
+          `Hoppá, nem sikerült lekérni az udvar adatait! \n ${err.error.message}\nKód: ${err.status}`,
+          'OK',
+          {
+            duration: 5000,
+            panelClass: ['snackbar-error']
+          }
+        );
+        console.error(err);
+      },
+      complete: () => {
+        this.progress.isLoading = false;
+      }
+    })
   }
 
   getErrorMessage(formName: FormGroup, formControlName: string) {
