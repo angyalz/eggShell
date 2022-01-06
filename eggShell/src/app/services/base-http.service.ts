@@ -13,8 +13,8 @@ export class BaseHttpService<E> {
 
   constructor(public http: HttpClient) { }
 
-  getAll(): Observable<Array<E>> {
-    return this.http.get<Array<E>>(`${this.BASE_URL}${this.entity}`);
+  getAll(query: string = ''): Observable<Array<E>> {
+    return this.http.get<Array<E>>(`${this.BASE_URL}${this.entity}${query}`);
   }
 
   getById(id: string): Observable<E> {
@@ -25,17 +25,12 @@ export class BaseHttpService<E> {
     return this.http.post<E>(`${this.BASE_URL}${this.entity}`, entity);
   }
 
-  update(entity: E, id: string): Observable<E> {
+  update(entity: E, id: string | undefined): Observable<E> {
     return this.http.put<E>(`${this.BASE_URL}${this.entity}/${id}`, entity);
   }
 
   deleteById(id: string): Observable<any> {
     return this.http.delete(`${this.BASE_URL}${this.entity}/${id}`);
   }
-
-
-  // getUsers(): Observable<any> {
-  //   return this.http.get(`${this.BASE_URL}users`)
-  // }
 
 }

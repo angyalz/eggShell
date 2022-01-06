@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -13,6 +13,7 @@ import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
 import { environment } from 'src/environments/environment';
 import { AuthComponent } from '../auth/auth.component';
 import { BartonService } from 'src/app/services/barton.service';
+import { Barton } from 'src/app/models/barton.model';
 
 export interface DialogData {
   tabIndex: 0;
@@ -25,7 +26,7 @@ export interface DialogData {
 })
 
 
-export class NavComponent implements OnInit {
+export class NavComponent implements OnInit, OnDestroy {
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -42,6 +43,7 @@ export class NavComponent implements OnInit {
   getBartonsDataSubscription?: Subscription;
 
   isLoggedIn: boolean = false;
+  hasBarton: boolean = false;
 
   badgeCounter = {
     settings: 1
@@ -77,7 +79,7 @@ export class NavComponent implements OnInit {
   checkRefreshToken(): void {
     if (localStorage.getItem('refreshToken')) {
       this.userRefreshSubscription = this.authService.refreshUserAuthentication().subscribe({
-        next: (user: UserLoggedIn) => { 
+        next: (user: UserLoggedIn) => {
           this.getBartonsData(user._id);
         },
         error: (err) => {
@@ -90,44 +92,49 @@ export class NavComponent implements OnInit {
         complete: () => { }
       })
     }
-    console.log('token checked at nav');    // debug
+    // console.log('token checked at nav');    // debug
   }
 
   getUserObject(): void {
-    this.userSignInSubscription = this.authService.getUserLoggedInObj().subscribe({
-      next: (user) => {
-        this.userObject = user;
-        this.isLoggedIn = Boolean(this.userObject);
-        console.log('userObject at nav: ', this.userObject, this.isLoggedIn)  // debug
-      },
-      error: (err) => { console.error(err) }
-    })
-    console.log('getUserObject method ended at nav', this.userObject);     // debug
+    this.userSignInSubscription = this.authService.getUserLoggedInObj()
+      .subscribe({
+        next: (user) => {
+          this.userObject = user;
+          this.isLoggedIn = Boolean(this.userObject);
+          console.log('userObject at nav: ', this.userObject, this.isLoggedIn)  // debug
+        },
+        error: (err) => { console.error(err) }
+      })
+    // console.log('getUserObject method ended at nav', this.userObject);     // debug
   }
 
   getBartonsData(id: string): void {
 
     this.progress.isLoading = true;
 
-    console.log('getBartonsData called', id); // debug
+    // console.log('getBartonsData called', id); // debug
 
-    this.getBartonsDataSubscription = this.bartonService.getBartonsData(id).subscribe({
-      next: () => { },
-      error: (err: { error: { message: any; }; status: any; }) => {
-        this._snackBar.open(
-          `Hoppá, nem sikerült lekérni az udvar adatait! \n ${err.error.message}\nKód: ${err.status}`,
-          'OK',
-          {
-            duration: 5000,
-            panelClass: ['snackbar-error']
-          }
-        );
-        console.error(err);
-      },
-      complete: () => {
-        this.progress.isLoading = false;
-      }
-    })
+    this.getBartonsDataSubscription = this.bartonService.getBartonsData(id)
+      .subscribe({
+        next: (data: Barton[]) => { 
+          this.hasBarton = !!(data.length);
+          // console.log('hasBarton: ', this.hasBarton);   // debug
+        },
+        error: (err: { error: { message: any; }; status: any; }) => {
+          this._snackBar.open(
+            `Hoppá, nem sikerült lekérni az udvar adatait! \n ${err.error.message}\nKód: ${err.status}`,
+            'OK',
+            {
+              duration: 5000,
+              panelClass: ['snackbar-error']
+            }
+          );
+          console.error(err);
+        },
+        complete: () => {
+          this.progress.isLoading = false;
+        }
+      })
   }
 
   openLoginDialog(): void {
@@ -137,7 +144,7 @@ export class NavComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe({ 
+    dialogRef.afterClosed().subscribe({
       next: (result) => console.log('loginDialog result: ', result),
     });
   }
@@ -154,7 +161,7 @@ export class NavComponent implements OnInit {
 
   logout(): void {
     this.userLogoutSubscription = this.authService.logout().subscribe({
-      next: () => { 
+      next: () => {
         this._snackBar.open(`Sikeres kilépés`, 'OK', {
           duration: 2000,
           panelClass: ['snackbar-ok']

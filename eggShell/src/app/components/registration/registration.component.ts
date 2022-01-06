@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserLogin } from 'src/app/models/user-login.model';
+import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
-// import { BaseHttpService } from 'src/app/services/base-http.service';
 import { ValidationErrorHandlerService } from 'src/app/services/validation-error-handler.service';
 import { matchValidator } from 'src/app/validators/match.validator';
 import { passwordStrengthValidator } from 'src/app/validators/password-strength.validator';
@@ -17,11 +17,12 @@ import { LoginComponent } from '../login/login.component';
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss']
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent implements OnInit, OnDestroy {
 
   hide = true;  // pwd visible switch
 
   loginSubscription: Subscription = new Subscription;
+  regSubscription: Subscription = new Subscription;
   userObject: any;
 
   lettersOnlyPattern: string | RegExp = '^[a-zA-Z íöüóőúűéáÍÖÜÓŐÚŰÉÁ]+$';
@@ -96,7 +97,6 @@ export class RegistrationComponent implements OnInit {
   }
 
   constructor(
-    // private httpService: HttpService,
     private authService: AuthService,
     private validErrorHandler: ValidationErrorHandlerService,
     public dialogRef: MatDialogRef<LoginComponent>,
@@ -105,42 +105,47 @@ export class RegistrationComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.userReg);  // debug
+    // console.log(this.userReg);  // debug
   }
 
-  regUser(user: any) {
+  ngOnDestroy(): void {
+    if (this.loginSubscription) this.loginSubscription.unsubscribe();
+    if (this.regSubscription) this.regSubscription.unsubscribe();
+  }
 
-    this.authService.regNewUser(user).subscribe({
+  regUser(user: User) {
 
-      next: (data: any) => {
-        this.userReg.reset();
-        this._snackBar.open(
-          `Sikeres regisztáció`,
-          'OK',
-          {
-            duration: 3000,
-            panelClass: ['snackbar-ok']
-          }
-        );
-        this.login(user);
-      },
+    this.regSubscription = this.authService.regNewUser(user)
+      .subscribe({
+        next: (data: User) => {
+          this.userReg.reset();
+          this._snackBar.open(
+            `Sikeres regisztáció`,
+            'OK',
+            {
+              duration: 3000,
+              panelClass: ['snackbar-ok']
+            }
+          );
+          this.login(user);
+        },
 
-      error: (err) => {
-        this._snackBar.open(
-          `Hoppá, valami döcög a szerverkapcsolatban: \nSzerverválasz: ${err.error.message}: ${err.status}`,
-          'OK',
-          {
-            duration: 5000,
-            panelClass: ['snackbar-error']
-          }
-        );
-        console.log(err);
-      },
+        error: (err) => {
+          this._snackBar.open(
+            `Hoppá, valami döcög a szerverkapcsolatban: \nSzerverválasz: ${err.error.message}: ${err.status}`,
+            'OK',
+            {
+              duration: 5000,
+              panelClass: ['snackbar-error']
+            }
+          );
+          console.log(err);
+        },
 
-      complete: () => { 
-        this.dialogRef.close();
-      }
-    })
+        complete: () => {
+          this.dialogRef.close();
+        }
+      })
   }
 
   login(user: UserLogin) {

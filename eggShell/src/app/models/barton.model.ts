@@ -1,7 +1,8 @@
+import { FeedOfBarton } from "./feed-of-barton.model";
+import { MedicineOfBarton } from "./medicine-of-barton.model";
 import { PoultryOfBarton } from "./poultry-of-barton.model";
 
 export interface Barton {
-
     _id?: string;
     bartonName?: string,
     users: [
@@ -25,21 +26,25 @@ export interface Barton {
     //         ageAtPurchase?: number
     //     },
     // ],
-    feed?: [
-        {
-            type: string,       // _id
-            unit: 'kg' | 'q',
-            price: number,
-            dateFrom: Date,
-            dateTo?: Date,
-        }
-    ],
-    medicine?: [
-        {
-            type: string,       // _id
-            price?: { type: Number },
-            dateFrom?: Date,
-            dateTo?: Date,
-        }
-    ]
+    feed?: FeedOfBarton[],
+    // feed?: [
+    //     {
+    //         _id: string;
+    //         type: string,       // _id
+    //         unit: 'kg' | 'q',
+    //         price: number,
+    //         dateFrom: Date,
+    //         dateTo?: Date,
+    //     }
+    // ],
+    medicine?: MedicineOfBarton[]
+    // medicine?: [
+    //     {
+    //         _id: string;
+    //         type: string,       // _id
+    //         price?: { type: Number },
+    //         dateFrom?: Date,
+    //         dateTo?: Date,
+    //     }
+    // ]
 }

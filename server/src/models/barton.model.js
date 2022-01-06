@@ -11,8 +11,8 @@ const BartonSchema = new mongoose.Schema({
         }
     ],
     poultry: [
-        {
-            species: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Poultry' },
+        {   
+            poultry: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Poultry' },
             customName: { type: String },
             quantity: { type: Number, required: true },
             purchaseDate: { type: Date, default: Date.now },
@@ -22,7 +22,7 @@ const BartonSchema = new mongoose.Schema({
     ],
     feed: [
         {
-            type: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Feed' },
+            feed: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Feed' },
             unit: { type: String, enum: ['kg', 'q'], default: 'kg', required: true },
             price: { type: Number, required: true },
             dateFrom: { type: Date, default: Date.now, required: true },
@@ -31,7 +31,7 @@ const BartonSchema = new mongoose.Schema({
     ],
     medicine: [
         {
-            type: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Medicine' },
+            medicine: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Medicine' },
             price: { type: Number },
             dateFrom: { type: Date, default: Date.now },
             dateTo: { type: Date, default: Date.now },

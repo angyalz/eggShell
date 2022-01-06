@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { BartonToSave } from '../models/barton-to-save.model';
 import { Barton } from '../models/barton.model'
 import { BaseHttpService } from './base-http.service';
 
@@ -14,15 +15,12 @@ export class BartonHttpService extends BaseHttpService<Barton>{
     this.entity = 'bartons'
    }
 
-  getAllBartons(): Observable<Barton[]> {
-    return this.http.get<Barton[]>(`${this.BASE_URL}${this.entity}`)
+  saveBarton(data: BartonToSave): Observable<Barton> {
+    return this.http.post<Barton>(`${this.BASE_URL}${this.entity}`, data);
   }
 
-  getBartonsByUserId(user_id: string): Observable<Barton[]> {
-    return this.http.get<Barton[]>(`${this.BASE_URL}${this.entity}/?users.user=${user_id}`)
+  updateBarton(data: BartonToSave, id: string | undefined): Observable<Barton> {
+    return this.http.put<Barton>(`${this.BASE_URL}${this.entity}/${id}`, data);
   }
 
-  getBartonById(id: string): Observable<Barton> {
-    return this.http.get<Barton>(`${this.BASE_URL}${this.entity}/${id}`)
-  }
 }

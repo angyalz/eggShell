@@ -7,6 +7,7 @@ export interface PoultryOfBarton extends Poultry{
     // nameOfSex: string;
     // image: string;
     // quantity: number;
+    // poultry: Poultry;
     customName?: string;
     purchaseDate?: Date;
     purchasePrice?: number;
