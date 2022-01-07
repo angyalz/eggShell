@@ -21,12 +21,12 @@ export class BartonService {
 
   constructor(
     private bartonHttp: BartonHttpService,
-    // public progress: ProgressService,
+    public progress: ProgressService,
   ) { }
 
   getBartonsData(userId: string): Observable<Barton[]> {
 
-    // this.progress.isLoading = true;
+    this.progress.isLoading = true;
 
     return this.bartonHttp.getAll(`?users.user=${userId}`)
       .pipe(
@@ -38,6 +38,7 @@ export class BartonService {
               this.bartonList.next(
                 this.incomingDataTransform(bartonsData)
               )
+              this.progress.isLoading = false;
             } else if (bartonsData && !this.userHasBarton) {
               console.log('bartonsData at bartonService: ', bartonsData);     // debug
               this.bartonList.next(
@@ -53,6 +54,7 @@ export class BartonService {
                   }
                 ]
               )
+              this.progress.isLoading = false;
             }
           }
         })
@@ -61,6 +63,8 @@ export class BartonService {
 
 
   saveBartonData(): void {
+
+    this.progress.isLoading = true;
 
     let dataSource: BartonToSave[] = this.outgoingDataTransform(this.getBartonListValue());
 
@@ -79,7 +83,9 @@ export class BartonService {
             error: (err) => {
               console.error(err);
             },
-            complete: () => { }
+            complete: () => { 
+              this.progress.isLoading = false;
+            }
           })
 
       } else {
@@ -92,7 +98,9 @@ export class BartonService {
               error: (err) => {
                 console.error(err);
               },
-              complete: () => { }
+              complete: () => { 
+                this.progress.isLoading = false;
+              }
             })
         } else {
           console.error('barton._id missing!');   // debug
@@ -111,7 +119,7 @@ export class BartonService {
       let feedOfBarton: FeedOfBarton[] = [];
       let medicineOfBarton: MedicineOfBarton[] = [];
 
-      if (!!item.poultry.length) {
+      if (item.poultry && !!item.poultry.length) {
         for (const elem of item.poultry) {
 
           let poultry: PoultryOfBarton =
@@ -133,7 +141,7 @@ export class BartonService {
         }
       }
 
-      if (!!item.feed.length) {
+      if (item.feed && !!item.feed.length) {
         for (const elem of item.feed) {
 
           let feed: FeedOfBarton =
@@ -151,7 +159,7 @@ export class BartonService {
         }
       }
 
-      if (!!item.medicine.length) {
+      if (item.medicine && !!item.medicine.length) {
         for (const elem of item.medicine) {
 
           let medicine: MedicineOfBarton =
@@ -249,13 +257,14 @@ export class BartonService {
 
       let barton: BartonToSave =
       {
-        _id: item._id,
         bartonName: item.bartonName,
         users: item.users,
         poultry: poultryOfBarton,
         feed: feedOfBarton,
         medicine: medicineOfBarton,
       }
+
+      item._id ? barton._id = item._id : null;
 
       transformedBartonList.push(barton);
 

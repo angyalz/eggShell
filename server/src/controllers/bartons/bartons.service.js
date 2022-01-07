@@ -1,10 +1,14 @@
 const Model = require('../../models/barton.model');
+const userService = require('../users/users.service');
 
 
 exports.create = async (requestData) => {
 
     try {
         const entity = new Model(requestData);
+        const user = await userService.findById(requestData.users[0].user);
+        user.bartons.push(entity._id);
+        await user.save();
         return await entity.save();
     } catch (err) {
         console.error(err.message);
