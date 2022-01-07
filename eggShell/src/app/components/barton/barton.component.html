@@ -15,7 +15,7 @@
                     <button mat-icon-button color="accent" (click)="addNewBarton(i)">
                         <mat-icon>add_circle</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="deleteBarton(i)">
+                    <button mat-icon-button color="warn" (click)="deleteBarton(i)" [disabled]="isOwner(barton)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>

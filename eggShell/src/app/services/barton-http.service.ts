@@ -15,12 +15,12 @@ export class BartonHttpService extends BaseHttpService<Barton>{
     this.entity = 'bartons'
    }
 
-  saveBarton(data: BartonToSave): Observable<Barton> {
-    return this.http.post<Barton>(`${this.BASE_URL}${this.entity}`, data);
+  saveBarton(data: BartonToSave): Observable<BartonToSave> {
+    return this.http.post<BartonToSave>(`${this.BASE_URL}${this.entity}`, data);
   }
 
-  updateBarton(data: BartonToSave, id: string | undefined): Observable<Barton> {
-    return this.http.put<Barton>(`${this.BASE_URL}${this.entity}/${id}`, data);
+  updateBarton(data: BartonToSave, id: string | undefined): Observable<BartonToSave> {
+    return this.http.put<BartonToSave>(`${this.BASE_URL}${this.entity}/${id}`, data);
   }
 
 }

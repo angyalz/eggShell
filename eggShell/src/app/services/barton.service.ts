@@ -8,6 +8,7 @@ import { MedicineOfBartonToSave } from '../models/medicine-of-barton-to-save.mod
 import { MedicineOfBarton } from '../models/medicine-of-barton.model';
 import { PoultryOfBartonToSave } from '../models/poultry-of-barton-to-save.model';
 import { PoultryOfBarton } from '../models/poultry-of-barton.model';
+import { UsersOfBarton } from '../models/users-of-barton.model';
 import { BartonHttpService } from './barton-http.service';
 import { ProgressService } from './progress.service';
 
@@ -67,6 +68,7 @@ export class BartonService {
     this.progress.isLoading = true;
 
     let dataSource: BartonToSave[] = this.outgoingDataTransform(this.getBartonListValue());
+    let bartonList: BartonToSave[] = [];
 
     for (const barton of dataSource) {
 
@@ -78,12 +80,12 @@ export class BartonService {
           .subscribe({
             next: (data) => {
               console.log('Barton saved! ', data);    // debug
-              // this.bartonList[barton].next(data)
+              bartonList.unshift(data);
             },
             error: (err) => {
               console.error(err);
             },
-            complete: () => { 
+            complete: () => {
               this.progress.isLoading = false;
             }
           })
@@ -94,11 +96,12 @@ export class BartonService {
             .subscribe({
               next: (data) => {
                 console.log('Barton updated! ', data);    // debug
+                bartonList.unshift(data);
               },
               error: (err) => {
                 console.error(err);
               },
-              complete: () => { 
+              complete: () => {
                 this.progress.isLoading = false;
               }
             })
@@ -118,7 +121,22 @@ export class BartonService {
       let poultryOfBarton: PoultryOfBarton[] = [];
       let feedOfBarton: FeedOfBarton[] = [];
       let medicineOfBarton: MedicineOfBarton[] = [];
+      let usersOfBarton: UsersOfBarton[] = [];
 
+      if (item.users && !!item.users.length) {
+        for (const elem of item.users) {
+
+          let users: UsersOfBarton =
+          {
+            user: elem.user,
+            role: elem.role
+          }
+
+          usersOfBarton.push(users);
+
+        }
+      }
+      
       if (item.poultry && !!item.poultry.length) {
         for (const elem of item.poultry) {
 
@@ -180,7 +198,7 @@ export class BartonService {
       {
         _id: item._id,
         bartonName: item.bartonName,
-        users: item.users,
+        users: usersOfBarton,
         poultry: poultryOfBarton,
         feed: feedOfBarton,
         medicine: medicineOfBarton,
@@ -279,6 +297,10 @@ export class BartonService {
 
   getBartonListValue(): Barton[] {
     return this.bartonList.value;
+  }
+
+  setBartonList(data: Barton[]): void {
+    this.bartonList.next(data);
   }
 }
 

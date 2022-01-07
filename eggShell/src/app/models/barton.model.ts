@@ -1,16 +1,12 @@
 import { FeedOfBarton } from "./feed-of-barton.model";
 import { MedicineOfBarton } from "./medicine-of-barton.model";
 import { PoultryOfBarton } from "./poultry-of-barton.model";
+import { UsersOfBarton } from "./users-of-barton.model";
 
 export interface Barton {
     _id?: string;
     bartonName?: string,
-    users: [
-        {
-            user: string,
-            role: 'owner' | 'user'
-        }
-    ],
+    users: UsersOfBarton[],
     poultry: PoultryOfBarton[],
     // poultry: [
     //     {

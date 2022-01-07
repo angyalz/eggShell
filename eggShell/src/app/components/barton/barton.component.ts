@@ -33,7 +33,6 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
 
   bartonsData: Barton[] = [
     {
-      _id: '',
       bartonName: 'Udvar 1',
       users: [
         {
@@ -146,8 +145,7 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
     this.poultry = JSON.parse(JSON.stringify(this.poultryRef));
 
     console.log('bartonsData at drop: ', this.bartonsData);   //debug
-    // this.saveBartonData();
-    // this.bartonService.
+
     this.bartonService.saveBartonData();
   }
 
@@ -171,47 +169,16 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
     this.bartonsData.splice(index, 1);
   }
 
-  // saveBartonData(): void {
-  //   const dataToSave: Barton[] = JSON.parse(JSON.stringify([...this.bartonsData]));
-  //   console.log('dataToSave: ', dataToSave);    // debug
-  //   if (!this.userHasBarton) {
-  //     for (const barton of dataToSave) {
-  //       for (const poultry of barton.poultry) {
-  //         poultry.species = poultry._id
-  //       }
-  //       this.bartonHttp.save(barton)
-  //         .subscribe({
-  //           next: (data: Barton) => { 
-  //             console.log('Barton saved! ', data);    // debug
-  //           },
-  //           error: (err) => {
-  //             console.error(err);
-  //           },
-  //           complete: () => {}
-  //         })
-  //     }
-  //   } else {
-  //     for (const barton of dataToSave) {
-  //       for (const poultry of barton.poultry) {
-  //         poultry.species = poultry._id
-  //       }
-  //       if (barton._id) {
-  //         this.bartonHttp.update(barton, barton._id)
-  //         .subscribe({
-  //           next: (data: Barton) => { 
-  //             console.log('Barton updated! ', data);    // debug
-  //           },
-  //           error: (err) => { 
-  //             console.error(err);
-  //           },
-  //           complete: () => { }
-  //         })
-  //       } else {
-  //         console.error('barton._id missing!');   // debug
-  //       }
-  //     }
-  //   }
-  // }
+  isOwner(barton: Barton): boolean {
+    if (this.userObject) {
+      for (const user of barton.users) {
+        if (user.user === this.userObject._id && user.role === 'owner') {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
   logger(event: any): void {    // debug
     console.log('logger: ', event);

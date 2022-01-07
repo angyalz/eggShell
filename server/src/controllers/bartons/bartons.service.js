@@ -6,10 +6,14 @@ exports.create = async (requestData) => {
 
     try {
         const entity = new Model(requestData);
+        console.log('entity: ', entity);        // debug
         const user = await userService.findById(requestData.users[0].user);
+        console.log('user: ', user);        // debug
         user.bartons.push(entity._id);
+        console.log('user after barton push: ', user);      // debug
+        const savedEntity = await entity.save();
         await user.save();
-        return await entity.save();
+        return savedEntity;
     } catch (err) {
         console.error(err.message);
     }
