@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, map, Observable, tap } from 'rxjs';
 import { BartonToSave } from '../models/barton-to-save.model';
 import { Barton } from '../models/barton.model';
+import { FeedOfBartonToSave } from '../models/feed-of-barton-to-save.model';
 import { FeedOfBarton } from '../models/feed-of-barton.model';
+import { MedicineOfBartonToSave } from '../models/medicine-of-barton-to-save.model';
 import { MedicineOfBarton } from '../models/medicine-of-barton.model';
+import { PoultryOfBartonToSave } from '../models/poultry-of-barton-to-save.model';
 import { PoultryOfBarton } from '../models/poultry-of-barton.model';
 import { BartonHttpService } from './barton-http.service';
 import { ProgressService } from './progress.service';
@@ -30,11 +33,12 @@ export class BartonService {
         tap({
           next: (bartonsData: Barton[]) => {
             this.userHasBarton = !!(bartonsData?.length);
-            if (bartonsData && bartonsData.length !== 0) {
+            if (bartonsData && this.userHasBarton) {
+              console.log('bartonsData at bartonService before transform: ', bartonsData);     // debug
               this.bartonList.next(
                 this.incomingDataTransform(bartonsData)
               )
-            } else if (bartonsData) {
+            } else if (bartonsData && !this.userHasBarton) {
               console.log('bartonsData at bartonService: ', bartonsData);     // debug
               this.bartonList.next(
                 [
@@ -57,61 +61,16 @@ export class BartonService {
 
 
   saveBartonData(): void {
-    let dataToSave!: BartonToSave[];
-    let dataSource: Barton[] = this.getBartonListValue();
-    // JSON.parse(JSON.stringify(this.getBartonListValue()));
-    console.log('dataToSave: ', dataToSave);    // debug
-    console.log('dataSource: ', dataSource);    // debug
-    for (const barton in dataSource) {
-      // console.log('dataSource[barton]: ', dataSource[barton]);    // debug
-      // dataToSave[barton].bartonName = dataSource[barton].bartonName;
-      // console.log('dataToSave[barton]: ', dataToSave[barton]);    // debug
-      // for (const user in dataSource[barton].users) {
-      //   dataToSave[barton].users[user].user = dataSource[barton].users[user].user;
-      //   dataToSave[barton].users[user].role = dataSource[barton].users[user].role;
-      // }
-      // for (const poultry in dataSource[barton].poultry) {
-      //   dataToSave[barton].poultry[poultry].species = dataSource[barton].poultry[poultry]._id;
-      //   dataToSave[barton].poultry[poultry].customName = dataSource[barton].poultry[poultry].customName;
-      //   dataToSave[barton].poultry[poultry].quantity = dataSource[barton].poultry[poultry].quantity;
-      //   dataToSave[barton].poultry[poultry].purchaseDate = dataSource[barton].poultry[poultry].purchaseDate;
-      //   dataToSave[barton].poultry[poultry].purchasePrice = dataSource[barton].poultry[poultry].purchasePrice;
-      //   dataToSave[barton].poultry[poultry].ageAtPurchase = dataSource[barton].poultry[poultry].ageAtPurchase;
-      // }
 
-      let newBarton: any = {};
-      newBarton.users = [];
-      newBarton.poultry = [];
-      console.log('typeof(newBarton): ', typeof (newBarton));    // debug  
-      console.log('dataSource[barton]: ', dataSource[barton]);    // debug
-      console.log('newBarton: ', newBarton);    // debug
-      newBarton.bartonName = dataSource[barton].bartonName;
-      // console.log('dataToSave[barton]: ', dataToSave[barton]);    // debug
-      for (const user in dataSource[barton].users) {
-        let newUser: any = {};
-        newUser.user = dataSource[barton].users[user].user;
-        newUser.role = dataSource[barton].users[user].role;
+    let dataSource: BartonToSave[] = this.outgoingDataTransform(this.getBartonListValue());
 
-        newBarton.users.push(newUser);
-      }
-      for (const poultry in dataSource[barton].poultry) {
-        let newPoultry: any = {};
-        // newPoultry.type = dataSource[barton].poultry[poultry]._id;
-        newPoultry.customName = dataSource[barton].poultry[poultry].customName;
-        newPoultry.quantity = dataSource[barton].poultry[poultry].quantity;
-        newPoultry.purchaseDate = dataSource[barton].poultry[poultry].purchaseDate;
-        newPoultry.purchasePrice = dataSource[barton].poultry[poultry].purchasePrice;
-        newPoultry.ageAtPurchase = dataSource[barton].poultry[poultry].ageAtPurchase;
+    for (const barton of dataSource) {
 
-        newBarton.poultry.push(dataSource[barton].poultry[poultry]._id);
-        newBarton.poultry.push(newPoultry);
-      }
+      console.log('newBarton before save: ', barton);    // debug
 
-      // dataToSave.push(newBarton);
+      if (!barton._id) {
 
-      if (!newBarton._id) {
-
-        this.bartonHttp.saveBarton(newBarton)
+        this.bartonHttp.saveBarton(barton)
           .subscribe({
             next: (data) => {
               console.log('Barton saved! ', data);    // debug
@@ -124,8 +83,8 @@ export class BartonService {
           })
 
       } else {
-        if (newBarton._id) {
-          this.bartonHttp.updateBarton(dataToSave[barton], dataToSave[barton]._id)
+        if (barton._id) {
+          this.bartonHttp.updateBarton(barton, barton._id)
             .subscribe({
               next: (data) => {
                 console.log('Barton updated! ', data);    // debug
@@ -152,55 +111,61 @@ export class BartonService {
       let feedOfBarton: FeedOfBarton[] = [];
       let medicineOfBarton: MedicineOfBarton[] = [];
 
-      for (const elem of item.poultry) {
+      if (!!item.poultry.length) {
+        for (const elem of item.poultry) {
 
-        let poultry: PoultryOfBarton = 
-        {
-          _id: elem.poultry._id,
-          species: elem.poultry.species,
-          sex: elem.poultry.sex,
-          nameOfSex: elem.poultry.nameOfSex,
-          image: elem.poultry.image,
-          customName: elem.customName,
-          quantity: elem.quantity,
-          purchaseDate: elem.purchaseDate,
-          purchasePrice: elem.purchasePrice,
-          ageAtPurchase: elem.ageAtPurchase,
+          let poultry: PoultryOfBarton =
+          {
+            _id: elem.poultry._id,
+            species: elem.poultry.species,
+            sex: elem.poultry.sex,
+            nameOfSex: elem.poultry.nameOfSex,
+            image: elem.poultry.image,
+            customName: elem.customName,
+            quantity: elem.quantity,
+            purchaseDate: elem.purchaseDate,
+            purchasePrice: elem.purchasePrice,
+            ageAtPurchase: elem.ageAtPurchase,
+          }
+
+          poultryOfBarton.push(poultry);
+
         }
-
-        poultryOfBarton.push(poultry);
-
       }
 
-      for (const elem of item.feed) {
+      if (!!item.feed.length) {
+        for (const elem of item.feed) {
 
-        let feed: FeedOfBarton = 
-        {
-          _id: elem.feed._id,
-          type: elem.feed.type,
-          unit: elem.unit,
-          price: elem.price,
-          dateFrom: elem.dateFrom,
-          dateTo: elem.dateTo,
+          let feed: FeedOfBarton =
+          {
+            _id: elem.feed._id,
+            type: elem.feed.type,
+            unit: elem.unit,
+            price: elem.price,
+            dateFrom: elem.dateFrom,
+            dateTo: elem.dateTo,
+          }
+
+          feedOfBarton.push(feed);
+
         }
-
-        feedOfBarton.push(feed);
-
       }
 
-      for (const elem of item.medicine) {
+      if (!!item.medicine.length) {
+        for (const elem of item.medicine) {
 
-        let medicine: MedicineOfBarton = 
-        {
-          _id: elem.medicine._id,
-          type: elem.medicine.type,
-          price: elem.price,
-          dateFrom: elem.dateFrom,
-          dateTo: elem.dateTo,
+          let medicine: MedicineOfBarton =
+          {
+            _id: elem.medicine._id,
+            type: elem.medicine.type,
+            price: elem.price,
+            dateFrom: elem.dateFrom,
+            dateTo: elem.dateTo,
+          }
+
+          medicineOfBarton.push(medicine);
+
         }
-
-        medicineOfBarton.push(medicine);
-
       }
 
       let barton: Barton =
@@ -221,11 +186,89 @@ export class BartonService {
 
   }
 
-  getBartonList() {
+  outgoingDataTransform(data: any) {
+
+    let transformedBartonList: BartonToSave[] = [];
+
+    for (const item of data) {
+
+      let poultryOfBarton: PoultryOfBartonToSave[] = [];
+      let feedOfBarton: FeedOfBartonToSave[] = [];
+      let medicineOfBarton: MedicineOfBartonToSave[] = [];
+
+      if (item.poultry && !!item.poultry.length) {
+        for (const elem of item.poultry) {
+
+          let poultry: PoultryOfBartonToSave =
+          {
+            poultry: elem._id,
+            customName: elem.customName,
+            quantity: elem.quantity,
+            purchaseDate: elem.purchaseDate,
+            purchasePrice: elem.purchasePrice,
+            ageAtPurchase: elem.ageAtPurchase,
+          }
+
+          poultryOfBarton.push(poultry);
+
+        }
+      }
+
+      if (item.feed && !!item.feed.length) {
+        for (const elem of item.feed) {
+
+          let feed: FeedOfBartonToSave =
+          {
+            feed: elem.feed._id,
+            unit: elem.unit,
+            price: elem.price,
+            dateFrom: elem.dateFrom,
+            dateTo: elem.dateTo,
+          }
+
+          feedOfBarton.push(feed);
+
+        }
+      }
+
+      if (item.medicine && !!item.medicine.length) {
+        for (const elem of item.medicine) {
+
+          let medicine: MedicineOfBartonToSave =
+          {
+            medicine: elem.medicine._id,
+            price: elem.price,
+            dateFrom: elem.dateFrom,
+            dateTo: elem.dateTo,
+          }
+
+          medicineOfBarton.push(medicine);
+
+        }
+      }
+
+      let barton: BartonToSave =
+      {
+        _id: item._id,
+        bartonName: item.bartonName,
+        users: item.users,
+        poultry: poultryOfBarton,
+        feed: feedOfBarton,
+        medicine: medicineOfBarton,
+      }
+
+      transformedBartonList.push(barton);
+
+    }
+
+    return transformedBartonList;
+  }
+
+  getBartonList(): Observable<Barton[]> {
     return this.bartonList.asObservable();
   }
 
-  getBartonListValue() {
+  getBartonListValue(): Barton[] {
     return this.bartonList.value;
   }
 }

@@ -15,7 +15,7 @@ exports.findAll = async (query) => {
     console.log('query at bartons service findAll: ', query); // debug
     try {
         return await Model.find(query)
-        .populate('poultry' )
+        .populate('poultry.poultry')
         // .populate('feed.type')
         // .populate('medicine.type')
     } catch (err) {

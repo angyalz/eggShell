@@ -1,42 +1,19 @@
+import { FeedOfBartonToSave } from "./feed-of-barton-to-save.model";
+import { MedicineOfBartonToSave } from "./medicine-of-barton-to-save.model";
+import { PoultryOfBartonToSave } from "./poultry-of-barton-to-save.model";
+
 export interface BartonToSave {
 
     _id?: string;
-    bartonName?: string,
+    bartonName: string,
     users: [
         {
             user: string,
             role: 'owner' | 'user'
         }
     ],
-    poultry: [
-        {
-            species: string,
-            sex: 'hen' | 'cock';
-            nameOfSex: string;
-            image: string;
-            quantity: number,
-            customName?: string,
-            purchaseDate?: Date,
-            purchasePrice?: number,
-            ageAtPurchase?: number
-        },
-    ],
-    feed?: [
-        {
-            type: string,       // _id
-            unit?: 'kg' | 'q',
-            price?: number,
-            dateFrom?: Date,
-            dateTo?: Date,
-        }
-    ],
-    medicine?: [
-        {
-            type?: string,       // _id
-            price?: { type: Number },
-            dateFrom?: Date,
-            dateTo?: Date,
-        }
-    ]
+    poultry: PoultryOfBartonToSave[],
+    feed?: FeedOfBartonToSave[],
+    medicine?: MedicineOfBartonToSave[]
 }
 
