@@ -1,6 +1,7 @@
 div {
     box-sizing: border-box;
     width: 100%;
+    height: fit-content;
     display: flex;
     flex-direction: column-reverse;
     // flex-wrap: wrap;
@@ -21,10 +22,13 @@ div {
             display: flex;
             flex-direction: column;
             margin: 1em auto;
+            padding: 0;
             max-width: 21em;
+            box-shadow: 4px 4px 12px #ccc;
 
             .poultry-list {
                 margin: 0;
+                height: 100%;
             }
 
             .barton-header {
@@ -52,6 +56,7 @@ div {
         min-height: 10em;
         margin: 2em auto 0;
         text-align: center;
+        box-shadow: 4px 4px 12px #ccc;
 
         h2 {
             font-weight: 300;
@@ -72,7 +77,7 @@ div {
         align-items: center;
         justify-content: center;
         margin: 1em auto;
-        box-shadow: 4px 4px 12px #ccc;
+        // box-shadow: 4px 4px 12px #ccc;
         min-height: 10em;
         background: white;
         border-radius: 4px;

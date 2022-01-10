@@ -4,9 +4,12 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
 import { UserLogin } from 'src/app/models/user-login.model';
 import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { BartonService } from 'src/app/services/barton.service';
+import { ProgressService } from 'src/app/services/progress.service';
 import { ValidationErrorHandlerService } from 'src/app/services/validation-error-handler.service';
 import { matchValidator } from 'src/app/validators/match.validator';
 import { passwordStrengthValidator } from 'src/app/validators/password-strength.validator';
@@ -23,11 +26,13 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
   loginSubscription: Subscription = new Subscription;
   regSubscription: Subscription = new Subscription;
+  getBartonsDataSubscription: Subscription = new Subscription;
+
   userObject: any;
 
   lettersOnlyPattern: string | RegExp = '^[a-zA-Z íöüóőúűéáÍÖÜÓŐÚŰÉÁ]+$';
   numbersOnlyPattern: string | RegExp = '^[0-9]+$';
-  emailPattern: string | RegExp = '^\S+@\S{2,}\.\S{2,}$';
+  // emailPattern: string | RegExp = '^\S+@\S{2,}\.\S{2,}$';
 
   userReg: FormGroup = new FormGroup({
 
@@ -45,7 +50,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         validators: [
           Validators.required,
           Validators.email,
-          Validators.pattern(this.emailPattern)
+          // Validators.pattern(this.emailPattern)
         ],
         updateOn: 'blur'
       }
@@ -101,7 +106,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     private validErrorHandler: ValidationErrorHandlerService,
     public dialogRef: MatDialogRef<LoginComponent>,
     private _snackBar: MatSnackBar,
-    private router: Router
+    private bartonService: BartonService,
+    private progress: ProgressService
   ) { }
 
   ngOnInit(): void {
@@ -114,6 +120,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   regUser(user: User) {
+
+    this.progress.isLoading = true;
 
     this.regSubscription = this.authService.regNewUser(user)
       .subscribe({
@@ -152,22 +160,52 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
     this.loginSubscription = this.authService.login(user)
       .subscribe({
-        next: () => { },
+        next: (user: UserLoggedIn) => {
+          this.getBartonsData(user._id);
+        },
         error: (err) => {
           this._snackBar.open(
-            `Hoppá, nem sikerült bejelentkezni! \nSzerverválasz: ${err.error.message}\nKód: ${err.status}`,
+            `Hoppá, nem sikerült bejelentkezni! \n ${err.error.message}\nKód: ${err.status}`,
             'OK',
             {
-              duration: 5000
+              duration: 1000,
+              panelClass: ['snackbar-error']
             }
           );
           console.error(err);
         },
         complete: () => {
-          this._snackBar.open(`Sikeres belépés`, 'OK', { duration: 2000 });
-          this.router.navigate(['/recipes']);
+          this.dialogRef.close();
+          this._snackBar.open(`Sikeres belépés`, 'OK', { duration: 2000, panelClass: ['snackbar-ok'] });
+          this.progress.isLoading = false;
+          // this.router.navigate(['/']);
         }
       })
+  }
+
+  getBartonsData(id: string): void {
+
+    this.progress.isLoading = true;
+
+    console.log('getBartonsData called', id); // debug
+
+    this.getBartonsDataSubscription = this.bartonService.getBartonsData(id).subscribe({
+      next: () => { },
+      error: (err: { error: { message: any; }; status: any; }) => {
+        this._snackBar.open(
+          `Hoppá, nem sikerült lekérni az udvar adatait! \n ${err.error.message}\nKód: ${err.status}`,
+          'OK',
+          {
+            duration: 5000,
+            panelClass: ['snackbar-error']
+          }
+        );
+        console.error(err);
+      },
+      complete: () => {
+        this.progress.isLoading = false;
+      }
+    })
   }
 
   getErrorMessage(formName: FormGroup, formControlName: string) {

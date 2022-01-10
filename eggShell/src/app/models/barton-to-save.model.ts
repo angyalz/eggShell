@@ -5,6 +5,7 @@ import { PoultryOfBartonToSave } from "./poultry-of-barton-to-save.model";
 export interface BartonToSave {
 
     _id?: string;
+    active: boolean,
     bartonName: string,
     users: [
         {

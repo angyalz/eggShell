@@ -1,13 +1,10 @@
-<mat-stepper class="stepper" linear #stepper [orientation]="(stepperOrientation | async)!"
-    [selectedIndex]="stepperIndex" >
+<mat-stepper class="stepper" [linear]="true" #stepper [orientation]="(stepperOrientation | async)!"
+    [selectedIndex]="stepperIndex" (selectionChange)="getStepperIndex($event)">
 
     <mat-step state="login">
-        <!-- label="Regisztrálj vagy jelentkezz be!" -->
         <ng-template matStepLabel>
             <p class="label">Regisztrálj vagy jelentkezz be!</p>
         </ng-template>
-        <!-- [stepControl]="login" -->
-        <!-- <app-auth></app-auth> -->
         <!-- <div class="auth">
             <div>
                 <button mat-fab (click)="openLoginDialog()">
@@ -36,28 +33,36 @@
         </ng-template>
         <mat-tab-group class="tab-group" mat-align-tabs="center" [selectedIndex]="tabIndex">
             <mat-tab class="tab-content" label="létrehozok">
-                <app-barton></app-barton>
-                <button mat-raised-button color="accent" (click)="saveBarton()">
+                <app-barton [bartonsData]="bartonsData"></app-barton>
+                <button mat-raised-button color="accent" matStepperNext (click)="saveBarton()">
                     Kész!
-                    <!-- <mat-icon>save</mat-icon> -->
                 </button>
             </mat-tab>
             <mat-tab label="csatlakozok">
-                <form class="invite" (ngSubmit)="sendInvite(inviteEmailFormControl.value)">
+                <form class="invite" (ngSubmit)="sendInvite()">
                     <mat-form-field appearance="standard">
                         <mat-label>Email</mat-label>
-                        <input type="email" matInput [formControl]="inviteEmailFormControl" placeholder="mail@user.com">
-                        <mat-hint>Kérlek add meg annak a regisztrált felhasználónak az email címét, akihez csatlakozni kívánsz!</mat-hint>
-                        <mat-error
-                            *ngIf="inviteEmailFormControl.hasError('email') && !inviteEmailFormControl.hasError('required')">
+                        <input type="email" matInput [formControl]="requestEmailFormControl" placeholder="mail@user.com" 
+                            (input)="checkEmailIsValid(requestEmailFormControl.value)"
+                            (keyup.enter)="checkEmailIsValid(requestEmailFormControl.value)">
+                        <mat-icon matSuffix *ngIf="isEmailValid" [ngStyle]="{'color': 'green'}">check_cicrcle</mat-icon>
+                        <mat-icon matSuffix *ngIf="isEmailValid === false" color="warn">highlight_off</mat-icon>
+                        <mat-hint *ngIf="isEmailValid === null">Kérlek add meg annak a regisztrált felhasználónak az email címét, akihez
+                            csatlakozni
+                            kívánsz!</mat-hint>
+                            <mat-error
+                            *ngIf="requestEmailFormControl.hasError('email') && !requestEmailFormControl.hasError('required')">
                             Kérlek valós email címet adj meg!
                         </mat-error>
-                        <mat-error *ngIf="inviteEmailFormControl.hasError('required')">
+                        <mat-error *ngIf="requestEmailFormControl.hasError('required')">
                             Az email cím megadása <strong>kötelező</strong>
+                        </mat-error>
+                        <mat-error *ngIf="isEmailValid === false">
+                            Nem regisztrált e-mail cím
                         </mat-error>
                     </mat-form-field>
                     <button type="submit" mat-fab color="accent" mat-raised-button
-                        [disabled]="inviteEmailFormControl.invalid">
+                        [disabled]="requestEmailFormControl.invalid || !isEmailValid">
                         <mat-icon>send</mat-icon>
                     </button>
                 </form>
@@ -67,6 +72,14 @@
     </mat-step>
 
     <mat-step label="Kész!" state="completed">
+        <div class="done" >
+            <h3>Gratulálunk!</h3>
+            <p>Sikeresen megtetted az első lépéseket</p>
+            <mat-icon >task_alt</mat-icon>
+            <a routerLink="/barton" routerLinkActive="active" >
+                Irány a főoldal! {{counter}}
+            </a>
+        </div>
     </mat-step>
 
     <!-- Icon Overrides -->

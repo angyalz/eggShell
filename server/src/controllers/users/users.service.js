@@ -11,6 +11,16 @@ exports.create = async (requestData) => {
     }
 };
 
+exports.checkExists = async (requestData) => {
+
+    try {
+        // return await Model.exists(requestData);
+        return await Model.find(requestData).select({ _id: 1}).lean()
+    } catch (err) {
+        console.error(err.message);
+    }
+};
+
 exports.findAll = async () => {
     try {
         return await Model.find().select({ _id: 0, userName: 1, email: 1 })
@@ -22,6 +32,16 @@ exports.findAll = async () => {
 exports.findById = async (id) => {
     try {
         return await Model.findById(id)
+    } catch (err) {
+        console.error(err.message);
+    }
+};
+
+exports.setConnectRequest = async (id, updateData) => {
+    try {
+        const user = await Model.findById(id);
+        user.pendingRequests.push(updateData);
+        return await user.save();
     } catch (err) {
         console.error(err.message);
     }

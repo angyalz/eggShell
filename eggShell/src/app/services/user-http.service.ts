@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { BaseHttpService } from './base-http.service';
 
@@ -13,6 +14,14 @@ export class UserHttpService extends BaseHttpService<User>{
   ) {
     super(http);
     this.entity = 'users'
+  }
+
+  checkUserByEmail(email: string): Observable<any> {
+    return this.http.post<any>(`${this.BASE_URL}${this.entity}`, {'email': email});
+  }
+
+  sendConnectionRequest(user: string, id: string): Observable<any> {
+    return this.http.patch<any>(`${this.BASE_URL}${this.entity}/${id}`, { '_id': user })
   }
 
 }

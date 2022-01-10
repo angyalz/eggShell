@@ -29,7 +29,7 @@ export class BaseHttpService<E> {
     return this.http.put<E>(`${this.BASE_URL}${this.entity}/${id}`, entity);
   }
 
-  deleteById(id: string): Observable<any> {
+  deleteById(id: string | undefined): Observable<any> {
     return this.http.delete(`${this.BASE_URL}${this.entity}/${id}`);
   }
 

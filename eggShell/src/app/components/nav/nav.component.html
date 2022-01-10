@@ -16,24 +16,24 @@
     </mat-toolbar>
     <mat-nav-list>
       <a *ngIf="isLoggedIn"
-        mat-list-item routerLink="/" routerLinkActive="active" 
+        mat-list-item routerLink="/main" routerLinkActive="active" 
         (click)="drawer.toggle()">
         <mat-icon>home</mat-icon>
         <span>Főoldal</span>
       </a>
-      <a *ngIf="isLoggedIn"
+      <a *ngIf="isLoggedIn" [disabled]="!hasBarton"
         mat-list-item routerLink="/add-egg" routerLinkActive="active" 
         (click)="drawer.toggle()">
-        <mat-icon>egg</mat-icon>
+        <mat-icon >egg</mat-icon>
         <span>Tojás</span>
       </a>
-      <a *ngIf="isLoggedIn"
+      <a *ngIf="isLoggedIn" [disabled]="!hasBarton"
         mat-list-item routerLink="/add-egg" routerLinkActive="active" 
         (click)="drawer.toggle()">
         <mat-icon>restaurant_menu</mat-icon>
         <span>Táp</span>
       </a>
-      <a *ngIf="isLoggedIn"
+      <a *ngIf="isLoggedIn" [disabled]="!hasBarton"
         mat-list-item routerLink="/add-egg" routerLinkActive="active" 
         (click)="drawer.toggle()">
         <mat-icon>trending_up</mat-icon>
@@ -126,12 +126,12 @@
     </mat-toolbar>
     <!-- Add Content Here -->
     <div class="progress">
-      <mat-progress-bar mode="indeterminate" *ngIf="progress.isLoading"></mat-progress-bar>
+      <!-- <mat-progress-bar mode="indeterminate" *ngIf="progress.isLoading"></mat-progress-bar> -->
     </div>
     <!-- <app-getting-started></app-getting-started> -->
-    <app-getting-started 
+    <!-- <app-getting-started 
       *ngIf="(isLoggedIn !== undefined) || (!hasBarton)">
-    </app-getting-started>
+    </app-getting-started> -->
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

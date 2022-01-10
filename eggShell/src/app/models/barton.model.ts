@@ -5,6 +5,7 @@ import { UsersOfBarton } from "./users-of-barton.model";
 
 export interface Barton {
     _id?: string;
+    active?: boolean,
     bartonName?: string,
     users: UsersOfBarton[],
     poultry: PoultryOfBarton[],

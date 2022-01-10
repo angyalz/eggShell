@@ -47,7 +47,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<LoginComponent>,
     // @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private _snackBar: MatSnackBar,
-    private router: Router,
     private bartonService: BartonService,
     private progress: ProgressService
   ) { }
@@ -63,10 +62,12 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   login(user: UserLogin) {
 
+    this.progress.isLoading = true;
+
     this.loginSubscription = this.authService.login(user)
       .subscribe({
-        next: (user: UserLoggedIn) => { 
-          this.getBartonsData(user._id);
+        next: (user: UserLoggedIn) => {
+          // this.getBartonsData(user._id);
         },
         error: (err) => {
           this._snackBar.open(
@@ -78,11 +79,19 @@ export class LoginComponent implements OnInit, OnDestroy {
             }
           );
           console.error(err);
+          this.dialogRef.close();
         },
         complete: () => {
           this.dialogRef.close();
           this.userLogin.reset();
-          this._snackBar.open(`Sikeres belépés`, 'OK', { duration: 2000, panelClass: ['snackbar-ok'] });
+          this._snackBar.open(
+            `Sikeres belépés`,
+            'OK',
+            {
+              duration: 2000,
+              panelClass: ['snackbar-ok']
+            }
+          );
           this.progress.isLoading = false;
           // this.router.navigate(['/']);
         }

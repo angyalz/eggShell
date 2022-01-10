@@ -82,6 +82,7 @@ exports.login = async (req, res, next) => {
             {
                 _id: user._id,
                 username: user.username,
+                email: user.email,
                 role: user.role,
                 bartons: user.barton,
             }, process.env.ACCESS_TOKEN_SECRET, {
@@ -93,6 +94,7 @@ exports.login = async (req, res, next) => {
         const refreshToken = jwt.sign({
             _id: user._id,
             username: user.username,
+            email: user.email,
             role: user.role,
             bartons: user.barton,
         }, process.env.REFRESH_TOKEN_SECRET, {
@@ -114,6 +116,7 @@ exports.login = async (req, res, next) => {
         res.json({
             _id: user._id,
             username: user.username,
+            email: user.email,
             role: user.role,
             bartons: user.barton,
             accessToken,
@@ -155,6 +158,7 @@ exports.refresh = async (req, res, next) => {
             {
                 _id: user._id,
                 username: user.username,
+                email: user.email,
                 role: user.role,
                 bartons: user.barton,
             }, process.env.ACCESS_TOKEN_SECRET, {
@@ -165,6 +169,7 @@ exports.refresh = async (req, res, next) => {
         res.json({
             _id: user._id,
             username: user.username,
+            email: user.email,
             role: user.role,
             bartons: user.barton,
             accessToken,

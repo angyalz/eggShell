@@ -7,6 +7,12 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, match: /.+\@.+\..+/, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
+    pendingRequests: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
     bartons: [
         {
             type: mongoose.Schema.Types.ObjectId,

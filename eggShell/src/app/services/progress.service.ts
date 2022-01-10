@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class ProgressService {
 
-  isLoading: boolean = true;
+  isLoading: boolean = false;
 
   constructor() { }
 

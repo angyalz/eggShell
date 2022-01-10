@@ -3,6 +3,7 @@ const idValidator = require('mongoose-id-validator');
 
 const BartonSchema = new mongoose.Schema({
 
+    active: { type: Boolean, default: true },
     bartonName: { type: String },
     users: [
         {

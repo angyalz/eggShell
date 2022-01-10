@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { environment } from 'src/environments/environment';
 import { AuthComponent } from '../auth/auth.component';
 import { BartonService } from 'src/app/services/barton.service';
 import { Barton } from 'src/app/models/barton.model';
+import { GettingStartedComponent } from '../getting-started/getting-started.component';
 
 export interface DialogData {
   tabIndex: 0;
@@ -26,7 +27,7 @@ export interface DialogData {
 })
 
 
-export class NavComponent implements OnInit, OnDestroy {
+export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -41,6 +42,7 @@ export class NavComponent implements OnInit, OnDestroy {
   userLogoutSubscription?: Subscription;
   userRefreshSubscription?: Subscription;
   getBartonsDataSubscription?: Subscription;
+  bartonsData: Barton[] | [] = [];
 
   isLoggedIn: boolean = false;
   hasBarton: boolean = false;
@@ -61,11 +63,14 @@ export class NavComponent implements OnInit, OnDestroy {
     public progress: ProgressService,
   ) { }
 
+  ngAfterViewInit(): void {
+    // this.navigate();
+  }
+
   ngOnInit(): void {
 
     this.checkRefreshToken();
     this.getUserObject();
-
   }
 
   ngOnDestroy(): void {
@@ -79,8 +84,9 @@ export class NavComponent implements OnInit, OnDestroy {
   checkRefreshToken(): void {
     if (localStorage.getItem('refreshToken')) {
       this.userRefreshSubscription = this.authService.refreshUserAuthentication().subscribe({
-        next: (user: UserLoggedIn) => {
-          this.getBartonsData(user._id);
+        next: (user: UserLoggedIn) => { 
+          console.log('%ccheckRefreshToken done', 'color: yellow;', user)    // debug
+          this.navigate('hasToken');
         },
         error: (err) => {
           this._snackBar.open(`A munkamenet lejárt, lépj be újra!`, 'OK', {
@@ -91,6 +97,8 @@ export class NavComponent implements OnInit, OnDestroy {
         },
         complete: () => { }
       })
+    } else {
+      this.navigate('hasn`t token');
     }
     // console.log('token checked at nav');    // debug
   }
@@ -101,6 +109,9 @@ export class NavComponent implements OnInit, OnDestroy {
         next: (user) => {
           this.userObject = user;
           this.isLoggedIn = Boolean(this.userObject);
+
+          if (this.userObject) { this.getBartonsData(this.userObject?._id) }
+          
           console.log('userObject at nav: ', this.userObject, this.isLoggedIn)  // debug
         },
         error: (err) => { console.error(err) }
@@ -112,17 +123,19 @@ export class NavComponent implements OnInit, OnDestroy {
 
     this.progress.isLoading = true;
 
-    // console.log('getBartonsData called', id); // debug
+    console.log('getBartonsData called', id); // debug
 
     this.getBartonsDataSubscription = this.bartonService.getBartonsData(id)
       .subscribe({
         next: (data: Barton[]) => { 
+          this.bartonsData = data;
           this.hasBarton = !!(data.length);
+          this.navigate('getBartonsData');
           // console.log('hasBarton: ', this.hasBarton);   // debug
         },
         error: (err: { error: { message: any; }; status: any; }) => {
           this._snackBar.open(
-            `Hoppá, nem sikerült lekérni az udvar adatait! \n ${err.error.message}\nKód: ${err.status}`,
+            `Hoppá, nem sikerült lekérni az udvarok adatait! \n ${err.error.message}\nKód: ${err.status}`,
             'OK',
             {
               duration: 5000,
@@ -137,6 +150,15 @@ export class NavComponent implements OnInit, OnDestroy {
       })
   }
 
+  navigate(from?: string): void {
+    console.log('%cnavigate starts from', 'color:orange', from)    // debug
+    if ((!this.isLoggedIn) && (!this.hasBarton)) {
+      this.router.navigate(['/getting-started'])
+    } else {
+      this.router.navigate(['/main'])
+    }
+  }
+
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(AuthComponent, {
       data: {
@@ -144,9 +166,7 @@ export class NavComponent implements OnInit, OnDestroy {
       }
     });
 
-    dialogRef.afterClosed().subscribe({
-      next: (result) => console.log('loginDialog result: ', result),
-    });
+    dialogRef.afterClosed().subscribe(result => { });
   }
 
   openRegDialog(): void {
@@ -166,7 +186,7 @@ export class NavComponent implements OnInit, OnDestroy {
           duration: 2000,
           panelClass: ['snackbar-ok']
         });
-        this.router.navigate([''])
+        this.router.navigate(['/getting-started'])
       },
       error: (err) => { console.error(err) },
       complete: () => { }

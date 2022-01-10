@@ -1,11 +1,11 @@
-import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy, Input } from '@angular/core';
 import { CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PoultryOfBarton } from 'src/app/models/poultry-of-barton.model';
 import { Poultry } from 'src/app/models/poultry.model';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PoultryHttpService } from 'src/app/services/poultry-http.service';
 import { ProgressService } from 'src/app/services/progress.service';
@@ -31,18 +31,20 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
   bartonsDataSubscription?: Subscription;
   userHasBarton: boolean = false;
 
-  bartonsData: Barton[] = [
-    {
-      bartonName: 'Udvar 1',
-      users: [
-        {
-          user: this.userObject?._id || '',
-          role: 'owner'
-        }
-      ],
-      poultry: []
-    }
-  ];
+  @ Input() bartonsData: Barton[] = [];
+  // bartonsData: Observable<Barton[] | []> = new Observable;
+  // = [
+    // {
+    //   bartonName: 'Udvar 1',
+    //   users: [
+    //     {
+    //       user: this.userObject?._id || '',
+    //       role: 'owner'
+    //     }
+    //   ],
+    //   poultry: []
+    // }
+  // ];
   poultryRef!: Poultry[];
   poultry: PoultryOfBarton[] = [];
 
@@ -59,8 +61,8 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
 
   ngOnInit(): void {
-    this.progress.isLoading = true;
-    this.getBartonList();
+    // this.progress.isLoading = true;
+    // this.getBartonList();
   }
 
   ngOnDestroy(): void {
@@ -70,6 +72,7 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.getUserObject();
+    this.getBartonList();
     this.getPoultryData();
     console.log('UserObject at barton component: ', this.userObject);   // debug
     console.log('BartonsData at barton component: ', this.bartonsData);   // debug
@@ -146,7 +149,8 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
 
     console.log('bartonsData at drop: ', this.bartonsData);   //debug
 
-    this.bartonService.saveBartonData();
+    // this.bartonService.saveBartonData();
+    this.saveBarton();
   }
 
   addNewBarton(index: number): void {
@@ -167,23 +171,41 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
   deleteBarton(index: number): void {
     console.log('tabIndex at deleteTab: ', index); // debug
     this.bartonsData.splice(index, 1);
+    if (this.bartonsData[index]._id) {
+      this.bartonService.deleteBarton(this.bartonsData[index]._id);
+    }
+  }
+
+  saveBarton(): void {
+    this.bartonService.setBartonList(this.bartonsData);
   }
 
   isOwner(barton: Barton): boolean {
     if (this.userObject) {
       for (const user of barton.users) {
         if (user.user === this.userObject._id && user.role === 'owner') {
-          return false;
+          return true;
         }
       }
     }
+    return false;
+  }
+
+  // logger(event?: any): void {    // debug
+  //   console.log('logger: ', event);
+  //   console.log('logger: ', this.bartonsData);
+  //   console.log('logger: ', this.bartonService.getBartonListValue());
+  //   this.bartonService.setBartonList(this.bartonsData);
+  // }
+
+  allowMove() {
     return true;
   }
 
-  logger(event: any): void {    // debug
-    console.log('logger: ', event);
-    console.log('logger: ', this.bartonsData);
-    console.log('logger: ', this.bartonService.getBartonListValue());
+  denyMove() {    //debug
+    return false;
   }
+
+
 
 }

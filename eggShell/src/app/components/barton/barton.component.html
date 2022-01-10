@@ -1,13 +1,12 @@
 <div cdkDropListGroup>
 
     <div class="barton-container" >
-        <div class="barton"  
-            *ngFor="let barton of bartonsData; index as i">
-            <div class="barton-header">
+        <mat-card class="barton" *ngFor="let barton of (bartonsData); index as i">
+            <mat-card-header class="barton-header" *ngIf="barton.active">
                 <mat-form-field>
                     <form ngForm [ngFormOptions]="{updateOn: 'blur'}">
                     <input type="text" matInput appearance="standard" ngModel [(ngModel)]="barton.bartonName"
-                        [ngModelOptions]="{standalone: true}" [value]="barton.bartonName">
+                        [ngModelOptions]="{standalone: true}" [value]="barton.bartonName" [disabled]="!isOwner(barton)">
                 </form>
                 </mat-form-field>
                 
@@ -15,18 +14,18 @@
                     <button mat-icon-button color="accent" (click)="addNewBarton(i)">
                         <mat-icon>add_circle</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="deleteBarton(i)" [disabled]="isOwner(barton)">
+                    <button mat-icon-button color="warn" (click)="deleteBarton(i)" [disabled]="!isOwner(barton)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>
 
-            </div>
+            </mat-card-header>
 
             <div class="poultry-list" cdkDropList [cdkDropListData]="(barton.poultry)"
-                (cdkDropListDropped)="drop($event)" cdkDropListOrientation="horizontal">
+                (cdkDropListDropped)="drop($event)" cdkDropListOrientation="horizontal" [cdkDropListEnterPredicate]="isOwner(barton) ? allowMove : denyMove">
                 <div class="items" *ngFor="let item of (barton.poultry)" cdkDrag [matBadge]="item.quantity"
-                    matBadgeColor="accent" [matMenuTriggerFor]="menu" (click)="logger(item)">
-                    <mat-menu #menu="matMenu" (click)="$event.stopPropagation()">
+                    matBadgeColor="accent" [matMenuTriggerFor]="menu" [cdkDragDisabled]="!isOwner(barton)" (menuClosed)="saveBarton()">
+                    <mat-menu #menu="matMenu" (click)="$event.stopPropagation()" >
                         <form class="item-form" ngForm mat-menu-item [ngFormOptions]="{updateOn: 'blur'}">
                             <mat-form-field class="form-field" appearance="standard">
                                 <mat-label>egyedszám</mat-label>
@@ -34,7 +33,7 @@
                                     <input type="number" matInput ngModel placeholder="egyedszám"
                                         [(ngModel)]="item.quantity" [ngModelOptions]="{standalone: true}"
                                         [value]="item.quantity" min=0 (keyup.enter)="trigger.closeMenu()"
-                                        (click)="$event.stopPropagation()" (blur)="logger(item)">
+                                        (click)="$event.stopPropagation()">
                                 </div>
                             </mat-form-field>
                             <mat-form-field class="form-field" appearance="standard">
@@ -42,21 +41,21 @@
                                 <input type="text" matInput ngModel placeholder="egyedi név"
                                     [(ngModel)]="item.customName" [ngModelOptions]="{standalone: true}"
                                     [value]="item.customName || ''" (keyup.enter)="trigger.closeMenu()"
-                                    (event)="logger($event)" (click)="$event.stopPropagation()" (blur)="logger(item)">
+                                    (click)="$event.stopPropagation()">
                             </mat-form-field>
                             <mat-form-field class="form-field" appearance="standard">
                                 <mat-label>beszerzés dátuma</mat-label>
                                 <input type="date" matInput ngModel placeholder="beszerzés dátuma"
                                     [(ngModel)]="item.purchaseDate" [ngModelOptions]="{standalone: true}"
                                     [value]="item.purchaseDate" (keyup.enter)="trigger.closeMenu()"
-                                    (event)="logger($event)" (click)="$event.stopPropagation()" (blur)="logger(item)">
+                                    (click)="$event.stopPropagation()">
                             </mat-form-field>
                             <mat-form-field class="form-field" appearance="standard">
                                 <mat-label>ár</mat-label>
                                 <input type="number" matInput ngModel placeholder="egyed ára"
                                     [(ngModel)]="item.purchasePrice" [ngModelOptions]="{standalone: true}"
                                     [value]="item.purchasePrice" min=0 (keyup.enter)="trigger.closeMenu()"
-                                    (event)="logger($event)" (click)="$event.stopPropagation()" (blur)="logger(item)">
+                                    (click)="$event.stopPropagation()">
                                 <span matSuffix>Ft</span>
                             </mat-form-field>
                             <mat-form-field class="form-field" appearance="standard">
@@ -64,7 +63,7 @@
                                 <input type="number" matInput ngModel placeholder="egyed kora beszerzéskor"
                                     [(ngModel)]="item.ageAtPurchase" [ngModelOptions]="{standalone: true}"
                                     [value]="item.ageAtPurchase" min=0 (keyup.enter)="trigger.closeMenu()"
-                                    (event)="logger($event)" (click)="$event.stopPropagation()" (blur)="logger(item)">
+                                    (click)="$event.stopPropagation()">
                                 <span matSuffix>hét</span>
                             </mat-form-field>
                         </form>
@@ -75,7 +74,7 @@
                     <h6 *ngIf="!item.customName && (item.nameOfSex !== item.species)">{{item.nameOfSex}}</h6>
                 </div>
             </div>
-        </div>
+        </mat-card>
     </div>
 
     <div class="poultry-container">

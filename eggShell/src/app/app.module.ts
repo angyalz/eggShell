@@ -43,6 +43,7 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { SettingsComponent } from './components/settings/settings.component';
 
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { MainComponent } from './components/main/main.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
     NavComponent,
     RegistrationComponent,
     SettingsComponent,
+    MainComponent,
   ],
   imports: [
     AppRoutingModule,

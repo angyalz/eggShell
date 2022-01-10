@@ -33,6 +33,7 @@ export class AuthService {
                 {
                   _id: loginData._id,
                   username: loginData.username,
+                  email: loginData.email,
                   role: loginData.role,
                   bartons: loginData.bartons,
                   accessToken: loginData.accessToken,
@@ -60,6 +61,7 @@ export class AuthService {
               this.userLoggedInObject.next({
                 _id: res._id,
                 username: res.username,
+                email: res.email,
                 role: res.role,
                 bartons: res.bartons,
                 accessToken: res.accessToken,

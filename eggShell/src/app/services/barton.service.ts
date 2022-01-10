@@ -46,6 +46,7 @@ export class BartonService {
                 [
                   {
                     // _id: '',
+                    active: true,
                     bartonName: 'Udvar 1',
                     users: [{
                       user: userId,
@@ -61,7 +62,6 @@ export class BartonService {
         })
       )
   }
-
 
   saveBartonData(): void {
 
@@ -112,6 +112,15 @@ export class BartonService {
     }
   }
 
+  deleteBarton(id: string | undefined): void {
+    this.bartonHttp.deleteById(id)
+      .subscribe({
+        next: (data) => {},
+        error: (err) => { console.error(err) },
+        complete: () => {}
+      })
+  }
+
   incomingDataTransform(data: any[]) {
 
     let transformedBartonList: Barton[] = [];
@@ -136,7 +145,7 @@ export class BartonService {
 
         }
       }
-      
+
       if (item.poultry && !!item.poultry.length) {
         for (const elem of item.poultry) {
 
@@ -197,6 +206,7 @@ export class BartonService {
       let barton: Barton =
       {
         _id: item._id,
+        active: item.active,
         bartonName: item.bartonName,
         users: usersOfBarton,
         poultry: poultryOfBarton,
@@ -275,6 +285,7 @@ export class BartonService {
 
       let barton: BartonToSave =
       {
+        active: item.active,
         bartonName: item.bartonName,
         users: item.users,
         poultry: poultryOfBarton,
@@ -301,6 +312,7 @@ export class BartonService {
 
   setBartonList(data: Barton[]): void {
     this.bartonList.next(data);
+    this.saveBartonData();                      // autoSave!!!
   }
 }
 

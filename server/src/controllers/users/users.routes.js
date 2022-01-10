@@ -4,8 +4,8 @@ const controller = require('./users.controller');
 const authenticationByJWT = require('../../controllers/auth/authenticate');
 const adminRoleHandler = require('../../controllers/auth/adminOnly');
 
-router.post('/', (req, res, next) => {
-    return controller.create(req, res, next);
+router.post('/', authenticationByJWT, (req, res, next) => {
+    return controller.checkExists(req, res, next);
 });
 
 router.get('/', authenticationByJWT, adminRoleHandler, (req, res, next) => {
@@ -17,7 +17,7 @@ router.get('/:id', authenticationByJWT, (req, res, next) => {
 });
 
 router.patch('/:id', authenticationByJWT, (req, res, next) => {
-    return controller.update(req, res, next);
+    return controller.setConnectRequest(req, res, next);
 });
 
 router.put('/:id', authenticationByJWT, (req, res, next) => {
