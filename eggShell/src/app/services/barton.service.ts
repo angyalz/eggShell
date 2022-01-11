@@ -33,50 +33,52 @@ export class BartonService {
 
   getBartonsData(userId: string): Observable<Barton[]> {
 
-      this.progress.isLoading = true;
+    this.progress.isLoading = true;
 
-      return this.bartonHttp.getAll(`?users.user=${userId}`)
-        .pipe(
-          tap({
-            next: (bartonsData: Barton[]) => {
-              this.userHasBarton = !!(bartonsData?.length);
-              if (bartonsData && this.userHasBarton) {
+    return this.bartonHttp.getAll(`?users.user=${userId}`)
+      .pipe(
+        tap({
+          next: (bartonsData: Barton[]) => {
+            this.userHasBarton = !!(bartonsData?.length);
+            if (bartonsData && this.userHasBarton) {
               // this.userHasBarton$.next(!!(bartonsData?.length));
               // if (bartonsData && this.userHasBarton$) {
-                console.log('bartonsData at bartonService before transform: ', bartonsData);     // debug
-                this.bartonList$.next(
-                  this.incomingDataTransform(bartonsData)
-                )
-                this.progress.isLoading = false;
-              } else if (bartonsData && !this.userHasBarton) {
+              console.log('bartonsData at bartonService before transform: ', bartonsData);     // debug
+              this.bartonList$.next(
+                this.incomingDataTransform(bartonsData)
+              )
+              this.progress.isLoading = false;
+            } else if (bartonsData && !this.userHasBarton) {
               // } else if (bartonsData && !this.userHasBarton$) {
-                console.log('bartonsData at bartonService: ', bartonsData);     // debug
-                this.bartonList$.next(
-                  [
-                    {
-                      // _id: '',
-                      active: true,
-                      bartonName: 'Udvar 1',
-                      users: [{
-                        user: userId,
-                        role: 'owner'
-                      }],
-                      poultry: []
-                    }
-                  ]
-                )
-                this.progress.isLoading = false;
-              }
+              console.log('bartonsData at bartonService: ', bartonsData);     // debug
+              this.bartonList$.next(
+                [
+                  {
+                    // _id: '',
+                    active: true,
+                    bartonName: 'Udvar 1',
+                    users: [{
+                      user: userId,
+                      role: 'owner'
+                    }],
+                    poultry: []
+                  }
+                ]
+              )
+              this.progress.isLoading = false;
             }
-          })
-        )
+          }
+        })
+      )
   }
 
   saveBartonData(data?: Barton[]): void {
 
     this.progress.isLoading = true;
 
-    let dataSource: BartonToSave[] = this.outgoingDataTransform(data) || this.outgoingDataTransform(this.getBartonListValue());
+    let incomingData = data || this.getBartonListValue();
+
+    let dataSource: BartonToSave[] = this.outgoingDataTransform(incomingData);
     let bartonList: BartonToSave[] = [];
 
     for (const barton of dataSource) {
@@ -95,6 +97,10 @@ export class BartonService {
               console.error(err);
             },
             complete: () => {
+              let user = this.authService.getUserAuthData();
+              if (user) {
+                this.getBartonsData(user._id);
+              }
               this.progress.isLoading = false;
             }
           })
@@ -112,6 +118,10 @@ export class BartonService {
                 console.error(err);
               },
               complete: () => {
+                let user = this.authService.getUserAuthData();
+                if (user) {
+                  this.getBartonsData(user._id);
+                }
                 this.progress.isLoading = false;
               }
             })
@@ -119,10 +129,6 @@ export class BartonService {
           console.error('barton._id missing!');   // debug
         }
       }
-    }
-    let user = this.authService.getUserAuthData();
-    if (user) {
-      this.getBartonsData(user._id);
     }
   }
 
@@ -132,15 +138,17 @@ export class BartonService {
         .subscribe({
           next: (data) => { },
           error: (err) => { console.error(err) },
-          complete: () => { }
+          complete: () => {
+            let user = this.authService.getUserAuthData();
+            if (user) {
+              this.getBartonsData(user._id);
+            }
+          }
         })
     } else {
       this.bartonHttp.setBartonInactive(barton._id);
     }
-    let user = this.authService.getUserAuthData();
-    if (user) {
-      this.getBartonsData(user._id);
-    }
+
   }
 
   incomingDataTransform(data: any) {
