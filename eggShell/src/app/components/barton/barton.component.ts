@@ -28,23 +28,12 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
 
   userObject!: UserLoggedIn | null;
   userSignInSubscription?: Subscription;
-  bartonsDataSubscription?: Subscription;
+  // bartonsDataSubscription: Subscription = this.bartonService.getBartonList().subscribe();
   userHasBarton: boolean = false;
 
-  @ Input() bartonsData: Barton[] = [];
-  // bartonsData: Observable<Barton[] | []> = new Observable;
-  // = [
-    // {
-    //   bartonName: 'Udvar 1',
-    //   users: [
-    //     {
-    //       user: this.userObject?._id || '',
-    //       role: 'owner'
-    //     }
-    //   ],
-    //   poultry: []
-    // }
-  // ];
+  // bartonsData$: Barton[] = [];
+  bartonsData$: Observable<Barton[]> = this.bartonService.getBartonList();
+  
   poultryRef!: Poultry[];
   poultry: PoultryOfBarton[] = [];
 
@@ -67,15 +56,15 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.userSignInSubscription) this.userSignInSubscription.unsubscribe();
-    if (this.bartonsDataSubscription) this.bartonsDataSubscription.unsubscribe();
+    // if (this.bartonsDataSubscription) this.bartonsDataSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
     this.getUserObject();
-    this.getBartonList();
+    // this.getBartonList();
     this.getPoultryData();
     console.log('UserObject at barton component: ', this.userObject);   // debug
-    console.log('BartonsData at barton component: ', this.bartonsData);   // debug
+    console.log('BartonsData at barton component: ', this.bartonsData$);   // debug
   }
 
   getUserObject(): void {
@@ -91,15 +80,16 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
       })
   }
 
-  getBartonList(): void {
-    this.bartonsDataSubscription = this.bartonService.getBartonList()
-      .subscribe({
-        next: (data: Barton[]) => {
-          this.bartonsData = data;
-          console.log('bartonsData at barton`s subscribtion: ', this.bartonsData)  // debug
-        }
-      })
-  }
+  // getBartonList(): void {
+  //   this.bartonsDataSubscription = this.bartonService.getBartonList()
+  //     .subscribe({
+  //       next: (data: Barton[]) => {
+  //         this.bartonsData = data;
+  //         console.log('bartonsData at barton`s subscribtion: ', this.bartonsData)  // debug
+  //         console.log('%cBartonList asObservable:', 'color: yellow', this.bartonService.getBartonList());     // debug
+  //       }
+  //     })
+  // }
 
   getPoultryData(): void {
     this.progress.isLoading = true;
@@ -147,16 +137,16 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.poultry = JSON.parse(JSON.stringify(this.poultryRef));
 
-    console.log('bartonsData at drop: ', this.bartonsData);   //debug
+    console.log('bartonsData at drop: ', this.bartonsData$);   //debug
 
-    // this.bartonService.saveBartonData();
-    this.saveBarton();
+    this.bartonService.saveBartonData();
+    // this.saveBarton(this.bartonsData$);
   }
 
-  addNewBarton(index: number): void {
+  addNewBarton(index?: number): void {
     const newBarton: Barton = {
       _id: '',
-      bartonName: 'Udvar ' + (this.bartonsData.length + 1),
+      bartonName: 'Udvar ' + (this.bartonService.getBartonListValue().length + 1),
       users: [
         {
           user: this.userObject?._id || '',
@@ -165,19 +155,21 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
       ],
       poultry: []
     }
-    this.bartonsData.splice(index + 1, 0, newBarton);
+    // this.bartonsData.splice(index + 1, 0, newBarton);
+    this.bartonService.saveBartonData([newBarton]);
   }
 
-  deleteBarton(index: number): void {
-    console.log('tabIndex at deleteTab: ', index); // debug
-    this.bartonsData.splice(index, 1);
-    if (this.bartonsData[index]._id) {
-      this.bartonService.deleteBarton(this.bartonsData[index]._id);
-    }
+  deleteBarton(barton: Barton): void {
+    console.log('tabIndex at deleteTab: ', barton); // debug
+    // this.bartonsData.splice(index, 1);
+    // if (this.bartonsData[index]._id) {
+      // this.bartonService.deleteBarton(this.bartonsData[index]._id);
+    // }
+    this.bartonService.deleteBarton(barton);
   }
 
-  saveBarton(): void {
-    this.bartonService.setBartonList(this.bartonsData);
+  saveBarton(barton: Barton): void {
+    this.bartonService.saveBartonData([barton]);
   }
 
   isOwner(barton: Barton): boolean {

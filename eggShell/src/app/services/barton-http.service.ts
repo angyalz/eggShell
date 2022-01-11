@@ -23,4 +23,8 @@ export class BartonHttpService extends BaseHttpService<Barton>{
     return this.http.put<BartonToSave>(`${this.BASE_URL}${this.entity}/${id}`, data);
   }
 
+  setBartonInactive(id: string | undefined): Observable<any> {
+    return this.http.patch<any>(`${this.BASE_URL}${this.entity}/${id}`, {active: false});
+  }
+
 }

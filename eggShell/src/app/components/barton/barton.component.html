@@ -1,7 +1,7 @@
 <div cdkDropListGroup>
 
     <div class="barton-container" >
-        <mat-card class="barton" *ngFor="let barton of (bartonsData); index as i">
+        <mat-card class="barton" *ngFor="let barton of (bartonsData$ | async); index as i">
             <mat-card-header class="barton-header" *ngIf="barton.active">
                 <mat-form-field>
                     <form ngForm [ngFormOptions]="{updateOn: 'blur'}">
@@ -14,7 +14,7 @@
                     <button mat-icon-button color="accent" (click)="addNewBarton(i)">
                         <mat-icon>add_circle</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="deleteBarton(i)" [disabled]="!isOwner(barton)">
+                    <button mat-icon-button color="warn" (click)="deleteBarton(barton)" [disabled]="!isOwner(barton)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>
@@ -24,7 +24,7 @@
             <div class="poultry-list" cdkDropList [cdkDropListData]="(barton.poultry)"
                 (cdkDropListDropped)="drop($event)" cdkDropListOrientation="horizontal" [cdkDropListEnterPredicate]="isOwner(barton) ? allowMove : denyMove">
                 <div class="items" *ngFor="let item of (barton.poultry)" cdkDrag [matBadge]="item.quantity"
-                    matBadgeColor="accent" [matMenuTriggerFor]="menu" [cdkDragDisabled]="!isOwner(barton)" (menuClosed)="saveBarton()">
+                    matBadgeColor="accent" [matMenuTriggerFor]="menu" [cdkDragDisabled]="!isOwner(barton)" (menuClosed)="saveBarton(barton)">
                     <mat-menu #menu="matMenu" (click)="$event.stopPropagation()" >
                         <form class="item-form" ngForm mat-menu-item [ngFormOptions]="{updateOn: 'blur'}">
                             <mat-form-field class="form-field" appearance="standard">

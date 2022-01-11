@@ -131,7 +131,7 @@ export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
           this.bartonsData = data;
           this.hasBarton = !!(data.length);
           this.navigate('getBartonsData');
-          // console.log('hasBarton: ', this.hasBarton);   // debug
+          console.log('hasBarton: ', this.hasBarton);   // debug
         },
         error: (err: { error: { message: any; }; status: any; }) => {
           this._snackBar.open(

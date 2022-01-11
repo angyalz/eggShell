@@ -161,7 +161,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.loginSubscription = this.authService.login(user)
       .subscribe({
         next: (user: UserLoggedIn) => {
-          this.getBartonsData(user._id);
+          // this.getBartonsData(user._id);
         },
         error: (err) => {
           this._snackBar.open(
@@ -183,30 +183,30 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       })
   }
 
-  getBartonsData(id: string): void {
+  // getBartonsData(id: string): void {
 
-    this.progress.isLoading = true;
+  //   this.progress.isLoading = true;
 
-    console.log('getBartonsData called', id); // debug
+  //   console.log('getBartonsData called', id); // debug
 
-    this.getBartonsDataSubscription = this.bartonService.getBartonsData(id).subscribe({
-      next: () => { },
-      error: (err: { error: { message: any; }; status: any; }) => {
-        this._snackBar.open(
-          `Hoppá, nem sikerült lekérni az udvar adatait! \n ${err.error.message}\nKód: ${err.status}`,
-          'OK',
-          {
-            duration: 5000,
-            panelClass: ['snackbar-error']
-          }
-        );
-        console.error(err);
-      },
-      complete: () => {
-        this.progress.isLoading = false;
-      }
-    })
-  }
+  //   this.getBartonsDataSubscription = this.bartonService.getBartonsData(id).subscribe({
+  //     next: () => { },
+  //     error: (err: { error: { message: any; }; status: any; }) => {
+  //       this._snackBar.open(
+  //         `Hoppá, nem sikerült lekérni az udvar adatait! \n ${err.error.message}\nKód: ${err.status}`,
+  //         'OK',
+  //         {
+  //           duration: 5000,
+  //           panelClass: ['snackbar-error']
+  //         }
+  //       );
+  //       console.error(err);
+  //     },
+  //     complete: () => {
+  //       this.progress.isLoading = false;
+  //     }
+  //   })
+  // }
 
   getErrorMessage(formName: FormGroup, formControlName: string) {
     return this.validErrorHandler.getErrorMessage(formName, formControlName);

@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class BaseHttpService<E> {
+export class BaseHttpService<E> {     //  extends {id?: string}
 
   BASE_URL = environment.apiUrl;
   entity!: string;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, from, map, Observable, Subscription, tap } from 'rxjs';
 import { BartonToSave } from '../models/barton-to-save.model';
 import { Barton } from '../models/barton.model';
 import { FeedOfBartonToSave } from '../models/feed-of-barton-to-save.model';
@@ -8,7 +8,9 @@ import { MedicineOfBartonToSave } from '../models/medicine-of-barton-to-save.mod
 import { MedicineOfBarton } from '../models/medicine-of-barton.model';
 import { PoultryOfBartonToSave } from '../models/poultry-of-barton-to-save.model';
 import { PoultryOfBarton } from '../models/poultry-of-barton.model';
+import { UserLoggedIn } from '../models/user-logged-in.model';
 import { UsersOfBarton } from '../models/users-of-barton.model';
+import { AuthService } from './auth.service';
 import { BartonHttpService } from './barton-http.service';
 import { ProgressService } from './progress.service';
 
@@ -17,57 +19,64 @@ import { ProgressService } from './progress.service';
 })
 export class BartonService {
 
-  private bartonList: BehaviorSubject<Barton[] | []> = new BehaviorSubject<Barton[] | []>([]);
+  private bartonList$: BehaviorSubject<Barton[]> = new BehaviorSubject<Barton[]>([]);
+  // private userHasBarton$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private userHasBarton: boolean = false;
+  // private userObject!: UserLoggedIn | null;
+  // private userObjectSubscription: Subscription = this.authService.getUserLoggedInObj().subscribe(user => this.userObject = user);
 
   constructor(
     private bartonHttp: BartonHttpService,
     public progress: ProgressService,
+    private authService: AuthService,
   ) { }
 
   getBartonsData(userId: string): Observable<Barton[]> {
 
-    this.progress.isLoading = true;
+      this.progress.isLoading = true;
 
-    return this.bartonHttp.getAll(`?users.user=${userId}`)
-      .pipe(
-        tap({
-          next: (bartonsData: Barton[]) => {
-            this.userHasBarton = !!(bartonsData?.length);
-            if (bartonsData && this.userHasBarton) {
-              console.log('bartonsData at bartonService before transform: ', bartonsData);     // debug
-              this.bartonList.next(
-                this.incomingDataTransform(bartonsData)
-              )
-              this.progress.isLoading = false;
-            } else if (bartonsData && !this.userHasBarton) {
-              console.log('bartonsData at bartonService: ', bartonsData);     // debug
-              this.bartonList.next(
-                [
-                  {
-                    // _id: '',
-                    active: true,
-                    bartonName: 'Udvar 1',
-                    users: [{
-                      user: userId,
-                      role: 'owner'
-                    }],
-                    poultry: []
-                  }
-                ]
-              )
-              this.progress.isLoading = false;
+      return this.bartonHttp.getAll(`?users.user=${userId}`)
+        .pipe(
+          tap({
+            next: (bartonsData: Barton[]) => {
+              this.userHasBarton = !!(bartonsData?.length);
+              if (bartonsData && this.userHasBarton) {
+              // this.userHasBarton$.next(!!(bartonsData?.length));
+              // if (bartonsData && this.userHasBarton$) {
+                console.log('bartonsData at bartonService before transform: ', bartonsData);     // debug
+                this.bartonList$.next(
+                  this.incomingDataTransform(bartonsData)
+                )
+                this.progress.isLoading = false;
+              } else if (bartonsData && !this.userHasBarton) {
+              // } else if (bartonsData && !this.userHasBarton$) {
+                console.log('bartonsData at bartonService: ', bartonsData);     // debug
+                this.bartonList$.next(
+                  [
+                    {
+                      // _id: '',
+                      active: true,
+                      bartonName: 'Udvar 1',
+                      users: [{
+                        user: userId,
+                        role: 'owner'
+                      }],
+                      poultry: []
+                    }
+                  ]
+                )
+                this.progress.isLoading = false;
+              }
             }
-          }
-        })
-      )
+          })
+        )
   }
 
-  saveBartonData(): void {
+  saveBartonData(data?: Barton[]): void {
 
     this.progress.isLoading = true;
 
-    let dataSource: BartonToSave[] = this.outgoingDataTransform(this.getBartonListValue());
+    let dataSource: BartonToSave[] = this.outgoingDataTransform(data) || this.outgoingDataTransform(this.getBartonListValue());
     let bartonList: BartonToSave[] = [];
 
     for (const barton of dataSource) {
@@ -91,6 +100,7 @@ export class BartonService {
           })
 
       } else {
+
         if (barton._id) {
           this.bartonHttp.updateBarton(barton, barton._id)
             .subscribe({
@@ -110,18 +120,30 @@ export class BartonService {
         }
       }
     }
+    let user = this.authService.getUserAuthData();
+    if (user) {
+      this.getBartonsData(user._id);
+    }
   }
 
-  deleteBarton(id: string | undefined): void {
-    this.bartonHttp.deleteById(id)
-      .subscribe({
-        next: (data) => {},
-        error: (err) => { console.error(err) },
-        complete: () => {}
-      })
+  deleteBarton(barton: Barton): void {
+    if (barton.poultry.length === 0) {
+      this.bartonHttp.deleteById(barton._id)
+        .subscribe({
+          next: (data) => { },
+          error: (err) => { console.error(err) },
+          complete: () => { }
+        })
+    } else {
+      this.bartonHttp.setBartonInactive(barton._id);
+    }
+    let user = this.authService.getUserAuthData();
+    if (user) {
+      this.getBartonsData(user._id);
+    }
   }
 
-  incomingDataTransform(data: any[]) {
+  incomingDataTransform(data: any) {
 
     let transformedBartonList: Barton[] = [];
 
@@ -303,17 +325,29 @@ export class BartonService {
   }
 
   getBartonList(): Observable<Barton[]> {
-    return this.bartonList.asObservable();
+    return this.bartonList$.asObservable();
   }
 
   getBartonListValue(): Barton[] {
-    return this.bartonList.value;
+    return this.bartonList$.value;
   }
 
   setBartonList(data: Barton[]): void {
-    this.bartonList.next(data);
+    this.bartonList$.next(data);
     this.saveBartonData();                      // autoSave!!!
   }
+
+  unsetBartonList(): void {
+    this.bartonList$.next([]);
+  }
+
+  // getUserHasBarton(): Observable<boolean> {
+  //   return this.userHasBarton$.asObservable();
+  // }
+
+  // getUserHasBartonValue(): boolean {
+  //   return this.userHasBarton$.value;
+  // }
 }
 
 

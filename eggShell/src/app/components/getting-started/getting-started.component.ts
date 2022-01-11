@@ -236,7 +236,7 @@ export class GettingStartedComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   saveBarton(): void {
-    this.bartonService.setBartonList(this.bartonComponent.bartonsData);
+    this.bartonService.setBartonList(this.bartonService.getBartonListValue());
   }
 
   getStepperIndex(index: any): void {

@@ -26,7 +26,7 @@ router.put('/:id', authenticationByJWT, (req, res, next) => {
     return controller.update(req, res, next);
 });
 
-router.delete('/:id', authenticationByJWT, adminRoleHandler, (req, res, next) => {
+router.delete('/:id', authenticationByJWT, (req, res, next) => {
     return controller.delete(req, res, next);
 });
 

@@ -14,7 +14,9 @@ export class AuthService {
   private BASE_URL = environment.apiUrl;
   private userLoggedInObject: BehaviorSubject<UserLoggedIn | null> = new BehaviorSubject<UserLoggedIn | null>(null);
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+  ) { }
 
   regNewUser(user: any): Observable<User> {
     return this.http.post<User>(`${this.BASE_URL}register`, user);
