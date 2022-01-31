@@ -23,7 +23,8 @@ div {
             flex-direction: column;
             margin: 1em auto;
             padding: 0;
-            max-width: 21em;
+            // max-width: 21em;
+            min-width: 20em;
             box-shadow: 4px 4px 12px #ccc;
 
             .poultry-list {
@@ -53,7 +54,7 @@ div {
         display: flex;
         flex-direction: column;
         width: 100%;
-        min-height: 10em;
+        // min-height: 10em;
         margin: 2em auto 0;
         text-align: center;
         box-shadow: 4px 4px 12px #ccc;

@@ -46,7 +46,13 @@ exports.update = async (id, updateData) => {
 
 exports.delete = async (id) => {
     try {
-        // removeUser
+        const barton = await Model.findById(id);
+        console.log('barton: ', barton);        // debug
+        const user = await userService.findById(barton.users[0].user);
+        console.log('user: ', user);        // debug
+        const index = user.bartons.indexOf(id);
+        user.bartons.splice(index, 1);
+        await user.save();
         return await Model.findByIdAndRemove(id)
     } catch (err) {
         console.error(err.message);

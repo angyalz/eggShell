@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BartonToSave } from '../models/barton-to-save.model';
 import { Barton } from '../models/barton.model'
-import { BaseHttpService } from './base-http.service';
+import { BaseHttpService } from '../../common/services/base-http.service';
 
 @Injectable({
   providedIn: 'root'

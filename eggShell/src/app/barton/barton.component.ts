@@ -3,17 +3,18 @@ import { CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem } from '
 import { environment } from 'src/environments/environment';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PoultryOfBarton } from 'src/app/models/poultry-of-barton.model';
-import { Poultry } from 'src/app/models/poultry.model';
+import { PoultryOfBarton } from 'src/app/barton/models/poultry-of-barton.model';
+import { Poultry } from 'src/app/barton/models/poultry.model';
 import { Observable, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PoultryHttpService } from 'src/app/services/poultry-http.service';
-import { ProgressService } from 'src/app/services/progress.service';
-import { Barton } from 'src/app/models/barton.model';
-import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { BartonService } from 'src/app/services/barton.service';
-import { BartonHttpService } from 'src/app/services/barton-http.service';
+import { PoultryHttpService } from 'src/app/barton/services/poultry-http.service';
+import { ProgressService } from 'src/app/common/services/progress.service';
+import { Barton } from 'src/app/barton/models/barton.model';
+// import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { BartonService } from 'src/app/barton/services/barton.service';
+import { BartonHttpService } from 'src/app/barton/services/barton-http.service';
+import { UserLoggedIn } from 'src/app/common/models/user.model';
 
 @Component({
   selector: 'app-barton',
@@ -24,12 +25,15 @@ import { BartonHttpService } from 'src/app/services/barton-http.service';
 
 export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
 
+  @Input() editAllowed: boolean = false;
+
   URL = environment.apiUrl;
 
-  userObject!: UserLoggedIn | null;
+  userObject$: Observable<UserLoggedIn | null> = this.authService.getUserLoggedInObj();
+  userId: string | undefined = this.authService.getUserAuthData()?._id;
   userSignInSubscription?: Subscription;
   // bartonsDataSubscription: Subscription = this.bartonService.getBartonList().subscribe();
-  userHasBarton: boolean = false;
+  // userHasBarton: boolean = false;
 
   // bartonsData$: Barton[] = [];
   bartonsData$: Observable<Barton[]> = this.bartonService.getBartonList();
@@ -60,23 +64,56 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.getUserObject();
+    // this.getUserObject();
     // this.getBartonList();
+    // if (this.userObject) { this.getBartonsData(this.userObject?._id) };
+    if (this.userId) {this.getBartonsData(this.userId)};
     this.getPoultryData();
-    console.log('UserObject at barton component: ', this.userObject);   // debug
+    console.log('UserObject at barton component: ', this.userObject$);   // debug
     console.log('BartonsData at barton component: ', this.bartonsData$);   // debug
   }
 
-  getUserObject(): void {
-    this.userSignInSubscription = this.authService.getUserLoggedInObj()
+  // getUserObject(): void {
+  //   this.userSignInSubscription = this.authService.getUserLoggedInObj()
+  //     .subscribe({
+  //       next: (user) => {
+  //         // this.userObject$ = user;
+  //         // this.isLoggedIn = Boolean(this.userObject);
+  //         this.userHasBarton = !!(this.userObject$?.bartons?.length);
+  //         console.log('userObject at barton: ', this.userObject$)  // debug
+  //       },
+  //       error: (err) => { console.error(err) }
+  //     })
+  // }
+
+  getBartonsData(id: string): void {
+
+    this.progress.isLoading = true;
+
+    console.log('getBartonsData called', id); // debug
+
+    this.bartonService.getBartonsData(id)
       .subscribe({
-        next: (user) => {
-          this.userObject = user;
-          // this.isLoggedIn = Boolean(this.userObject);
-          this.userHasBarton = !!(this.userObject?.bartons?.length);
-          console.log('userObject at barton: ', this.userObject)  // debug
+        next: (data: Barton[]) => {
+          // this.bartonsData = data;
+          // this.hasBarton = !!(data.length);
+          // this.navigate('getBartonsData');
+          // console.log('hasBarton: ', this.hasBarton);   // debug
         },
-        error: (err) => { console.error(err) }
+        error: (err: { error: { message: any; }; status: any; }) => {
+          this._snackBar.open(
+            `Hoppá, nem sikerült lekérni az udvarok adatait! \n ${err.error.message}\nKód: ${err.status}`,
+            'OK',
+            {
+              duration: 5000,
+              panelClass: ['snackbar-error']
+            }
+          );
+          console.error(err);
+        },
+        complete: () => {
+          this.progress.isLoading = false;
+        }
       })
   }
 
@@ -149,7 +186,7 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
       bartonName: 'Udvar ' + (this.bartonService.getBartonListValue().length + 1),
       users: [
         {
-          user: this.userObject?._id || '',
+          user: this.userId || '',
           role: 'owner'
         }
       ],
@@ -173,9 +210,9 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   isOwner(barton: Barton): boolean {
-    if (this.userObject) {
+    if (this.userId) {
       for (const user of barton.users) {
-        if (user.user === this.userObject._id && user.role === 'owner') {
+        if (user.user === this.userId && user.role === 'owner') {
           return true;
         }
       }

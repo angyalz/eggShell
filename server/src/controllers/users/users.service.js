@@ -32,6 +32,7 @@ exports.findAll = async () => {
 exports.findById = async (id) => {
     try {
         return await Model.findById(id)
+            .populate('pendingRequests', 'username');
     } catch (err) {
         console.error(err.message);
     }

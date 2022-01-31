@@ -1,0 +1,126 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'" [position]="(isHandset$ | async) ? 'end' : 'start'"
+    [disableClose]="(isHandset$ | async) ? false : true" [opened]="(isHandset$ | async) ? false : true">
+    <!-- [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" -->
+    <!-- [mode]="(isHandset$ | async) ? 'over' : 'side'" -->
+    <mat-toolbar color="primary"
+      [ngStyle]="(isHandset$ | async) ? {'justify-content': 'flex-end'} : {'justify-content': 'flex-start'}">
+      <button class="close-btn" type="button" aria-label="Close sidenav" mat-icon-button (click)="drawer.toggle()">
+        <!-- *ngIf="isHandset$ | async"> -->
+        <mat-icon aria-label="Side nav close icon">close</mat-icon>
+      </button>
+      <!-- Menü -->
+    </mat-toolbar>
+    <mat-nav-list>
+      <a *ngIf="isLoggedIn" mat-list-item routerLink="/main" routerLinkActive="active" (click)="menuClick()">
+        <mat-icon>home</mat-icon>
+        <span>Főoldal</span>
+        <!-- <mat-divider></mat-divider> -->
+      </a>
+      <a *ngIf="isLoggedIn" [disabled]="!hasBarton" mat-list-item routerLink="/add-egg" routerLinkActive="active"
+        (click)="drawer.toggle()">
+        <mat-icon>egg</mat-icon>
+        <span>Tojás</span>
+        <!-- <mat-divider></mat-divider> -->
+      </a>
+      <a *ngIf="isLoggedIn" [disabled]="!hasBarton" mat-list-item routerLink="/add-egg" routerLinkActive="active"
+        (click)="drawer.toggle()">
+        <mat-icon>restaurant_menu</mat-icon>
+        <span>Táp</span>
+        <!-- <mat-divider></mat-divider> -->
+      </a>
+      <a *ngIf="isLoggedIn" [disabled]="!hasBarton" mat-list-item routerLink="/add-egg" routerLinkActive="active"
+        (click)="drawer.toggle()">
+        <mat-icon>trending_up</mat-icon>
+        <span>Statisztikák</span>
+        <!-- <mat-divider></mat-divider> -->
+      </a>
+      <a *ngIf="isLoggedIn" mat-list-item routerLink="/settings" routerLinkActive="active" (click)="drawer.toggle()">
+        <mat-icon>settings</mat-icon>
+        <span 
+          [matBadge]="badgeCounter.getSumOfSettings()"
+          [matBadgeHidden]="badgeCounter.getSumOfSettings()> 0 ? false : true" 
+          matBadgeColor="warn"
+          matBadgeOverlap="false">
+          Beállítások
+        </span>
+        <!-- <mat-divider></mat-divider> -->
+      </a>
+      <a *ngIf="!isLoggedIn" mat-list-item (click)="drawer.toggle()" (click)="openLoginDialog()">
+        <mat-icon>login</mat-icon>
+        <span>Belépés</span>
+        <!-- <mat-divider></mat-divider> -->
+      </a>
+      <a *ngIf="!isLoggedIn" mat-list-item (click)="drawer.toggle()" (click)="openRegDialog()">
+        <mat-icon>person_add</mat-icon>
+        <span>Regisztráció</span>
+        <!-- <mat-divider></mat-divider> -->
+      </a>
+      <a *ngIf="isLoggedIn" mat-list-item (click)="drawer.toggle()" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Kilépés</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+
+      <span *ngIf="!(isHandset$ | async)" >
+        <button type="button" [ngStyle]="{'padding-right': '1em'}"
+          aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+          <mat-icon aria-label="Side nav toggle icon" [matBadge]="menuBadgeCounter()"
+            [matBadgeHidden]="menuBadgeCounter() > 0 ? false : true" matBadgeColor="warn" matBadgeSize="medium"
+            matBadgeOverlap="true">
+            menu
+          </mat-icon>
+        </button>
+        <span *ngIf="!(isHandset$ | async) || !isLoggedIn" routerLink="/main" routerLinkActive="active">
+          <img [src]="URL + 'images/favicon.ico'" alt="favicon">
+          eggshell
+        </span>
+      </span>
+
+      <span class="user" *ngIf="(isHandset$ | async) && isLoggedIn" style="font-size: medium">
+        <img [src]="userObject?.avatarUrl ? userObject?.avatarUrl : URL + 'images/favicon2.ico'" alt="favicon">
+        {{userObject?.username}}
+      </span>
+      <div class="icons">
+        <span class="user" *ngIf="!(isHandset$ | async) && isLoggedIn" style="font-size: medium">
+          <img [src]="userObject?.avatarUrl ? userObject?.avatarUrl : URL + 'images/favicon2.ico'" alt="favicon">
+          {{userObject?.username}}
+        </span>
+        <mat-icon *ngIf="!isLoggedIn" (click)="openLoginDialog()" matTooltip="Belépés" matTooltipPosition="below"
+          matTooltipShowDelay=250 matTooltipHideDelay=500>
+          login
+        </mat-icon>
+        <mat-icon *ngIf="!isLoggedIn" (click)="openRegDialog()" matTooltip="Regisztráció" matTooltipPosition="below"
+          matTooltipShowDelay=250 matTooltipHideDelay=500>
+          person_add
+        </mat-icon>
+        <mat-icon *ngIf="isLoggedIn" (click)="logout()" matTooltip="Kilépés" matTooltipPosition="below"
+          matTooltipShowDelay=250 matTooltipHideDelay=500>
+          logout
+        </mat-icon>
+        <button *ngIf="(isHandset$ | async)" type="button" aria-label="Toggle sidenav" mat-icon-button
+          (click)="drawer.toggle()">
+          <!-- *ngIf="isHandset$ | async"> -->
+          <mat-icon aria-label="Side nav toggle icon" [matBadge]="menuBadgeCounter()"
+            [matBadgeHidden]="menuBadgeCounter() > 0 ? false : true" matBadgeColor="warn" matBadgeSize="medium"
+            matBadgeOverlap="true">
+            menu
+          </mat-icon>
+        </button>
+      </div>
+    </mat-toolbar>
+    <!-- Add Content Here -->
+    <div class="progress">
+      <!-- <mat-progress-bar mode="indeterminate" *ngIf="progress.isLoading"></mat-progress-bar> -->
+    </div>
+    <!-- <app-getting-started></app-getting-started> -->
+    <!-- <app-getting-started 
+      *ngIf="(isLoggedIn !== undefined) || (!hasBarton)">
+    </app-getting-started> -->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

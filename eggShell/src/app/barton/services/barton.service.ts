@@ -8,11 +8,11 @@ import { MedicineOfBartonToSave } from '../models/medicine-of-barton-to-save.mod
 import { MedicineOfBarton } from '../models/medicine-of-barton.model';
 import { PoultryOfBartonToSave } from '../models/poultry-of-barton-to-save.model';
 import { PoultryOfBarton } from '../models/poultry-of-barton.model';
-import { UserLoggedIn } from '../models/user-logged-in.model';
+// import { UserLoggedIn } from '../models/user-logged-in.model';
 import { UsersOfBarton } from '../models/users-of-barton.model';
-import { AuthService } from './auth.service';
+import { AuthService } from '../../auth/services/auth.service';
 import { BartonHttpService } from './barton-http.service';
-import { ProgressService } from './progress.service';
+import { ProgressService } from '../../common/services/progress.service';
 
 @Injectable({
   providedIn: 'root'
@@ -83,8 +83,6 @@ export class BartonService {
 
     for (const barton of dataSource) {
 
-      console.log('newBarton before save: ', barton);    // debug
-
       if (!barton._id) {
 
         this.bartonHttp.saveBarton(barton)
@@ -99,7 +97,7 @@ export class BartonService {
             complete: () => {
               let user = this.authService.getUserAuthData();
               if (user) {
-                this.getBartonsData(user._id);
+                this.getBartonsData(user._id).subscribe();
               }
               this.progress.isLoading = false;
             }
@@ -120,13 +118,12 @@ export class BartonService {
               complete: () => {
                 let user = this.authService.getUserAuthData();
                 if (user) {
-                  this.getBartonsData(user._id);
+                  this.getBartonsData(user._id).subscribe();
                 }
                 this.progress.isLoading = false;
               }
             })
         } else {
-          console.error('barton._id missing!');   // debug
         }
       }
     }
@@ -141,12 +138,21 @@ export class BartonService {
           complete: () => {
             let user = this.authService.getUserAuthData();
             if (user) {
-              this.getBartonsData(user._id);
+              this.getBartonsData(user._id).subscribe();
             }
           }
         })
     } else {
-      this.bartonHttp.setBartonInactive(barton._id);
+      this.bartonHttp.setBartonInactive(barton._id).subscribe({
+        next: () => {},
+        error: (err) => { console.error(err) },
+        complete: () => {
+          let user = this.authService.getUserAuthData();
+          if (user) {
+            this.getBartonsData(user._id).subscribe();
+          }
+        }
+      });
     }
 
   }

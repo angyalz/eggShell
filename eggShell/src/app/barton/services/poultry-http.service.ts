@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Poultry } from '../models/poultry.model';
-import { BaseHttpService } from './base-http.service';
+import { BaseHttpService } from '../../common/services/base-http.service';
 
 @Injectable({
   providedIn: 'root'

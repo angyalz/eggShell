@@ -13,6 +13,12 @@ const UserSchema = new mongoose.Schema({
             ref: 'User'
         }
     ],
+    pendingInvitations: [
+        { 
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Barton'
+        }
+    ],
     bartons: [
         {
             type: mongoose.Schema.Types.ObjectId,

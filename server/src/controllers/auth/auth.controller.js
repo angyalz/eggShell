@@ -84,7 +84,7 @@ exports.login = async (req, res, next) => {
                 username: user.username,
                 email: user.email,
                 role: user.role,
-                bartons: user.barton,
+                bartons: user.bartons,
             }, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: process.env.TOKEN_EXPIRY
         }
@@ -96,7 +96,7 @@ exports.login = async (req, res, next) => {
             username: user.username,
             email: user.email,
             role: user.role,
-            bartons: user.barton,
+            bartons: user.bartons,
         }, process.env.REFRESH_TOKEN_SECRET, {
             expiresIn: process.env.REFRESH_EXPIRY
         });
@@ -112,13 +112,23 @@ exports.login = async (req, res, next) => {
         if (!savedRefreshToken) {
             throw new Error('could not save token')
         }
+        console.log('res data at login: ', {        // debug
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            bartons: user.bartons,
+            accessToken,
+            refreshToken,
+        });
+
         res.status(200);
         res.json({
             _id: user._id,
             username: user.username,
             email: user.email,
             role: user.role,
-            bartons: user.barton,
+            bartons: user.bartons,
             accessToken,
             refreshToken,
         });
@@ -160,7 +170,7 @@ exports.refresh = async (req, res, next) => {
                 username: user.username,
                 email: user.email,
                 role: user.role,
-                bartons: user.barton,
+                bartons: user.bartons,
             }, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: process.env.TOKEN_EXPIRY
         }
@@ -171,7 +181,7 @@ exports.refresh = async (req, res, next) => {
             username: user.username,
             email: user.email,
             role: user.role,
-            bartons: user.barton,
+            bartons: user.bartons,
             accessToken,
             refreshToken,
         });

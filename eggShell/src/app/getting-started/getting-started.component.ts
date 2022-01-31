@@ -6,16 +6,17 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { Observable, map, Subscription } from 'rxjs';
-import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { ProgressService } from 'src/app/services/progress.service';
-import { UserHttpService } from 'src/app/services/user-http.service';
-import { AuthComponent } from '../auth/auth.component';
-import { requestEmailMatchValidator } from 'src/app/validators/request-email-match.validator';
-import { BartonComponent } from '../barton/barton.component';
-import { BartonService } from 'src/app/services/barton.service';
+// import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { ProgressService } from 'src/app/common/services/progress.service';
+import { UserHttpService } from 'src/app/common/services/user-http.service';
+import { AuthComponent } from 'src/app/auth/auth.component';
+import { requestEmailMatchValidator } from 'src/app/common/validators/request-email-match.validator';
+import { BartonComponent } from 'src/app/barton/barton.component';
+import { BartonService } from 'src/app/barton/services/barton.service';
 import { Router } from '@angular/router';
-import { Barton } from 'src/app/models/barton.model';
+import { Barton } from 'src/app/barton/models/barton.model';
+import { UserLoggedIn } from 'src/app/common/models/user.model';
 
 @Component({
   selector: 'app-getting-started',

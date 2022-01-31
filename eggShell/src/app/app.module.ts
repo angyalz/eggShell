@@ -12,10 +12,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { NavComponent } from './components/nav/nav.component';
+import { NavComponent } from './nav/nav.component';
 import { MatCommonModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -30,19 +31,20 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { AddEggComponent } from './components/add-egg/add-egg.component';
-import { AuthComponent } from './components/auth/auth.component';
-import { BartonComponent } from './components/barton/barton.component';
-import { GettingStartedComponent } from './components/getting-started/getting-started.component';
-import { LoginComponent } from './components/login/login.component';
-import { RegistrationComponent } from './components/registration/registration.component';
+import { AuthComponent } from './auth/auth.component';
+import { BartonComponent } from './barton/barton.component';
+import { GettingStartedComponent } from './getting-started/getting-started.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegistrationComponent } from './auth/registration/registration.component';
 import { SettingsComponent } from './components/settings/settings.component';
 
-import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { JwtInterceptor } from './common/interceptors/jwt.interceptor';
 import { MainComponent } from './components/main/main.component';
 
 @NgModule({
@@ -62,6 +64,7 @@ import { MainComponent } from './components/main/main.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
+    CdkAccordionModule,
     DragDropModule,
     FormsModule,
     HttpClientModule,
@@ -74,6 +77,7 @@ import { MainComponent } from './components/main/main.component';
     MatCommonModule,
     MatDatepickerModule,
     MatDialogModule,
+    MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,

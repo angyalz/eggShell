@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AddEggComponent } from './components/add-egg/add-egg.component';
-import { BartonComponent } from './components/barton/barton.component';
-import { GettingStartedComponent } from './components/getting-started/getting-started.component';
-import { LoginComponent } from './components/login/login.component';
+import { BartonComponent } from './barton/barton.component';
+import { GettingStartedComponent } from './getting-started/getting-started.component';
+import { LoginComponent } from './auth/login/login.component';
 import { MainComponent } from './components/main/main.component';
-import { RegistrationComponent } from './components/registration/registration.component';
+import { RegistrationComponent } from './auth/registration/registration.component';
 import { SettingsComponent } from './components/settings/settings.component';
 
 const routes: Routes = [

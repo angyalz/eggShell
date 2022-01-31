@@ -4,12 +4,13 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
-import { UserLogin } from 'src/app/models/user-login.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { BartonService } from 'src/app/services/barton.service';
-import { ProgressService } from 'src/app/services/progress.service';
-import { ValidationErrorHandlerService } from 'src/app/services/validation-error-handler.service';
+import { UserLogin, UserLoggedIn } from 'src/app/common/models/user.model';
+// import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
+// import { UserLogin } from 'src/app/models/user-login.model';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { BartonService } from 'src/app/barton/services/barton.service';
+import { ProgressService } from 'src/app/common/services/progress.service';
+import { ValidationErrorHandlerService } from 'src/app/common/services/validation-error-handler.service';
 
 @Component({
   selector: 'app-login',

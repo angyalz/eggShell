@@ -71,6 +71,8 @@ exports.findOne = async (req, res, next) => {
             return next(new createError.NotFound(`Could not send user by id:${req.params.id}`));
         }
 
+        console.log('User by ID: ', entity);        // debug
+
         res.status(200);
         return res.json(entity);
 
