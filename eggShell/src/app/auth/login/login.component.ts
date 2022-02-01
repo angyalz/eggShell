@@ -2,13 +2,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+// import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserLogin, UserLoggedIn } from 'src/app/common/models/user.model';
 // import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
 // import { UserLogin } from 'src/app/models/user-login.model';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { BartonService } from 'src/app/barton/services/barton.service';
+// import { BartonService } from 'src/app/barton/services/barton.service';
 import { ProgressService } from 'src/app/common/services/progress.service';
 import { ValidationErrorHandlerService } from 'src/app/common/services/validation-error-handler.service';
 
@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<LoginComponent>,
     // @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private _snackBar: MatSnackBar,
-    private bartonService: BartonService,
+    // private bartonService: BartonService,
     private progress: ProgressService
   ) { }
 
@@ -85,14 +85,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         complete: () => {
           this.dialogRef.close();
           this.userLogin.reset();
-          this._snackBar.open(
-            `Sikeres belépés`,
-            'OK',
-            {
-              duration: 2000,
-              panelClass: ['snackbar-ok']
-            }
-          );
+          // this._snackBar.open(
+          //   `Sikeres belépés`,
+          //   'OK',
+          //   {
+          //     duration: 2000,
+          //     panelClass: ['snackbar-ok']
+          //   }
+          // );
           this.progress.isLoading = false;
           // this.router.navigate(['/']);
         }

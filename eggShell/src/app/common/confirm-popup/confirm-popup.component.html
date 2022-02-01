@@ -1,0 +1,7 @@
+<div class="delete-container">
+    <h4>{{data.message}}</h4>
+    <div>
+        <button mat-raised-button color="warn" [mat-dialog-close]="true">{{data.actionButtonLabel}}</button>
+        <button mat-raised-button [mat-dialog-close]="false" cdkFocusInitial>{{data.cancelButtonLabel || 'Mégsem'}}</button>
+    </div>
+</div>

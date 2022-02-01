@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { LoginComponent } from '../auth/login/login.component';
@@ -17,9 +17,16 @@ import { Barton } from 'src/app/barton/models/barton.model';
 import { GettingStartedComponent } from '../getting-started/getting-started.component';
 import { User, UserLoggedIn } from 'src/app/common/models/user.model';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
+import { NewRequestNotificationComponent } from './new-request-notification/new-request-notification.component';
+import { ConfirmPopupComponent } from '../common/confirm-popup/confirm-popup.component';
+import { ConfirmPopupService } from '../common/confirm-popup/service/confirm-popup.service';
 
 export interface DialogData {
-  tabIndex: 0;
+  tabIndex: 0
+}
+
+export interface SnackbarData {
+  username: string,
 }
 
 @Component({
@@ -65,18 +72,17 @@ export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-
-  // dialogResult!: string;
-
   constructor(
     private breakpointObserver: BreakpointObserver,
     private authService: AuthService,
-    private bartonService: BartonService,
+    // private bartonService: BartonService,
     private userHttpService: UserHttpService,
     private _snackBar: MatSnackBar,
     private router: Router,
     public dialog: MatDialog,
     public progress: ProgressService,
+    @Inject(MAT_SNACK_BAR_DATA) public data: SnackbarData,
+    private confirm: ConfirmPopupService
   ) { }
 
   ngAfterViewInit(): void {
@@ -152,7 +158,7 @@ export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
         this.badgeCounter.settings.pendingRequests = this.userData?.pendingRequests?.length ?? 0;
 
         if (this.userData.pendingRequests?.length) {
-          this.newRequest(this.userData.pendingRequests);
+          this.showNewRequest(this.userData.pendingRequests);
 
 
           // const snackBarRef = this._snackBar.open('')
@@ -170,17 +176,55 @@ export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
     })
   }
 
-  newRequest(requestUser: User["pendingRequests"]): void {
+  showNewRequest(requestUser: User["pendingRequests"]): void {
 
     if (requestUser) {
       for (let elem of requestUser) {
-        const snackBarRef = this._snackBar.open(`${elem.username}`, 'OK')
+        const snackBarRef = this._snackBar.openFromComponent(NewRequestNotificationComponent, {
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          // duration: 2500,
+          data: {
+            username: elem.username,
+          }
+        })
         snackBarRef.afterDismissed().subscribe({
-          next: () => { console.log('%cAction!!!', 'color: orange')}
+          next: () => { 
+            let result: boolean;
+            this.confirm.confirmDialog('Biztosan el akarod utasítani?', 'Elutasít', 'Később')
+              .then(res => {
+                result = res;
+                console.log('%cAction!!!', 'color: orange', result)   // debug
+              });
+            // console.log(this.openConfirmDialog())   // debug
+          }
         })
       }
     }
   }
+
+  // async openConfirmDialog(): Promise<boolean> {
+
+  //   let dismiss: boolean = false;
+  //   const dialogRef = this.dialog.open(ConfirmPopupComponent, {
+  //     data: {
+  //       actionConfirm: dismiss,
+  //       message: 'Biztosan el akarod utasítani?',
+  //       actionButtonLabel: 'Elutasít',
+  //       cancelButtonLabel: 'Később'
+  //     }
+  //   });
+
+  //   await dialogRef.afterClosed().subscribe(result => {
+  //     dismiss = result || false;
+  //     console.log('%cDismiss request: ', 'color:red', dismiss);     // debug
+  //     if (dismiss) {
+  //       // this.bartonService.deleteBarton(barton);
+  //     }
+  //   });
+    
+  //   return dismiss;
+  // }
 
   // getBartonsData(id: string): void {
 

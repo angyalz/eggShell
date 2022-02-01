@@ -37,6 +37,12 @@ div {
                 justify-items: flex-start;
                 align-items: center;
 
+                .header-title {
+                    padding: 1.5em 0;
+                    width: 10em;
+                    text-align: start;
+                }
+
                 .mat-form-field-appearance-legacy .mat-form-filed-wrapper {
                     padding: 0;
                 }

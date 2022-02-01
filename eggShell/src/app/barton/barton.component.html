@@ -3,7 +3,8 @@
     <div class="barton-container">
         <mat-card class="barton" *ngFor="let barton of (bartonsData$ | async); index as i">
             <mat-card-header class="barton-header" *ngIf="barton.active">
-                <mat-form-field>
+
+                <mat-form-field *ngIf="editAllowed && isOwner(barton)">
                     <form ngForm [ngFormOptions]="{updateOn: 'blur'}">
                         <input type="text" matInput appearance="standard" ngModel [(ngModel)]="barton.bartonName"
                             [ngModelOptions]="{standalone: true}" [value]="barton.bartonName"
@@ -11,7 +12,11 @@
                     </form>
                 </mat-form-field>
 
-                <div class="header-buttons">
+                <span *ngIf="!editAllowed || !isOwner(barton)" class="header-title">
+                    {{barton.bartonName}}
+                </span>
+
+                <div class="header-buttons" *ngIf="editAllowed">
                     <button mat-icon-button color="accent" (click)="addNewBarton(i)">
                         <mat-icon>add_circle</mat-icon>
                     </button>

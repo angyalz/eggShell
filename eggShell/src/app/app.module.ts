@@ -24,7 +24,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -34,7 +34,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+// import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { AddEggComponent } from './components/add-egg/add-egg.component';
 import { AuthComponent } from './auth/auth.component';
@@ -46,6 +46,8 @@ import { SettingsComponent } from './components/settings/settings.component';
 
 import { JwtInterceptor } from './common/interceptors/jwt.interceptor';
 import { MainComponent } from './components/main/main.component';
+import { ConfirmPopupComponent } from './common/confirm-popup/confirm-popup.component';
+import { NewRequestNotificationComponent } from './nav/new-request-notification/new-request-notification.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +61,8 @@ import { MainComponent } from './components/main/main.component';
     RegistrationComponent,
     SettingsComponent,
     MainComponent,
+    ConfirmPopupComponent,
+    NewRequestNotificationComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -99,6 +103,10 @@ import { MainComponent } from './components/main/main.component';
     },
     {
       provide: MAT_DIALOG_DATA,
+      useValue: {}
+    },
+    {
+      provide: MAT_SNACK_BAR_DATA,
       useValue: {}
     },
     {

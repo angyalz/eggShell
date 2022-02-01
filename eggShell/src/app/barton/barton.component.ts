@@ -1,8 +1,8 @@
 import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy, Input } from '@angular/core';
-import { CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { PoultryOfBarton } from 'src/app/barton/models/poultry-of-barton.model';
 import { Poultry } from 'src/app/barton/models/poultry.model';
 import { Observable, Subscription } from 'rxjs';
@@ -15,6 +15,8 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { BartonService } from 'src/app/barton/services/barton.service';
 import { BartonHttpService } from 'src/app/barton/services/barton-http.service';
 import { UserLoggedIn } from 'src/app/common/models/user.model';
+import { ConfirmPopupComponent } from '../common/confirm-popup/confirm-popup.component';
+
 
 @Component({
   selector: 'app-barton',
@@ -25,7 +27,7 @@ import { UserLoggedIn } from 'src/app/common/models/user.model';
 
 export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
 
-  @Input() editAllowed: boolean = false;
+  @Input() editAllowed?: boolean = false;
 
   URL = environment.apiUrl;
 
@@ -40,6 +42,7 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
   
   poultryRef!: Poultry[];
   poultry: PoultryOfBarton[] = [];
+
 
   constructor(
     public dialog: MatDialog,
@@ -197,12 +200,25 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   deleteBarton(barton: Barton): void {
-    console.log('tabIndex at deleteTab: ', barton); // debug
-    // this.bartonsData.splice(index, 1);
-    // if (this.bartonsData[index]._id) {
-      // this.bartonService.deleteBarton(this.bartonsData[index]._id);
-    // }
-    this.bartonService.deleteBarton(barton);
+
+    let deleteConfirm: boolean = false;
+
+    const dialogRef = this.dialog.open(ConfirmPopupComponent, {
+      data: { 
+        actionConfirm: deleteConfirm,
+        message: 'Biztosan törölni akarod?',
+        actionButtonLabel: 'Töröl'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      deleteConfirm = result || false;
+      console.log('%cDeleteDialogData: ', 'color:red', deleteConfirm);     // debug
+      if (deleteConfirm) {
+        this.bartonService.deleteBarton(barton);
+      }
+    });
+
   }
 
   saveBarton(barton: Barton): void {
