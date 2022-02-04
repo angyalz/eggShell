@@ -7,16 +7,18 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, match: /.+\@.+\..+/, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
+    avatarUrl: { type: String },
     pendingRequests: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+            timestamp: { timestamps: true }
         }
     ],
     pendingInvitations: [
-        { 
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Barton'
+        {
+            user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+            barton: { type: mongoose.Schema.Types.ObjectId, ref: 'Barton' },
+            timestamp: { timestamps: true }
         }
     ],
     bartons: [

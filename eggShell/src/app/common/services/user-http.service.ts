@@ -20,7 +20,7 @@ export class UserHttpService extends BaseHttpService<User>{
     return this.http.post<any>(`${this.BASE_URL}${this.entity}`, {'email': email});
   }
 
-  sendConnectionRequest(user: string, id: string): Observable<any> {
+  setConnectionRequest(user: string, id: string): Observable<any> {
     return this.http.patch<any>(`${this.BASE_URL}${this.entity}/${id}`, { '_id': user });
   }
 

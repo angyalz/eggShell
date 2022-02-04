@@ -12,7 +12,7 @@ const BartonSchema = new mongoose.Schema({
         }
     ],
     poultry: [
-        {   
+        {
             poultry: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Poultry' },
             customName: { type: String },
             quantity: { type: Number, required: true },

@@ -1,7 +1,7 @@
 <div cdkDropListGroup>
 
     <div class="barton-container">
-        <mat-card class="barton" *ngFor="let barton of (bartonsData$ | async); index as i">
+        <mat-card class="barton" *ngFor="let barton of (bartonsData$ | async); index as i" >
             <mat-card-header class="barton-header" *ngIf="barton.active">
 
                 <mat-form-field *ngIf="editAllowed && isOwner(barton)">
@@ -17,10 +17,17 @@
                 </span>
 
                 <div class="header-buttons" *ngIf="editAllowed">
-                    <button mat-icon-button color="accent" (click)="addNewBarton(i)">
+                    <button mat-icon-button color="primary" matTooltip="Megosztások" matTooltipPosition="below"
+                        matTooltipShowDelay=250 matTooltipHideDelay=500>
+                        <mat-icon>share</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="Új udvar hozzáadása" matTooltipPosition="below"
+                        matTooltipShowDelay=250 matTooltipHideDelay=500 (click)="addNewBarton(i)">
                         <mat-icon>add_circle</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="deleteBarton(barton)" [disabled]="!isOwner(barton)">
+                    <button mat-icon-button color="warn" matTooltip="Udvar törlése" matTooltipPosition="below"
+                        matTooltipShowDelay=250 matTooltipHideDelay=500 (click)="deleteBarton(barton)"
+                        [disabled]="!isOwner(barton)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>
@@ -51,14 +58,14 @@
                                     [value]="item.customName || ''" (keyup.enter)="trigger.closeMenu()"
                                     (click)="$event.stopPropagation()">
                             </mat-form-field>
-                            <mat-form-field class="form-field" appearance="standard">
+                            <mat-form-field class="form-field" appearance="standard" *ngIf="editAllowed">
                                 <mat-label>beszerzés dátuma</mat-label>
                                 <input type="date" matInput ngModel placeholder="beszerzés dátuma"
                                     [(ngModel)]="item.purchaseDate" [ngModelOptions]="{standalone: true}"
                                     [value]="item.purchaseDate" (keyup.enter)="trigger.closeMenu()"
                                     (click)="$event.stopPropagation()">
                             </mat-form-field>
-                            <mat-form-field class="form-field" appearance="standard">
+                            <mat-form-field class="form-field" appearance="standard" *ngIf="editAllowed">
                                 <mat-label>ár</mat-label>
                                 <input type="number" matInput ngModel placeholder="egyed ára"
                                     [(ngModel)]="item.purchasePrice" [ngModelOptions]="{standalone: true}"
@@ -66,7 +73,7 @@
                                     (click)="$event.stopPropagation()">
                                 <span matSuffix>Ft</span>
                             </mat-form-field>
-                            <mat-form-field class="form-field" appearance="standard">
+                            <mat-form-field class="form-field" appearance="standard" *ngIf="editAllowed">
                                 <mat-label>kor</mat-label>
                                 <input type="number" matInput ngModel placeholder="egyed kora beszerzéskor"
                                     [(ngModel)]="item.ageAtPurchase" [ngModelOptions]="{standalone: true}"
@@ -76,7 +83,7 @@
                             </mat-form-field>
                         </form>
                     </mat-menu>
-                    <img [src]="URL + item.image" [alt]="item.species" >
+                    <img [src]="URL + item.image" [alt]="item.species">
                     <h5 *ngIf="!item.customName">{{item.species}}</h5>
                     <h5 *ngIf="item.customName">{{item.customName}}</h5>
                     <h6 *ngIf="!item.customName && (item.nameOfSex !== item.species)">{{item.nameOfSex}}</h6>
@@ -94,17 +101,17 @@
                 <!-- <mat-panel-description></mat-panel-description> -->
             </mat-expansion-panel-header>
             <div id="source-list" class="poultry-list" cdkDropList [cdkDropListData]="poultry"
-            (cdkDropListDropped)="drop($event)" cdkDropListOrientation="horizontal">
-            <div class="items" *ngFor="let item of poultry" cdkDrag>
-                <img [src]="URL + item.image" [alt]="item.species">
-                <h5>{{item.species}}</h5>
-                <h6 *ngIf="item.nameOfSex !== item.species">{{item.nameOfSex}}</h6>
+                (cdkDropListDropped)="drop($event)" cdkDropListOrientation="horizontal">
+                <div class="items" *ngFor="let item of poultry" cdkDrag>
+                    <img [src]="URL + item.image" [alt]="item.species">
+                    <h5>{{item.species}}</h5>
+                    <h6 *ngIf="item.nameOfSex !== item.species">{{item.nameOfSex}}</h6>
+                </div>
             </div>
-        </div>
         </mat-expansion-panel>
-        
 
-        
+
+
     </div>
 
 </div>

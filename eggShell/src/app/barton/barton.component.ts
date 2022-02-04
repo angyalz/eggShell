@@ -5,7 +5,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { PoultryOfBarton } from 'src/app/barton/models/poultry-of-barton.model';
 import { Poultry } from 'src/app/barton/models/poultry.model';
-import { Observable, Subscription } from 'rxjs';
+import { map, Observable, shareReplay, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PoultryHttpService } from 'src/app/barton/services/poultry-http.service';
 import { ProgressService } from 'src/app/common/services/progress.service';
@@ -39,7 +39,7 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
 
   // bartonsData$: Barton[] = [];
   bartonsData$: Observable<Barton[]> = this.bartonService.getBartonList();
-  
+
   poultryRef!: Poultry[];
   poultry: PoultryOfBarton[] = [];
 
@@ -70,7 +70,7 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
     // this.getUserObject();
     // this.getBartonList();
     // if (this.userObject) { this.getBartonsData(this.userObject?._id) };
-    if (this.userId) {this.getBartonsData(this.userId)};
+    if (this.userId) { this.getBartonsData(this.userId) };
     this.getPoultryData();
     console.log('UserObject at barton component: ', this.userObject$);   // debug
     console.log('BartonsData at barton component: ', this.bartonsData$);   // debug
@@ -204,7 +204,7 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
     let deleteConfirm: boolean = false;
 
     const dialogRef = this.dialog.open(ConfirmPopupComponent, {
-      data: { 
+      data: {
         actionConfirm: deleteConfirm,
         message: 'Biztosan törölni akarod?',
         actionButtonLabel: 'Töröl'

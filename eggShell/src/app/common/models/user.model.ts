@@ -7,9 +7,15 @@ export interface User {
         {
             _id: string,
             username: string,
+            avatarUrl?: string
         }
     ];
-    pendingInvitations?: string[];
+    pendingInvitations?: [
+        {
+            _id: string,
+            bartonName: string,
+        }
+    ];
     bartons?: string[];
 }
 

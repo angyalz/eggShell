@@ -1,0 +1,28 @@
+<div class="notice-container" *ngIf="notice.type === 'request'">
+    <img [src]="notice.avatarUrl ? notice.avatarUrl : URL + 'images/favicon2.ico'" alt="favicon">
+    <div class="content-container">
+        <p>{{notice.username}} hozzáférést kér</p>
+        <div class="button-container">
+            <button mat-raised-button color="accent" (click)="acceptRequest()">
+                Jóváhagy
+            </button>
+            <button mat-raised-button color="warn" (click)="rejectRequest()">
+                Elutasít
+            </button>
+        </div>
+    </div>
+</div>
+<div class="notice-container" *ngIf="notice.type === 'invite'">
+    <img [src]="notice.avatarUrl ? notice.avatarUrl : URL + 'images/favicon2.ico'" alt="favicon">
+    <div class="content-container">
+        <p>{{notice.username}} meghívott a(z) {{notice.bartonName}} nevű udvara kezelésére</p>
+        <div class="button-container">
+            <button mat-raised-button color="accent" (click)="acceptInvite()">
+                Jóváhagy
+            </button>
+            <button mat-raised-button color="warn" (click)="rejectInvite()">
+                Elutasít
+            </button>
+        </div>
+    </div>
+</div>

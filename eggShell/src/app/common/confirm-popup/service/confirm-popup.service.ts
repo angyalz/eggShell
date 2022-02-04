@@ -14,7 +14,7 @@ export class ConfirmPopupService {
 
   async confirmDialog( message: string, actionButtonLabel: string, cancelButtonLabel?: string ): Promise<boolean> {
 
-    const dialogRef = this.dialog.open(ConfirmPopupComponent, {
+    const dialogRef = await this.dialog.open(ConfirmPopupComponent, {
       data: {
         message: message,
         actionButtonLabel: actionButtonLabel,
@@ -22,10 +22,8 @@ export class ConfirmPopupService {
       }
     });
 
-    console.log('%cDialogRef after confirmDialog opened', 'color:pink', dialogRef);    // debug
-
-    // return false;
-    return await firstValueFrom(dialogRef.afterClosed()) || false;
+    return await firstValueFrom(dialogRef.afterClosed());
     
   }
+
 }

@@ -1,15 +1,41 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { AuthService } from 'src/app/auth/services/auth.service';
 import { environment } from 'src/environments/environment';
-import { UserLoggedIn } from '../models/user.model';
+import { User, UserLoggedIn } from '../models/user.model';
+import { UserHttpService } from './user-http.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private BASE_URL = environment.apiUrl;
-  private userData$: BehaviorSubject<UserLoggedIn | null> = new BehaviorSubject<UserLoggedIn | null>(null);
+  // private BASE_URL = environment.apiUrl;
+  // private userLoggedInObject$: Observable<UserLoggedIn | null> = this.authService.getUserLoggedInObj();
+  private userData: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
+  // private userId!: User['_id'];
 
-  constructor() { }
+
+  constructor(
+    private authService: AuthService,
+    private userHttpService: UserHttpService,
+  ) { 
+    this.getUserObject();
+  }
+
+  getUserObject(): void {
+    this.authService.getUserLoggedInObj().subscribe({
+      next: (user) => {
+        if (user) {
+          this.userHttpService.getById(user._id).subscribe({
+            next: (user) => { this.userData.next(user) }
+          })
+        }
+      }
+    })
+  }
+
+  getUserData(): Observable<User | null> {
+    return this.userData.asObservable();
+  }
 }

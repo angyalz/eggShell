@@ -17,7 +17,7 @@ router.get('/:id', authenticationByJWT, (req, res, next) => {
 });
 
 router.patch('/:id', authenticationByJWT, (req, res, next) => {
-    return controller.setConnectRequest(req, res, next);
+    return controller.updatePartially(req, res, next);
 });
 
 router.put('/:id', authenticationByJWT, (req, res, next) => {

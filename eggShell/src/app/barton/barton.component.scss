@@ -13,6 +13,8 @@ div {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+        flex-grow: 2;
+        justify-items: space-evenly;
         width: 100%;
         min-height: 10em;
         margin: 1em auto;
@@ -21,11 +23,16 @@ div {
         .barton {
             display: flex;
             flex-direction: column;
-            margin: 1em auto;
+            margin: 1em;
             padding: 0;
-            // max-width: 21em;
-            min-width: 20em;
+            min-width: 250px;
             box-shadow: 4px 4px 12px #ccc;
+            @media (min-width: 20em) {
+                flex: 50%;
+            }
+            @media (min-width: 30em) {
+                flex: 33%;
+            }
 
             .poultry-list {
                 margin: 0;
@@ -34,12 +41,18 @@ div {
 
             .barton-header {
                 flex-direction: row;
-                justify-items: flex-start;
+                justify-items: space-between;
                 align-items: center;
+                width: 100%;
+
+                mat-form-field {
+                    max-width: 50%;
+                }
 
                 .header-title {
                     padding: 1.5em 0;
                     width: 10em;
+                    max-width: 50%;
                     text-align: start;
                 }
 

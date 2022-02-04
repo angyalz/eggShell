@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable, Subscription } from 'rxjs';
+import { firstValueFrom, Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
@@ -17,9 +17,11 @@ import { Barton } from 'src/app/barton/models/barton.model';
 import { GettingStartedComponent } from '../getting-started/getting-started.component';
 import { User, UserLoggedIn } from 'src/app/common/models/user.model';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
-import { NewRequestNotificationComponent } from './new-request-notification/new-request-notification.component';
+import { NotificationComponent } from './notification/notification.component';
 import { ConfirmPopupComponent } from '../common/confirm-popup/confirm-popup.component';
 import { ConfirmPopupService } from '../common/confirm-popup/service/confirm-popup.service';
+import { NotificationService } from './services/notification.service';
+import { Notice } from './models/notification.model';
 
 export interface DialogData {
   tabIndex: 0
@@ -55,22 +57,11 @@ export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
   // bartonsData: Barton[] | [] = [];
 
   isLoggedIn: boolean = false;
-  // hasBarton: boolean = false;
   hasBarton: boolean = false;
+  // hasBarton: boolean = false;
 
-  badgeCounter = {
-    settings: {
-      pendingRequests: this.userData?.pendingRequests?.length ?? 0,
-    },
-    getSumOfSettings(): number {
-      let sum = 0;
-      let elem: keyof typeof this.settings;
-      for (elem in this.settings) {
-        sum += this.settings[elem];
-      }
-      return sum;
-    }
-  }
+  notificationCounter$: Observable<number> = this.notification.getNotificationCounter();
+  notificationSubject$: Observable<Notice[]> = this.notification.getNotificationSubject();
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -82,7 +73,8 @@ export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
     public dialog: MatDialog,
     public progress: ProgressService,
     @Inject(MAT_SNACK_BAR_DATA) public data: SnackbarData,
-    private confirm: ConfirmPopupService
+    private confirm: ConfirmPopupService,
+    private notification: NotificationService,
   ) { }
 
   ngAfterViewInit(): void {
@@ -133,9 +125,9 @@ export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
           this.isLoggedIn = Boolean(this.userObject);
           this.hasBarton = !!user?.bartons.length;
 
-          if (this.userObject) {
-            this.getUserData(this.userObject._id);
-          };
+          // if (this.userObject) {
+          //   this.getUserData(this.userObject._id);
+          // };
 
           this.navigate('hasToken');
           // if (this.userObject?.pendingRequests !== undefined) {
@@ -151,79 +143,70 @@ export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
     // console.log('getUserObject method ended at nav', this.userObject);     // debug
   }
 
-  getUserData(userId: string): void {
-    this.userHttpService.getById(userId).subscribe({
-      next: (user) => {
-        this.userData = user;
-        this.badgeCounter.settings.pendingRequests = this.userData?.pendingRequests?.length ?? 0;
+  // getUserData(userId: string): void {
+  //   this.userHttpService.getById(userId).subscribe({
+  //     next: (user) => {
+  //       this.userData = user;
+  //       // this.badgeCounter.settings.pendingRequests = this.userData?.pendingRequests?.length ?? 0;
 
-        if (this.userData.pendingRequests?.length) {
-          this.showNewRequest(this.userData.pendingRequests);
+  //       if (this.userData.pendingRequests?.length) {
+  //         this.requestHandler(this.userData.pendingRequests);
+  //       }
+  //       console.log('%cuserData at nav: ', 'color:cyan', this.userData);     // debug
+  //       // console.log('%cbadgeCounter.pendingRequests at nav: ', 'color:orange', this.badgeCounter.settings.pendingRequests);     // debug
+  //     },
+  //     error: (err) => {
+  //       console.error(err)
+  //     },
+  //     complete: () => { }
+  //   })
+  // }
 
+  // requestHandler(requestUser: User["pendingRequests"]): void {
 
-          // const snackBarRef = this._snackBar.open('')
-          // snackBarRef.afterDismissed().subscribe({
-          // next: () => {}
-          // })
-        }
-        console.log('%cuserData at nav: ', 'color:cyan', this.userData);     // debug
-        console.log('%cbadgeCounter.pendingRequests at nav: ', 'color:orange', this.badgeCounter.settings.pendingRequests);     // debug
-      },
-      error: (err) => {
-        console.error(err)
-      },
-      complete: () => { }
-    })
-  }
+  //   if (requestUser) {
+  //     for (let elem of requestUser) {
+  //       const snackBarRef = this._snackBar.openFromComponent(RequestNotificationComponent, {
+  //         horizontalPosition: 'right',
+  //         verticalPosition: 'top',
+  //         duration: 3000,
+  //         data: {
+  //           username: elem.username,
+  //         }
+  //       })
+        // snackBarRef.afterDismissed().subscribe({
+        //   next: () => { 
+        //     let result: boolean;
+        //     this.confirm.confirmDialog('Biztosan el akarod utasítani?', 'Elutasít', 'Később')
+        //       .then(res => {
+        //         result = res;
+        //         console.log('%cAction!!!', 'color: orange', result)   // debug
+        //         if (result) {
+        //           // this.userHttpService.setConnectionRequest(this.userObject?._id, this.requestId)
+        //         }
+        //       });
+            
+        //   }
+        // })
+  //     }
+  //   }
+  // }
 
-  showNewRequest(requestUser: User["pendingRequests"]): void {
+  // openConfirmDialog(): boolean {
 
-    if (requestUser) {
-      for (let elem of requestUser) {
-        const snackBarRef = this._snackBar.openFromComponent(NewRequestNotificationComponent, {
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-          // duration: 2500,
-          data: {
-            username: elem.username,
-          }
-        })
-        snackBarRef.afterDismissed().subscribe({
-          next: () => { 
-            let result: boolean;
-            this.confirm.confirmDialog('Biztosan el akarod utasítani?', 'Elutasít', 'Később')
-              .then(res => {
-                result = res;
-                console.log('%cAction!!!', 'color: orange', result)   // debug
-              });
-            // console.log(this.openConfirmDialog())   // debug
-          }
-        })
-      }
-    }
-  }
-
-  // async openConfirmDialog(): Promise<boolean> {
-
-  //   let dismiss: boolean = false;
+  //   // let dismiss: boolean = false;
   //   const dialogRef = this.dialog.open(ConfirmPopupComponent, {
   //     data: {
-  //       actionConfirm: dismiss,
+  //       // actionConfirm: dismiss,
   //       message: 'Biztosan el akarod utasítani?',
   //       actionButtonLabel: 'Elutasít',
   //       cancelButtonLabel: 'Később'
   //     }
   //   });
-
-  //   await dialogRef.afterClosed().subscribe(result => {
-  //     dismiss = result || false;
-  //     console.log('%cDismiss request: ', 'color:red', dismiss);     // debug
-  //     if (dismiss) {
-  //       // this.bartonService.deleteBarton(barton);
-  //     }
-  //   });
+  //   let result!: boolean;
+  //   const promise = firstValueFrom(dialogRef.afterClosed()).then(res => result = res)
     
-  //   return dismiss;
+  //   return result;
   // }
 
   // getBartonsData(id: string): void {
@@ -305,9 +288,9 @@ export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
     console.log(this.isHandset$);   // debug
   }
 
-  menuBadgeCounter(): number {
+  // menuBadgeCounter(): number {
 
-    return this.badgeCounter.getSumOfSettings();
+  //   return this.badgeCounter.getSumOfSettings();
 
     // let sum = 0;
     // let elem: keyof typeof this.badgeCounter;
@@ -320,7 +303,7 @@ export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
     // }
 
     // return sum;
-  };
+  // };
 
 
 }

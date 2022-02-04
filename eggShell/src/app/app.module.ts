@@ -36,18 +36,18 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
 // import { ScrollingModule } from '@angular/cdk/scrolling';
 
-import { AddEggComponent } from './components/add-egg/add-egg.component';
+import { AddEggComponent } from './nav/add-egg/add-egg.component';
 import { AuthComponent } from './auth/auth.component';
 import { BartonComponent } from './barton/barton.component';
 import { GettingStartedComponent } from './getting-started/getting-started.component';
 import { LoginComponent } from './auth/login/login.component';
+import { MainComponent } from './nav/main/main.component';
 import { RegistrationComponent } from './auth/registration/registration.component';
-import { SettingsComponent } from './components/settings/settings.component';
+import { SettingsComponent } from './nav/settings/settings.component';
 
 import { JwtInterceptor } from './common/interceptors/jwt.interceptor';
-import { MainComponent } from './components/main/main.component';
 import { ConfirmPopupComponent } from './common/confirm-popup/confirm-popup.component';
-import { NewRequestNotificationComponent } from './nav/new-request-notification/new-request-notification.component';
+import { NotificationComponent } from './nav/notification/notification.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +62,7 @@ import { NewRequestNotificationComponent } from './nav/new-request-notification/
     SettingsComponent,
     MainComponent,
     ConfirmPopupComponent,
-    NewRequestNotificationComponent,
+    NotificationComponent,
   ],
   imports: [
     AppRoutingModule,

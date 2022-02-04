@@ -131,7 +131,7 @@ export class GettingStartedComponent implements AfterViewInit, OnInit, OnDestroy
       }
     });
 
-    this.dialogRef.afterClosed().subscribe(result => { });
+    // this.dialogRef.afterClosed().subscribe(result => { });
   }
 
   openRegDialog(): void {
@@ -141,7 +141,7 @@ export class GettingStartedComponent implements AfterViewInit, OnInit, OnDestroy
       }
     });
 
-    this.dialogRef.afterClosed().subscribe(result => { });
+    // this.dialogRef.afterClosed().subscribe(result => { });
   }
 
   sendInvite(): void {
@@ -149,7 +149,7 @@ export class GettingStartedComponent implements AfterViewInit, OnInit, OnDestroy
     this.progress.isLoading = true;
 
     if (this.userObject) {
-      this.userHttpService.sendConnectionRequest(this.userObject?._id, this.requestId)
+      this.userHttpService.setConnectionRequest(this.userObject?._id, this.requestId)
         .subscribe({
           next: () => { },
           error: (err) => {
