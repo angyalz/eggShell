@@ -7,13 +7,15 @@ export interface User {
         {
             _id: string,
             username: string,
-            avatarUrl?: string
+            avatarUrl?: string,
+            timestamp: Date
         }
     ];
     pendingInvitations?: [
         {
             _id: string,
             bartonName: string,
+            timestamp: Date
         }
     ];
     bartons?: string[];

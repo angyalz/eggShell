@@ -6,7 +6,6 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { Observable, map, Subscription } from 'rxjs';
-// import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { ProgressService } from 'src/app/common/services/progress.service';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
@@ -17,6 +16,7 @@ import { BartonService } from 'src/app/barton/services/barton.service';
 import { Router } from '@angular/router';
 import { Barton } from 'src/app/barton/models/barton.model';
 import { UserLoggedIn } from 'src/app/common/models/user.model';
+import { RequestHttpService } from '../nav/services/request-http.service';
 
 @Component({
   selector: 'app-getting-started',
@@ -35,10 +35,11 @@ export class GettingStartedComponent implements AfterViewInit, OnInit, OnDestroy
   @Input() bartonsData: Barton[] | [] = [];
 
   userObject!: UserLoggedIn | null;
+  userObject$: Observable<UserLoggedIn | null> = this.authService.getUserLoggedInObj();
   isLoggedIn!: boolean;
   isEmailValid: boolean | null = null;
 
-  userSignInSubscription!: Subscription;
+  userSignInSubscription?: Subscription = this.userObject$.subscribe(user => this.userObject = user);
 
   stepperOrientation: Observable<StepperOrientation>;
   stepperIndex: number = 0;
@@ -59,13 +60,14 @@ export class GettingStartedComponent implements AfterViewInit, OnInit, OnDestroy
   );
 
   @ViewChild('stepper') private stepper!: MatStepper;
-  @ViewChild('barton') private bartonComponent!: BartonComponent;
+  // @ViewChild('barton') private bartonComponent!: BartonComponent;
 
   constructor(
     private authService: AuthService,
     private bartonService: BartonService,
     private progress: ProgressService,
     private userHttpService: UserHttpService,
+    private requestHttpService: RequestHttpService,
     breakpointObserver: BreakpointObserver,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
@@ -77,10 +79,7 @@ export class GettingStartedComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   ngOnInit(): void {
-    // console.log('Getting Started ngOnInit');  // debug
-    // console.log('Getting Started isLoggedin: ', this.isLoggedIn);  // debug
-    // console.log('Getting Started userObject: ', this.userObject);  // debug
-    // this.getUserObject();
+
   }
 
   ngOnDestroy(): void {
@@ -88,16 +87,11 @@ export class GettingStartedComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
-    // console.log('Getting Started ngAfterViewInit');  // debug
-    // console.log('Getting Started isLoggedin: ', this.isLoggedIn);  // debug
-    // console.log('Getting Started userObject: ', this.userObject);  // debug
-    // console.log('Getting Started stepperOrientation: ', this.stepperOrientation);  // debug
     this.getUserObject();
-    // this.setStepper();
   }
 
   getUserObject(): void {
-    this.userSignInSubscription = this.authService.getUserLoggedInObj().subscribe({
+    this.userSignInSubscription = this.userObject$.subscribe({
       next: (user) => {
         this.userObject = user;
         this.isLoggedIn = Boolean(this.userObject);
@@ -149,7 +143,7 @@ export class GettingStartedComponent implements AfterViewInit, OnInit, OnDestroy
     this.progress.isLoading = true;
 
     if (this.userObject) {
-      this.userHttpService.setConnectionRequest(this.userObject?._id, this.requestId)
+      this.requestHttpService.sendConnectionRequest(this.userObject?._id, this.requestId)
         .subscribe({
           next: () => { },
           error: (err) => {
@@ -169,7 +163,6 @@ export class GettingStartedComponent implements AfterViewInit, OnInit, OnDestroy
           }
         })
     }
-
   }
 
   checkEmailIsValid(email: string): void {
@@ -232,8 +225,6 @@ export class GettingStartedComponent implements AfterViewInit, OnInit, OnDestroy
           })
       }, 1000);
     }
-
-
   }
 
   saveBarton(): void {

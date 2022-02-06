@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const idValidator = require('mongoose-id-validator');
+const RequestSchema = require('./request.model');
+const InvitationSchema = require('./invitation.model');
 
 const UserSchema = new mongoose.Schema({
 
@@ -8,19 +10,8 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true },
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
     avatarUrl: { type: String },
-    pendingRequests: [
-        {
-            user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-            timestamp: { timestamps: true }
-        }
-    ],
-    pendingInvitations: [
-        {
-            user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-            barton: { type: mongoose.Schema.Types.ObjectId, ref: 'Barton' },
-            timestamp: { timestamps: true }
-        }
-    ],
+    pendingRequests: [ RequestSchema ],
+    pendingInvitations: [ InvitationSchema ],
     bartons: [
         {
             type: mongoose.Schema.Types.ObjectId,

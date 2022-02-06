@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -113,7 +113,10 @@ import { NotificationComponent } from './nav/notification/notification.component
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
       multi: true
-    }
+    },
+    { 
+      provide: LOCALE_ID, useValue: "en-US" 
+    },
   ],
   bootstrap: [AppComponent]
 })

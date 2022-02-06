@@ -91,14 +91,14 @@ export class AuthService {
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
             this.userLoggedInObject.next(null);
-            this.userLoggedInObject.complete();
+            // this.userLoggedInObject.complete();
           },
           error: (err) => {
             console.error('logout error: ', err);
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
             this.userLoggedInObject.next(null);
-            this.userLoggedInObject.complete();
+            // this.userLoggedInObject.complete();
           }
         })
       )

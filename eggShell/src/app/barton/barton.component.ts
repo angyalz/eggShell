@@ -5,12 +5,11 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { PoultryOfBarton } from 'src/app/barton/models/poultry-of-barton.model';
 import { Poultry } from 'src/app/barton/models/poultry.model';
-import { map, Observable, shareReplay, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PoultryHttpService } from 'src/app/barton/services/poultry-http.service';
 import { ProgressService } from 'src/app/common/services/progress.service';
 import { Barton } from 'src/app/barton/models/barton.model';
-// import { UserLoggedIn } from 'src/app/models/user-logged-in.model';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { BartonService } from 'src/app/barton/services/barton.service';
 import { BartonHttpService } from 'src/app/barton/services/barton-http.service';
@@ -28,16 +27,15 @@ import { ConfirmPopupComponent } from '../common/confirm-popup/confirm-popup.com
 export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @Input() editAllowed?: boolean = false;
+  @Input() expansionOpened: boolean = false;
 
   URL = environment.apiUrl;
 
   userObject$: Observable<UserLoggedIn | null> = this.authService.getUserLoggedInObj();
   userId: string | undefined = this.authService.getUserAuthData()?._id;
   userSignInSubscription?: Subscription;
-  // bartonsDataSubscription: Subscription = this.bartonService.getBartonList().subscribe();
+  // bartonsDataSubscription!: Subscription;
   // userHasBarton: boolean = false;
-
-  // bartonsData$: Barton[] = [];
   bartonsData$: Observable<Barton[]> = this.bartonService.getBartonList();
 
   poultryRef!: Poultry[];
@@ -48,7 +46,7 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
     public dialog: MatDialog,
     private authService: AuthService,
     private bartonService: BartonService,
-    private bartonHttp: BartonHttpService,
+    // private bartonHttp: BartonHttpService,
     private poultryHttp: PoultryHttpService,
     private _snackBar: MatSnackBar,
     public progress: ProgressService,
@@ -70,8 +68,9 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
     // this.getUserObject();
     // this.getBartonList();
     // if (this.userObject) { this.getBartonsData(this.userObject?._id) };
-    if (this.userId) { this.getBartonsData(this.userId) };
+    // if (this.userId) { this.getBartonsData(this.userId) };
     this.getPoultryData();
+    
     console.log('UserObject at barton component: ', this.userObject$);   // debug
     console.log('BartonsData at barton component: ', this.bartonsData$);   // debug
   }
@@ -97,7 +96,7 @@ export class BartonComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.bartonService.getBartonsData(id)
       .subscribe({
-        next: (data: Barton[]) => {
+        next: (data) => {
           // this.bartonsData = data;
           // this.hasBarton = !!(data.length);
           // this.navigate('getBartonsData');

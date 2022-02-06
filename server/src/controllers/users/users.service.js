@@ -32,7 +32,7 @@ exports.findAll = async () => {
 exports.findById = async (id) => {
     try {
         return await Model.findById(id)
-            .populate('pendingRequests', 'username avatarUrl')
+            .populate('pendingRequests.user', 'username avatarUrl')
             .populate('pendingInvitations.user', 'username avatarUrl')
             .populate('pendingInvitations.barton', 'bartonName');
     } catch (err) {

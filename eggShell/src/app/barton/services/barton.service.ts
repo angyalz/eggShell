@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, map, Observable, Subscription, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { BartonToSave } from '../models/barton-to-save.model';
 import { Barton } from '../models/barton.model';
 import { FeedOfBartonToSave } from '../models/feed-of-barton-to-save.model';
@@ -13,23 +13,40 @@ import { UsersOfBarton } from '../models/users-of-barton.model';
 import { AuthService } from '../../auth/services/auth.service';
 import { BartonHttpService } from './barton-http.service';
 import { ProgressService } from '../../common/services/progress.service';
+import { UserService } from 'src/app/common/services/user.service';
+import { User } from 'src/app/common/models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BartonService {
 
-  private bartonList$: BehaviorSubject<Barton[]> = new BehaviorSubject<Barton[]>([]);
+  private bartonList: BehaviorSubject<Barton[]> = new BehaviorSubject<Barton[]>([]);
   // private userHasBarton$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private userHasBarton: boolean = false;
-  // private userObject!: UserLoggedIn | null;
+  private userData!: User | null;
   // private userObjectSubscription: Subscription = this.authService.getUserLoggedInObj().subscribe(user => this.userObject = user);
 
   constructor(
+    private userService: UserService,
     private bartonHttp: BartonHttpService,
     public progress: ProgressService,
-    private authService: AuthService,
-  ) { }
+  ) { 
+    this.getUserData();
+  }
+
+  private getUserData(): void {
+    this.userService.getUserData().subscribe({
+      next: (user) => {
+        this.userData = user;
+        if (this.userData) {
+          this.getBartonsData(this.userData._id).subscribe()
+        } else {
+          this.bartonList.next([])
+        };
+      },
+    })
+  }
 
   getBartonsData(userId: string): Observable<Barton[]> {
 
@@ -44,14 +61,14 @@ export class BartonService {
               // this.userHasBarton$.next(!!(bartonsData?.length));
               // if (bartonsData && this.userHasBarton$) {
               console.log('bartonsData at bartonService before transform: ', bartonsData);     // debug
-              this.bartonList$.next(
+              this.bartonList.next(
                 this.incomingDataTransform(bartonsData)
               )
               this.progress.isLoading = false;
             } else if (bartonsData && !this.userHasBarton) {
               // } else if (bartonsData && !this.userHasBarton$) {
               console.log('bartonsData at bartonService: ', bartonsData);     // debug
-              this.bartonList$.next(
+              this.bartonList.next(
                 [
                   {
                     // _id: '',
@@ -95,9 +112,8 @@ export class BartonService {
               console.error(err);
             },
             complete: () => {
-              let user = this.authService.getUserAuthData();
-              if (user) {
-                this.getBartonsData(user._id).subscribe();
+              if (this.userData) {
+                this.getBartonsData(this.userData._id).subscribe();
               }
               this.progress.isLoading = false;
             }
@@ -116,9 +132,8 @@ export class BartonService {
                 console.error(err);
               },
               complete: () => {
-                let user = this.authService.getUserAuthData();
-                if (user) {
-                  this.getBartonsData(user._id).subscribe();
+                if (this.userData) {
+                  this.getBartonsData(this.userData._id).subscribe();
                 }
                 this.progress.isLoading = false;
               }
@@ -136,9 +151,8 @@ export class BartonService {
           next: (data) => { },
           error: (err) => { console.error(err) },
           complete: () => {
-            let user = this.authService.getUserAuthData();
-            if (user) {
-              this.getBartonsData(user._id).subscribe();
+            if (this.userData) {
+              this.getBartonsData(this.userData._id).subscribe();
             }
           }
         })
@@ -147,9 +161,8 @@ export class BartonService {
         next: () => {},
         error: (err) => { console.error(err) },
         complete: () => {
-          let user = this.authService.getUserAuthData();
-          if (user) {
-            this.getBartonsData(user._id).subscribe();
+          if (this.userData) {
+            this.getBartonsData(this.userData._id).subscribe();
           }
         }
       });
@@ -339,20 +352,20 @@ export class BartonService {
   }
 
   getBartonList(): Observable<Barton[]> {
-    return this.bartonList$.asObservable();
+    return this.bartonList.asObservable();
   }
 
   getBartonListValue(): Barton[] {
-    return this.bartonList$.value;
+    return this.bartonList.value;
   }
 
   setBartonList(data: Barton[]): void {
-    this.bartonList$.next(data);
+    this.bartonList.next(data);
     this.saveBartonData();                      // autoSave!!!
   }
 
   unsetBartonList(): void {
-    this.bartonList$.next([]);
+    this.bartonList.next([]);
   }
 
   // getUserHasBarton(): Observable<boolean> {

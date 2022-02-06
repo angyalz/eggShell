@@ -23,13 +23,15 @@ export class UserService {
     this.getUserObject();
   }
 
-  getUserObject(): void {
+  private getUserObject(): void {
     this.authService.getUserLoggedInObj().subscribe({
       next: (user) => {
         if (user) {
           this.userHttpService.getById(user._id).subscribe({
             next: (user) => { this.userData.next(user) }
           })
+        } else {
+          this.userData.next(null);
         }
       }
     })
@@ -38,4 +40,9 @@ export class UserService {
   getUserData(): Observable<User | null> {
     return this.userData.asObservable();
   }
+
+  setUserData(data: User): void {
+    this.userData.next(data);
+  }
+  
 }

@@ -34,6 +34,8 @@ app.use('/', require('./controllers/auth/auth.routes'));
 app.use('/bartons', require('./controllers/bartons/bartons.routes'));
 // app.use('/eggs', require('./controllers/eggs/eggs.routes'));
 app.use('/poultry', require('./controllers/poultry/poultry.routes'));
+app.use('/share/invite', require('./controllers/share/invite/invite.routes'));
+app.use('/share/request', require('./controllers/share/request/request.routes'));
 app.use('/users', require('./controllers/users/users.routes'));
 app.get('/images/:file', (req, res, next) => {
     logger.info(`file request: ${req.params.file}`);

@@ -1,21 +1,22 @@
 <div class="notice-container" *ngIf="notice.type === 'request'">
     <img [src]="notice.avatarUrl ? notice.avatarUrl : URL + 'images/favicon2.ico'" alt="favicon">
     <div class="content-container">
-        <p>{{notice.username}} hozzáférést kér</p>
+        <p>{{notice.user?.username}} hozzáférést kér</p>
         <div class="button-container">
             <button mat-raised-button color="accent" (click)="acceptRequest()">
                 Jóváhagy
             </button>
-            <button mat-raised-button color="warn" (click)="rejectRequest()">
+            <button mat-raised-button color="warn" (click)="rejectRequest(notice._id)">
                 Elutasít
             </button>
         </div>
+        <small>{{notice.timestamp | date: 'yyyy.MMMM dd, EEEE HH:mm:ss'}}</small>
     </div>
 </div>
 <div class="notice-container" *ngIf="notice.type === 'invite'">
     <img [src]="notice.avatarUrl ? notice.avatarUrl : URL + 'images/favicon2.ico'" alt="favicon">
     <div class="content-container">
-        <p>{{notice.username}} meghívott a(z) {{notice.bartonName}} nevű udvara kezelésére</p>
+        <p>{{notice.user?.username}} meghívott a(z) {{notice.barton?.bartonName}} nevű udvara kezelésére</p>
         <div class="button-container">
             <button mat-raised-button color="accent" (click)="acceptInvite()">
                 Jóváhagy
@@ -24,5 +25,6 @@
                 Elutasít
             </button>
         </div>
+        <small>{{notice.timestamp}}</small>
     </div>
 </div>

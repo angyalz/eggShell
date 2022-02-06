@@ -14,7 +14,14 @@
 export interface Notice {
     type: 'request' | 'invite',
     _id: string,
-    username?: string,
+    user?: {
+        _id: string,
+        username: string
+    },
     avatarUrl?: string,
-    bartonName?: string,
+    barton?: {
+        _id: string,
+        bartonName: string,
+    },
+    timestamp: Date
 }

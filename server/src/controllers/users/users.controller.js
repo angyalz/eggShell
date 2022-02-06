@@ -122,6 +122,26 @@ exports.update = async (req, res, next) => {
 
 };
 
+exports.updatePartially = async (req, res, next) => {
+
+    // const validationErrors = new Model(req.body).validateSync();
+
+    // if (validationErrors) {
+    //     return next(
+    //         new createError.BadRequest(validationErrors)
+    //     );
+    // }
+
+    try {
+        const entity = await service.update(req.params.id, req.body)
+        return res.json(entity);
+    } catch (err) {
+        console.error(err)
+        return next(new createError.InternalServerError('Could not update user'));
+    }
+
+};
+
 exports.delete = async (req, res, next) => {
 
     try {
