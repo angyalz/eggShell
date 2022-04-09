@@ -23,6 +23,13 @@ export class NotificationService {
     let noticeList: Notice[] = this.notificationSubject.value;
     this.userService.getUserData().subscribe({
       next: (user) => { 
+        console.log('%cUser at notService: ', 'color:blue', user);   // debug
+        noticeList = [];
+        if (user && !user.pendingRequests?.length && !user.pendingInvitations?.length) {
+          console.log('%cNotlists are empty', 'color:blue');  // debug
+          this.notificationSubject.next([]);
+          this.notificationCounter.next(0);
+        }
         if (user && user.pendingRequests) {
           for (let notice of user.pendingRequests) {
             let data: Notice = {...notice, type: 'request'}

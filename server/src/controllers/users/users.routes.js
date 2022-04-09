@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const controller = require('./users.controller');
 
-const authenticationByJWT = require('../../controllers/auth/authenticate');
-const adminRoleHandler = require('../../controllers/auth/adminOnly');
+const authenticationByJWT = require('../auth/authenticate');
+const adminRoleHandler = require('../auth/adminOnly');
 
 router.post('/', authenticationByJWT, (req, res, next) => {
     return controller.checkExists(req, res, next);

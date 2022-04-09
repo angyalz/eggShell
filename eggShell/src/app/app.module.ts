@@ -12,7 +12,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { NavComponent } from './nav/nav.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCommonModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -26,6 +26,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -36,12 +37,13 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
 // import { ScrollingModule } from '@angular/cdk/scrolling';
 
-import { AddEggComponent } from './nav/add-egg/add-egg.component';
+import { AddEggComponent } from './egg/add-egg/add-egg.component';
 import { AuthComponent } from './auth/auth.component';
 import { BartonComponent } from './barton/barton.component';
 import { GettingStartedComponent } from './getting-started/getting-started.component';
 import { LoginComponent } from './auth/login/login.component';
 import { MainComponent } from './nav/main/main.component';
+import { NavComponent } from './nav/nav.component';
 import { RegistrationComponent } from './auth/registration/registration.component';
 import { SettingsComponent } from './nav/settings/settings.component';
 
@@ -78,6 +80,7 @@ import { NotificationComponent } from './nav/notification/notification.component
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatCommonModule,
     MatDatepickerModule,
     MatDialogModule,
@@ -92,6 +95,7 @@ import { NotificationComponent } from './nav/notification/notification.component
     MatSidenavModule,
     MatSnackBarModule,
     MatStepperModule,
+    MatSlideToggleModule,
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
@@ -114,9 +118,9 @@ import { NotificationComponent } from './nav/notification/notification.component
       useClass: JwtInterceptor,
       multi: true
     },
-    { 
-      provide: LOCALE_ID, useValue: "en-US" 
-    },
+    // { 
+    //   provide: LOCALE_ID, useValue: "en-US" 
+    // },
   ],
   bootstrap: [AppComponent]
 })

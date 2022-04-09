@@ -25,10 +25,14 @@ export class UserService {
 
   private getUserObject(): void {
     this.authService.getUserLoggedInObj().subscribe({
-      next: (user) => {
-        if (user) {
-          this.userHttpService.getById(user._id).subscribe({
-            next: (user) => { this.userData.next(user) }
+      next: (userObj) => {
+        console.log('%cuser sevice gets userLoggedIn Object', 'color:brown', userObj); // debug
+        if (userObj) {
+          this.userHttpService.getById(userObj._id).subscribe({
+            next: (user) => { 
+              this.userData.next(user) ;
+              console.log('%cuser sevice gets userLoggedIn Object', 'color:brown', user); // debug
+            }
           })
         } else {
           this.userData.next(null);

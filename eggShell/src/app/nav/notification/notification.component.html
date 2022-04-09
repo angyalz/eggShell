@@ -1,30 +1,75 @@
 <div class="notice-container" *ngIf="notice.type === 'request'">
-    <img [src]="notice.avatarUrl ? notice.avatarUrl : URL + 'images/favicon2.ico'" alt="favicon">
-    <div class="content-container">
-        <p>{{notice.user?.username}} hozzáférést kér</p>
+    <div class="notice-wrapper">
+        <img [src]="notice.avatarUrl ? notice.avatarUrl : URL + 'images/favicon2.ico'" alt="favicon">
+        <div class="content-container">
+            <p>{{notice.user?.username}} hozzáférést kér</p>
+            <div class="button-container">
+                <button mat-raised-button color="accent" *ngIf="!panelToggle" (click)="(panelToggle = !panelToggle) && setInitAcceptRequestData()">
+                    Jóváhagy
+                </button>
+                <button mat-raised-button color="warn" (click)="rejectRequest(notice._id)">
+                    Elutasít
+                </button>
+            </div>
+            <small>{{notice.timestamp | date: 'yyyy.MMMM dd, EEEE HH:mm:ss'}}</small>
+        </div>
+    </div>
+    <div class="notice-expand" *ngIf="panelToggle">
+        <table class="table">
+            <thead>
+                <tr class="table-header-row">
+                    <td>
+                        <mat-checkbox color="primary"
+                            [checked]="allChecked" 
+                            [indeterminate]="someChecked()"
+                            (change)="setAllChecked($event.checked)">
+                            udvar neve
+                        </mat-checkbox>
+                    </td>
+                    <td colspan="2">
+                        jogosultság
+                    </td>
+                </tr>
+            </thead>
+            <tbody class="table-body">
+                <tr *ngFor="let barton of ownBartons; index as i">
+                    <td>
+                        <mat-checkbox color="primary"
+                            [(ngModel)]="acceptBartonList[i].checked" 
+                            (ngModelChange)="updateAllChecked()">
+                            {{barton.bartonName}}
+                        </mat-checkbox>
+                    </td>
+                    <td>
+                        {{acceptBartonList[i].role ? 'kiemelt\nfelhasználó' : 'felhasználó'}}
+                    </td>
+                    <td>
+                        <mat-slide-toggle [(ngModel)]="acceptBartonList[i].role"></mat-slide-toggle>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         <div class="button-container">
-            <button mat-raised-button color="accent" (click)="acceptRequest()">
+            <button mat-raised-button color="accent" (click)="acceptRequest(notice._id, setRequestData(acceptBartonList))">
                 Jóváhagy
             </button>
-            <button mat-raised-button color="warn" (click)="rejectRequest(notice._id)">
-                Elutasít
-            </button>
         </div>
-        <small>{{notice.timestamp | date: 'yyyy.MMMM dd, EEEE HH:mm:ss'}}</small>
     </div>
 </div>
 <div class="notice-container" *ngIf="notice.type === 'invite'">
-    <img [src]="notice.avatarUrl ? notice.avatarUrl : URL + 'images/favicon2.ico'" alt="favicon">
-    <div class="content-container">
-        <p>{{notice.user?.username}} meghívott a(z) {{notice.barton?.bartonName}} nevű udvara kezelésére</p>
-        <div class="button-container">
-            <button mat-raised-button color="accent" (click)="acceptInvite()">
-                Jóváhagy
-            </button>
-            <button mat-raised-button color="warn" (click)="rejectInvite()">
-                Elutasít
-            </button>
+    <div class="notice-wrapper">
+        <img [src]="notice.avatarUrl ? notice.avatarUrl : URL + 'images/favicon2.ico'" alt="favicon">
+        <div class="content-container">
+            <p>{{notice.user?.username}} meghívott a(z) {{notice.barton?.bartonName}} nevű udvara kezelésére</p>
+            <div class="button-container">
+                <button mat-raised-button color="accent" (click)="acceptInvite()">
+                    Jóváhagy
+                </button>
+                <button mat-raised-button color="warn" (click)="rejectInvite()">
+                    Elutasít
+                </button>
+            </div>
+            <small>{{notice.timestamp}}</small>
         </div>
-        <small>{{notice.timestamp}}</small>
     </div>
 </div>

@@ -6,6 +6,45 @@ import { BaseHttpService } from 'src/app/common/services/base-http.service';
 import { UserService } from 'src/app/common/services/user.service';
 import { Notice } from '../models/notification.model';
 
+export class AcceptBartonList {
+
+  id: string;
+  role: 'admin' | 'user';
+
+  constructor(
+
+    id: string,
+    role: 'admin' | 'user'
+
+  ) {
+
+    this.id = id;
+    this.role = role;
+
+  }
+}
+
+export class AcceptRequestData {
+
+  userId: string;
+  targetUserId: string;
+  bartonDataList: AcceptBartonList[];
+
+  constructor(
+
+    userId: string,
+    targetUserId: string,
+    bartonDataList: AcceptBartonList[]
+
+  ) {
+
+    this.userId = userId;
+    this.targetUserId = targetUserId;
+    this.bartonDataList = bartonDataList;
+
+  }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,19 +59,19 @@ export class RequestHttpService extends BaseHttpService<Notice> {
   }
 
   sendConnectionRequest(applicantId: string, targetUserId: string): Observable<User> {
-    return this.http.post<User>(`${this.BASE_URL}${this.entity}`, { targetUserId: targetUserId, applicantId: applicantId })
+    return this.http.post<User>(`${this.BASE_URL}${this.entity}/${targetUserId}`, { user: applicantId })
       .pipe(
         tap({
-          next: (data: User) => { this.userService.setUserData(data) }
+          next: (data: User) => { if (data) this.userService.setUserData(data) }
         })
       )
   }
 
-  acceptConnectionRequest(requestId: string): Observable<User> {
-    return this.http.patch<User>(`${this.BASE_URL}${this.entity}/${requestId}`, 'accept')
+  acceptConnectionRequest(requestId: string, data: AcceptRequestData): Observable<User> {
+    return this.http.patch<User>(`${this.BASE_URL}${this.entity}/${requestId}`, data)
       .pipe(
         tap({
-          next: (data: User) => { this.userService.setUserData(data) }
+          next: (data: User) => { if (data) this.userService.setUserData(data) }
         })
       )
   }
@@ -41,7 +80,7 @@ export class RequestHttpService extends BaseHttpService<Notice> {
     return this.http.delete<User>(`${this.BASE_URL}${this.entity}/${requestId}`)
       .pipe(
         tap({
-          next: (data: User) => { this.userService.setUserData(data) }
+          next: (data: User) => { if (data) this.userService.setUserData(data) }
         })
       )
   }

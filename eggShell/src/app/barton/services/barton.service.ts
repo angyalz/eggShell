@@ -10,7 +10,7 @@ import { PoultryOfBartonToSave } from '../models/poultry-of-barton-to-save.model
 import { PoultryOfBarton } from '../models/poultry-of-barton.model';
 // import { UserLoggedIn } from '../models/user-logged-in.model';
 import { UsersOfBarton } from '../models/users-of-barton.model';
-import { AuthService } from '../../auth/services/auth.service';
+// import { AuthService } from '../../auth/services/auth.service';
 import { BartonHttpService } from './barton-http.service';
 import { ProgressService } from '../../common/services/progress.service';
 import { UserService } from 'src/app/common/services/user.service';

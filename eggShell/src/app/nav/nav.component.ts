@@ -13,6 +13,7 @@ import { User, UserLoggedIn } from 'src/app/common/models/user.model';
 import { NotificationService } from './services/notification.service';
 import { Notice } from './models/notification.model';
 import { MatSidenav } from '@angular/material/sidenav';
+import { UserService } from '../common/services/user.service';
 
 export interface DialogData {
   tabIndex: 0
@@ -44,6 +45,7 @@ export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
 
   userObject!: UserLoggedIn | null;
   userObject$: Observable<UserLoggedIn | null> = this.authService.getUserLoggedInObj();
+  // userData$: Observable<User | null> = this.userService.getUserData();
   userSignInSubscription?: Subscription = this.userObject$.subscribe(user => this.userObject = user);
   userLogoutSubscription?: Subscription;
   userRefreshSubscription?: Subscription;
@@ -57,12 +59,13 @@ export class NavComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private authService: AuthService,
+    private notification: NotificationService,
+    private userService: UserService,
     private _snackBar: MatSnackBar,
     private router: Router,
     public dialog: MatDialog,
     public progress: ProgressService,
     @Inject(MAT_SNACK_BAR_DATA) public data: SnackbarData,
-    private notification: NotificationService,
   ) { }
 
   ngAfterViewInit(): void {

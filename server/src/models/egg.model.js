@@ -15,9 +15,11 @@ const EggSchema = new mongoose.Schema({
 const EggListSchema = new mongoose.Schema({
 
     active: { type: Boolean, default: true },
-    barton: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Barton' },
+    bartonId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Barton' },
     eggs: [ EggSchema ],
-    poultry: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Barton.poultry' },
+    poultryId: [
+        { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Barton.poultry' }
+    ],
 
 }, {
 

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AddEggComponent } from './nav/add-egg/add-egg.component';
+import { AddEggComponent } from './egg/add-egg/add-egg.component';
 import { BartonComponent } from './barton/barton.component';
 import { GettingStartedComponent } from './getting-started/getting-started.component';
 import { LoginComponent } from './auth/login/login.component';

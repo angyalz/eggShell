@@ -8,7 +8,7 @@ const BartonSchema = new mongoose.Schema({
     users: [
         {
             user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
-            role: { type: String, enum: ['owner', 'user'], default: 'owner', required: true }
+            role: { type: String, enum: ['owner', 'admin', 'user'], default: 'owner', required: true }
         }
     ],
     poultry: [

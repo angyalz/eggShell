@@ -19,7 +19,7 @@
             </mat-form-field>
             <mat-form-field appearance="standard">
                 <mat-label>Dátum</mat-label>
-                <input matInput [matDatepicker]="dp" [formControl]="date">
+                <input matInput [matDatepicker]="dp" [min]="minDate" [max]="maxDate" [formControl]="date">
                 <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
                 <mat-datepicker #dp></mat-datepicker>
             </mat-form-field>

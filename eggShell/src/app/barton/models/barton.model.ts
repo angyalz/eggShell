@@ -8,6 +8,12 @@ export interface Barton {
     active?: boolean,
     bartonName?: string,
     users: UsersOfBarton[],
+    // users: [
+    //      {
+    //          user: string,
+    //          role: 'owner' | 'user'
+    //      }
+    // ]
     poultry: PoultryOfBarton[],
     // poultry: [
     //     {
