@@ -5,15 +5,15 @@ const cors = require('cors');
 const morgan = require('morgan');
 const logger = require('./config/logger');
 
-// const path = require('path');
-// const staticUrl = path.join(__dirname, '..', 'public', 'angular');
+const path = require('path');
+const staticUrl = path.join(__dirname, '..', 'public', 'angular');
 
 // const swaggerUI = require('swagger-ui-express');
 // const YAML = require('yamljs');
 // const swaggerDocument = YAML.load('./docs/swagger.yaml');
 
 const app = express();
-const staticUrl = '../public/angular';
+// const staticUrl = '../public/angular';
 // const swaggerDocument = load('./docs/swagger.yaml');
 
 app.use(morgan('combined', { stream: logger.stream }));
@@ -48,7 +48,7 @@ app.get('/api/images/poultries/:file', (req, res, next) => {
 
 // app.use('/api-doc', serve, setup(swaggerDocument));
 
-app.use('*/*', express.static(staticUrl));
+app.use('/', express.static(staticUrl));
 
 app.use((err, req, res, next) => {
     logger.error(`ERROR ${err.statusCode}: ${err.message}`);
@@ -59,8 +59,11 @@ app.use((err, req, res, next) => {
     })
 });
 
-app.all('*', (req, res) => {
-    res.redirect('');
+app.all('*/*', (req, res) => {
+    console.log('App all!!! ')      // debug
+    // res.redirect(staticUrl);
+    // res.status(200).sendFile(`${staticUrl}/index.html`,);
+    res.status(200).sendFile(staticUrl, '/index.html');
 })
 
 module.exports = app;
