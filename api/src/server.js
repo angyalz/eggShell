@@ -56,15 +56,10 @@ app.use((err, req, res, next) => {
     })
 });
 
-app.use('*/*', express.static(staticUrl));
+app.get('*/*', express.static(staticUrl));
 
 app.all('*', (req, res) => {
-    console.log('App all!!! ')      // debug
-    console.log('staticUrl: ', staticUrl);      // debug
-    console.log('dirname:', __dirname);     // debug
-    // res.redirect('');
-    res.status(200).sendFile(`${staticUrl}/index.html`);
-    // res.status(200).sendFile(staticUrl, '/index.html');
+    res.sendFile(`${staticUrl}/index.html`);
 })
 
 module.exports = app;
