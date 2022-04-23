@@ -4,7 +4,7 @@
   "description": "eggshell App with Angular frontend and node.js express backend",
   "main": "index.js",
   "scripts": {
-    "build": "cd eggShell && npm i && npm run build",
+    "build": "cd eggshell && npm i && npm run build",
     "start": "node src/index.js",
     "start:server": "nodemon --delay 3500ms src/index.js",
     "start:server-prod": "cross-env NODE_ENV=production node src/index.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/angyalz/eggShell.git"
+    "url": "git+https://github.com/angyalz/eggshell.git"
   },
   "keywords": [
     "server",
@@ -22,9 +22,9 @@
   "author": "angyalZK",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/github.com/angyalz/eggShell/issues"
+    "url": "https://github.com/github.com/angyalz/eggshell/issues"
   },
-  "homepage": "https://github.com/github.com/angyalz/eggShell#readme",
+  "homepage": "https://github.com/github.com/angyalz/eggshell#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "config": "^3.3.6",
