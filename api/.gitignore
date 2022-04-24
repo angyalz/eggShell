@@ -128,7 +128,7 @@ dist
 .history/
 
 # Mongo Config
-# config/
+config/
 
 # System Files
 .DS_Store
