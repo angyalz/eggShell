@@ -7,7 +7,6 @@ const logger = require('./config/logger');
 
 const path = require('path');
 const staticUrl = path.join(__dirname, '..', 'public', 'angular');
-// const staticUrl = '../public/angular';
 
 // const swaggerUI = require('swagger-ui-express');
 // const YAML = require('yamljs');
