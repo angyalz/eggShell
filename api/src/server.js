@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
-const cors = require('cors');
+// const cors = require('cors');
 const morgan = require('morgan');
 const logger = require('./config/logger');
 
@@ -17,17 +17,17 @@ const app = express();
 
 app.use(morgan('combined', { stream: logger.stream }));
 app.use(express.json());
-app.use(cors());
-app.options('*', cors());
+
+if (process.env.NODE_ENV !== 'production') {
+    const cors = require('cors');
+    app.use(cors());
+    app.options('*', cors());
+}
 
 app.use('/', (req, res, next) => {
     console.log(`HTTP ${req.method} ${req.path}`);
     next();
 });
-
-// app.post('/login', login);
-// app.post('/refresh', refresh);
-// app.post('/logout', logout);
 
 app.use('/api/', require('./controllers/auth/auth.routes'));
 app.use('/api/bartons', require('./controllers/bartons/bartons.routes'));

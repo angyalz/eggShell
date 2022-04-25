@@ -1,11 +1,14 @@
 {
   "name": "server",
-  "version": "1.0.0",
+  "version": "0.6.0",
+  "engines": {
+    "node": "16.x",
+    "npm": "8.x"
+  },
   "description": "eggshell App with Angular frontend and node.js express backend",
   "main": "index.js",
   "scripts": {
-    "build": "cd eggshell && npm i && npm run build",
-    "start": "node src/index.js",
+    "start": "NODE_ENV=production node src/index.js",
     "start:server": "nodemon src/index.js",
     "start:server-prod": "cross-env NODE_ENV=production node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
